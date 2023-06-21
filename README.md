@@ -71,3 +71,54 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## MEMBER CRUD Test   
+1. members all : GET http://localhost:3000/members   
+2. members id : GET http://localhost:3000/members/id    
+* body sample 1 : 
+  ```
+  { "member_id": "sjstomato@gmail.com" }
+  ```  
+* body sample 2 : 
+  ```
+  { "member_id": "csm0222@gmail.com" }
+  ```  
+
+3. members name : GET http://localhost:3000/members/name  
+* body sample 1 : 
+  ```
+  { "member_name": "JUSHINSEO" }
+  ```
+* body sample 2 : 
+  ```
+  { "member_name": "SEONGMINCHOI" }
+  ```  
+
+4. member add : POST http://localhost:3000/members  
+* body sample :
+  ```
+  {
+    "member_id": "csm0222@gmail.com",
+    "company_code": "000000",
+    "member_name": "SEONGMINCHOI",
+    "password": "encrypt",
+    "dormant_status": "N",
+    "password_expired_day": 19000101,
+    "created_by": "admin",
+    "modified_by": "admin"
+  }
+  ```
+
+5. member update : PATCH http://localhost:3000/members
+  
+* body sample : member_id를 키로 update 한다.
+  ```
+  {
+    "member_id": "csm0222@gmail.com",
+    "company_code": "000002",
+    "member_name": "SEONGMINCHOI",
+    "password": "encrypt",
+    "dormant_status": "N",
+    "password_expired_day": 19000101
+  }
+  ```
