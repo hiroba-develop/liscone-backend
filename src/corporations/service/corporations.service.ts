@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCorporationDTO } from '../dto/create-corporation.dto';
@@ -38,6 +38,9 @@ export class CorporationsService {
 
     async update(corporation: UpdateCorporationDTO) {
         const resultcorporation = await this.findByCorporationId(corporation.corporation_id);
+        if (!resultcorporation) {
+            throw new NotFoundException("corporation id is not exist");
+        }
         try{
             await this.corporationsRepository.update(
                 corporation.corporation_id, 

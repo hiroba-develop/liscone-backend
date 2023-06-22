@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMemberDTO } from '../dto/create-member.dto';
@@ -38,6 +38,9 @@ export class MembersService {
 
     async update(member: UpdateMemberDTO) {
         const resultMember = await this.findByMemberId(member.member_id);
+        if (!resultMember) {
+            throw new NotFoundException("member id is not exist");
+        }
         try{
             await this.membersRepository.update(                
                     member.member_id ,

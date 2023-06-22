@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { MembersModule } from './members/members.module';
 import { CorporationsModule } from './corporations/corporations.module';
+import { SalestasksModule } from './salestasks/salestasks.module';
+import { SaleslistsModule } from './saleslists/saleslists.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { CorporationsModule } from './corporations/corporations.module';
     UsersModule,
     MembersModule,
     CorporationsModule,
+    SalestasksModule,
+    SaleslistsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
