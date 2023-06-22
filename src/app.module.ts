@@ -7,6 +7,7 @@ import { MembersModule } from './members/members.module';
 import { CorporationsModule } from './corporations/corporations.module';
 import { SalestasksModule } from './salestasks/salestasks.module';
 import { SaleslistsModule } from './saleslists/saleslists.module';
+import { MembercompanyproductsModule } from './membercompanyproducts/membercompanyproducts.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { SaleslistsModule } from './saleslists/saleslists.module';
     CorporationsModule,
     SalestasksModule,
     SaleslistsModule,
+    MembercompanyproductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
