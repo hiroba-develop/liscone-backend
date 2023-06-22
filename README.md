@@ -72,7 +72,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](LICENSE).
 
-## MEMBER CRUD Test   
+## 1. MEMBER CRUD Test   
 1. members all : GET http://localhost:3000/members   
 2. members id : GET http://localhost:3000/members/id    
 * body sample 1 : 
@@ -120,5 +120,67 @@ Nest is [MIT licensed](LICENSE).
     "password": "encrypt",
     "dormant_status": "N",
     "password_expired_day": 19000101
+  }
+  ```
+
+  
+## 2. CORPORATION CRUD Test   
+1. corporation all : GET http://localhost:3000/corporations  
+2. corporation id : GET http://localhost:3000/corporations/id    
+* body sample : 
+  ```
+  { "corporation_id": "000-0000-001" }
+  ```  
+
+3. corporation name : GET http://localhost:3000/corporations/name  
+* body sample : 
+  ```
+  { "corporation_name": "株式会社AAAAA" }
+  ```
+
+4. corporation add : POST http://localhost:3000/corporations  
+* body sample :
+  ```
+   {
+    "corporation_id": "000-0000-001",
+    "corporation_name": "株式会社AAAAA",
+    "corporate_number": "123-4567",
+    "address": "東京都港区南麻布1-2-3 麻布オフィスビル1F",
+    "business_category": "IT",
+    "capital_stock": "100万円",
+    "employee_number": "100名",
+    "establishment_year": "1997",
+    "home_page": "http://example.co.jp",
+    "listing_status": "上場",
+    "created_by": "admin",
+    "modified_by": "admin",
+    "representative_name": "JUSIN-SEO",
+    "representative_phone_number": "02-000-0001",
+    "sales_amount": "10000",
+    "zip_code": "011-070" 
+  }
+  ```
+
+5. corporation update : PATCH http://localhost:3000/corporations
+  
+* body sample : corporation_id 키로 update 한다.
+  ```
+  {
+    "corporation_id": "000-0000-001",
+    "corporation_name": "株式会社AAAAA",
+    "corporate_number": "123-0000",
+    "address": "東京都港区南麻布1-2-3 麻布オフィスビル1F",
+    "business_category": "IT",
+    "capital_stock": "100万円",
+    "employee_number": "100名",
+    "establishment_year": "1997",
+    "home_page": "http://example.co.jp",
+    "listing_status": "上場",
+    "created_by": "admin",
+    "modified_by": "admin",
+    "representative_name": "JUSIN-SEO",
+    "representative_phone_number": "02-000-0001",
+    "sales_amount": "10000",
+    "zip_code": "011-070" 
   }
   ```

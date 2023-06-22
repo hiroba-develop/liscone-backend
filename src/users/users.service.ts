@@ -26,6 +26,6 @@ export class UsersService {
     }
     
     async remove(id: string): Promise<void> {
-        return id;
+        //return id;
     }
 }

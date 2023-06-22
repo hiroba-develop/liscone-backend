@@ -39,8 +39,8 @@ export class MembersService {
     async update(member: UpdateMemberDTO) {
         const resultMember = await this.findByMemberId(member.member_id);
         try{
-            await this.membersRepository.update(
-                { member.member_id } ,
+            await this.membersRepository.update(                
+                    member.member_id ,
                 {                 
                     company_code: member.company_code,
                     member_name: member.member_name,
