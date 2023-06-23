@@ -8,6 +8,7 @@ import { CorporationsModule } from './corporations/corporations.module';
 import { SalestasksModule } from './salestasks/salestasks.module';
 import { SaleslistsModule } from './saleslists/saleslists.module';
 import { MembercompanyproductsModule } from './membercompanyproducts/membercompanyproducts.module';
+import { SalesCorporationstaffsModule } from './salescorporationstaffs/salescorporationstaffs.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { MembercompanyproductsModule } from './membercompanyproducts/membercompa
     SalestasksModule,
     SaleslistsModule,
     MembercompanyproductsModule,
+    SalesCorporationstaffsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
