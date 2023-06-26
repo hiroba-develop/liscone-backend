@@ -11,9 +11,6 @@ export class SalestaskEntity {
     @Column( {length: 256} )
     comment: string;
 
-    @Column( {length: 256} )
-    created_by: string;
-
     @Column( {length: 8} )
     deadline: string;
 
@@ -26,9 +23,6 @@ export class SalestaskEntity {
     @Column( {length: 256} )
     member_id: string;
 
-    @Column( {length: 256} )
-    modified_by: string;
-
     @Column( {length: 12} )
     sales_list_number: string;
 
@@ -38,9 +32,16 @@ export class SalestaskEntity {
     @Column( {length: 8} )
     status: string;
 
+    @Column( {length: 256} )
+    created_by: string;
+
     @Column( {type:"timestamp", nullable:true})
     created: Date;
-    
+
+    @Column( {length: 256} )
+    modified_by: string;
+        
     @Column( {type:"timestamp", nullable:true})
     modified: Date;
+    
 }

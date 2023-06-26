@@ -15,6 +15,7 @@ export class SalestasksService {
     findAll(): Promise<SalestaskEntity[]> {
         return this.salestasksRepository.find();
     }
+
     
     findBySalestaskMemberId(member_id: string): Promise<SalestaskEntity> {
         return this.salestasksRepository.findOne({

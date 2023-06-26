@@ -13,6 +13,7 @@ export class SalestasksController {
         return this.salestasksService.findAll();
     }
 
+
     @Get('/memberid')
     getSalestaskId(@Body() dto: CreateSalestaskDTO): Promise<SalestaskEntity> {
         console.log("getSalestaskMemberId");

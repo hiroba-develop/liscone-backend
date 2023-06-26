@@ -184,3 +184,52 @@ Nest is [MIT licensed](LICENSE).
     "zip_code": "011-070" 
   }
   ```
+
+  
+## 3. my task(tb_my_sales_task) CRUD Test   
+1. my task : GET http://localhost:3001/membersalestasks 
+2. my task param (member_id and task_number) : GET http://localhost:3001/membersalestasks/membersalestask    
+* body sample : 
+  ```
+  {
+    "member_id": "sjstomato@gmail.com",
+    "task_number": "00001"
+  }
+  ```  
+
+3. my task add : POST http://localhost:3001/membersalestasks  
+* body sample :
+  ```
+   {
+    "member_id": "sjstomato@gmail.com",
+    "task_number": "00001",
+    "assign_date": "20230622",
+    "assign_confirm": "20230622",
+    "created_by": "admin",
+    "modified_by": "admin"
+  }
+  ```
+
+4. my task update : PATCH http://localhost:3001/membersalestasks
+  
+* body sample : member_id and task_number is key
+  ```
+  {
+    "member_id": "sjstomato@gmail.com",
+    "task_number": "00001",
+    "assign_date": "20230622",
+    "assign_confirm": "일하세요001",
+    "created_by": "admin",
+    "modified_by": "admin"
+  }
+  ```
+
+5. my task delete : PATCH http://localhost:3001/membersalestasks
+  
+* body sample : member_id and task_number is key
+  ```
+  {
+    "member_id": "sjstomato@gmail.com",
+    "task_number": "00001"
+  }
+  ```
