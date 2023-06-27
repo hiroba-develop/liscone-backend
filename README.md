@@ -73,7 +73,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 Nest is [MIT licensed](LICENSE).
 
   
-## 1. ダッシュボード my task(tb_my_sales_task) CRUD   
+## 1. ダッシュボード my task(tb_my_sales_task) CRUD & Search   
 1. my task : GET http://localhost:3001/membersalestasks 
 2. my task param (member_id and task_number) : GET http://localhost:3001/membersalestasks/search    
 * body sample :   
@@ -129,7 +129,7 @@ Nest is [MIT licensed](LICENSE).
   }
   ```
 
-## 2. 企業リスト作成 CORPORATION(tb_corporation) CRUD   
+## 2. 企業リスト作成 CORPORATION(tb_corporation) CRUD & Search   
 
 1. corporation all : GET http://localhost:3000/corporations  
 2. corporation search : GET http://localhost:3000/corporations/search    
