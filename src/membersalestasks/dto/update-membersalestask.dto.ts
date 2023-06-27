@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsOptional, IsString, IsDateString } from "class-validator";
 
 export class UpdateMemberSalestaskDTO {    
     
@@ -8,12 +8,15 @@ export class UpdateMemberSalestaskDTO {
     @IsString()
     task_number: string;
     
-    @IsString()
+    @IsDateString()
     assign_date: string;
 
     @IsString()
     assign_confirm: string;
 
+    @IsString()
+    status: string;
+    
     @IsString()
     created_by: string;
 

@@ -15,7 +15,6 @@ export class MemberSalestaskEntity {
 
     @Column( {length: 256} )
     assign_confirm: string;
-
     
     @Column( {length: 256} )
     created_by: string;

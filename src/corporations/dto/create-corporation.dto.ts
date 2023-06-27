@@ -17,26 +17,11 @@ export class CreateCorporationDTO {
     business_category: string;
 
     @IsString()
-    capital_stock: string;
-
-    @IsString()
-    created_by: string;
-    
-    @IsString()
-    employee_number: string;
-    
-    @IsString()
-    establishment_year: string;
-
-    @IsString()
     home_page: string;
     
     @IsString()
     listing_status: string;
-    
-    @IsString()
-    modified_by: string;
-    
+        
     @IsString()
     representative_name: string;
     
@@ -45,9 +30,32 @@ export class CreateCorporationDTO {
     
     @IsString()
     sales_amount: string;
+    sales_from_amount: string;
+    sales_to_amount: string;
     
     @IsString()
+    capital_stock: string;
+    capital_from_stock: string;
+    capital_to_stock: string;
+    
+    @IsString()
+    employee_number: string;
+    employee_from_number: string;
+    employee_to_number: string;
+    
+    @IsString()
+    establishment_year: string;
+    establishment_from_year: string;
+    establishment_to_year: string;
+
+    @IsString()
     zip_code: string;
+
+    @IsString()
+    created_by: string;
+    
+    @IsString()
+    modified_by: string;
 
     created: Date;
     

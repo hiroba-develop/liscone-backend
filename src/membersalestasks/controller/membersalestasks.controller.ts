@@ -14,10 +14,10 @@ export class MemberSalestasksController {
         return this.memberSalestasksService.findAll();
     }
 
-    @Get('/membersalestask')
+    @Get('/search')
     getAllMemberSalestask(@Body() dto: CreateMemberSalestaskDTO): Promise<MemberSalestaskEntity[]> {
-        console.log("membersalestask");
-        return this.memberSalestasksService.findAllMemberSalesTask(dto.member_id, dto.task_number);
+        console.log("membersalestask search");
+        return this.memberSalestasksService.findAllMemberSalesTask(dto);
     }
 
     
@@ -28,7 +28,7 @@ export class MemberSalestasksController {
     }
 
     @Patch()
-    updateSalestask(@Body() membersalestask: UpdateMemberSalestaskDTO) {
+    updateSalestask(@Body() membersalestask: CreateMemberSalestaskDTO) {
         console.log("updateMembersalestask");
         return this.memberSalestasksService.update(membersalestask);
     }

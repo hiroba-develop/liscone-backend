@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Between, LessThan, MoreThan } from 'typeorm';
 import { CreateMemberSalestaskDTO } from '../dto/create-membersalestask.dto';
 import { UpdateMemberSalestaskDTO } from '../dto/update-membersalestask.dto';
 import { MemberSalestaskEntity} from '../entities/membersalestasks.entity';
@@ -16,10 +16,18 @@ export class MemberSalestasksService {
         return this.membersalestasksRepository.find({relations:['memberEntity','salestaskEntity']});
     }
 
-    findAllMemberSalesTask(member_id: string, task_number: string) : Promise<MemberSalestaskEntity[]> {
-        return this.membersalestasksRepository.find({
-            where: {member_id, task_number},
-            relations:['memberEntity','salestaskEntity'] 
+    findAllMemberSalesTask(memberSalestask: CreateMemberSalestaskDTO) : Promise<MemberSalestaskEntity[]> {
+        return this.membersalestasksRepository.find(
+            {
+              where: 
+              { 
+                member_id: memberSalestask.member_id, 
+                assign_date: Between(memberSalestask.assign_from_date, memberSalestask.assign_to_date), 
+                salestaskEntity: {
+                    status: memberSalestask.status,
+                },
+              } ,
+              relations:['memberEntity','salestaskEntity'] 
             }
         );
     }
@@ -28,8 +36,8 @@ export class MemberSalestasksService {
         await this.membersalestasksRepository.save(membersalestask)
     }
 
-    async update(membersalestask: UpdateMemberSalestaskDTO) {
-        const resultsalestask = await this.findAllMemberSalesTask(membersalestask.member_id, membersalestask.task_number);
+    async update(membersalestask: CreateMemberSalestaskDTO) {
+        const resultsalestask = await this.findAllMemberSalesTask(membersalestask);
         if (!resultsalestask) {
             throw new NotFoundException("member_id and task_number is not exist");
         }
@@ -45,7 +53,7 @@ export class MemberSalestasksService {
                     modified_by: membersalestask.modified_by
                 }
                 );
-           return await this.findAllMemberSalesTask(membersalestask.member_id, membersalestask.task_number);
+           return await this.findAllMemberSalesTask(membersalestask);
         } catch (e) {
             console.log('there is no member_id / task_number : ' + membersalestask.member_id + '/' + membersalestask.task_number);
             throw e;

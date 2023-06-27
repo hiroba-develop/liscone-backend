@@ -13,10 +13,10 @@ export class CorporationsController {
         return this.corporationsService.findAll();
     }
 
-    @Get('/id')
-    getCorporationId(@Body() dto: CreateCorporationDTO): Promise<CorporationEntity> {
-        console.log("getCorporationId");
-        return this.corporationsService.findByCorporationId(dto.corporation_id);
+    @Get('/search')
+    getCorporationSearch(@Body() dto: CreateCorporationDTO): Promise<CorporationEntity[]> {
+        console.log("getCorporationSearch");
+        return this.corporationsService.findByCorporationAll(dto);
     }
 
     @Get('/name')
@@ -32,7 +32,7 @@ export class CorporationsController {
     }
 
     @Patch()
-    updateCorporation(@Body() corporation: UpdateCorporationDTO) {
+    updateCorporation(@Body() corporation: CreateCorporationDTO) {
         console.log("updateCorporation");
         return this.corporationsService.update(corporation);
     }

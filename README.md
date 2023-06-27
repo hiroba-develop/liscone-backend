@@ -111,7 +111,8 @@ Nest is [MIT licensed](LICENSE).
 
 5. member update : PATCH http://localhost:3000/members
   
-* body sample : member_id를 키로 update 한다.
+* body sample :  
+  member_id is update key.
   ```
   {
     "member_id": "csm0222@gmail.com",
@@ -124,12 +125,87 @@ Nest is [MIT licensed](LICENSE).
   ```
 
   
-## 2. CORPORATION CRUD Test   
-1. corporation all : GET http://localhost:3000/corporations  
-2. corporation id : GET http://localhost:3000/corporations/id    
-* body sample : 
+  
+## 1. ダッシュボード my task(tb_my_sales_task) CRUD   
+1. my task : GET http://localhost:3001/membersalestasks 
+2. my task param (member_id and task_number) : GET http://localhost:3001/membersalestasks/search    
+* body sample :   
+  member_id : optional  
+  assign_from_date : essential  
+  assign_to_date : essential  
+  status : optional  
   ```
-  { "corporation_id": "000-0000-001" }
+  {
+    "member_id": "sjstomato@gmail.com",
+    "assign_from_date":"20230622",
+    "assign_to_date":"20230629",
+    "status": "CODE-801"
+  }
+  ```  
+
+3. my task add : POST http://localhost:3001/membersalestasks  
+* body sample :
+  ```
+   {
+    "member_id": "sjstomato@gmail.com",
+    "task_number": "00001",
+    "assign_date": "20230622",
+    "assign_confirm": "20230622",
+    "created_by": "admin",
+    "modified_by": "admin"
+  }
+  ```
+
+4. my task update : PATCH http://localhost:3001/membersalestasks
+  
+* body sample :  
+  member_id and task_number is update key
+  ```
+  {
+    "member_id": "sjstomato@gmail.com",
+    "task_number": "00001",
+    "assign_date": "20230622",
+    "assign_confirm": "일하세요001",
+    "created_by": "admin",
+    "modified_by": "admin"
+  }
+  ```
+
+5. my task delete : PATCH http://localhost:3001/membersalestasks
+  
+* body sample :  
+  member_id and task_number is key
+  ```
+  {
+    "member_id": "sjstomato@gmail.com",
+    "task_number": "00001"
+  }
+  ```
+
+## 2. 企業リスト作成 CORPORATION(tb_corporation) CRUD   
+
+1. corporation all : GET http://localhost:3000/corporations  
+2. corporation search : GET http://localhost:3000/corporations/search    
+* body sample :   
+  all : optional
+  address : like search
+  ```
+  {
+    "corporate_number": "123-0000",
+    "corporation_name": "株式会社AAAAA",
+    "business_category": "IT",
+    "address": "東京都港区南麻布",
+    "representative_phone_number": "02-000-0001",
+    "sales_from_amount": "10000",
+    "sales_to_amount": "10000",
+    "capital_from_stock": "100",
+    "capital_to_stock": "100",
+    "employee_from_number": "10",
+    "employee_to_number": "1000",
+    "establishment_from_year": "1997",
+    "establishment_to_year": "1997",
+    "listing_status": "Y"
+  }
   ```  
 
 3. corporation name : GET http://localhost:3000/corporations/name  
@@ -163,7 +239,8 @@ Nest is [MIT licensed](LICENSE).
 
 5. corporation update : PATCH http://localhost:3000/corporations
   
-* body sample : corporation_id 키로 update 한다.
+* body sample :  
+  corporation_id is update key.
   ```
   {
     "corporation_id": "000-0000-001",
@@ -182,54 +259,5 @@ Nest is [MIT licensed](LICENSE).
     "representative_phone_number": "02-000-0001",
     "sales_amount": "10000",
     "zip_code": "011-070" 
-  }
-  ```
-
-  
-## 3. my task(tb_my_sales_task) CRUD Test   
-1. my task : GET http://localhost:3001/membersalestasks 
-2. my task param (member_id and task_number) : GET http://localhost:3001/membersalestasks/membersalestask    
-* body sample : 
-  ```
-  {
-    "member_id": "sjstomato@gmail.com",
-    "task_number": "00001"
-  }
-  ```  
-
-3. my task add : POST http://localhost:3001/membersalestasks  
-* body sample :
-  ```
-   {
-    "member_id": "sjstomato@gmail.com",
-    "task_number": "00001",
-    "assign_date": "20230622",
-    "assign_confirm": "20230622",
-    "created_by": "admin",
-    "modified_by": "admin"
-  }
-  ```
-
-4. my task update : PATCH http://localhost:3001/membersalestasks
-  
-* body sample : member_id and task_number is key
-  ```
-  {
-    "member_id": "sjstomato@gmail.com",
-    "task_number": "00001",
-    "assign_date": "20230622",
-    "assign_confirm": "일하세요001",
-    "created_by": "admin",
-    "modified_by": "admin"
-  }
-  ```
-
-5. my task delete : PATCH http://localhost:3001/membersalestasks
-  
-* body sample : member_id and task_number is key
-  ```
-  {
-    "member_id": "sjstomato@gmail.com",
-    "task_number": "00001"
   }
   ```
