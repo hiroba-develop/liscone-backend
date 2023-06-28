@@ -14,11 +14,11 @@ import { MemberSalestasksModule } from './membersalestasks/membersalestasks.modu
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: "ec2-35-78-238-15.ap-northeast-1.compute.amazonaws.com",
+      host: "ec2-43-207-203-185.ap-northeast-1.compute.amazonaws.com",
       port: 3306,
       username: "root",
       password: "1234",
-      database: "lisconeDB",
+      database: "lisconeDb",
       entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
       synchronize: false, // 개발 환경에서만 사용하세요. 프로덕션 환경에서는 false로 설정하는 것이 좋습니다.
     }),
