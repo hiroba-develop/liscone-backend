@@ -18,6 +18,7 @@ export class CorporationsService {
 
     findByCorporationAll(corporation: CreateCorporationDTO): Promise<CorporationEntity[]> {
         let query = this.corporationsRepository.createQueryBuilder("tb_corporation");
+        query.where("1 = 1");
         if(typeof corporation.corporate_number !== 'undefined') {
             query.andWhere("corporate_number = :corporate_number", {corporate_number: corporation.corporate_number});
         }

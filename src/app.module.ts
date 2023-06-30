@@ -10,6 +10,8 @@ import { SaleslistsModule } from './saleslists/saleslists.module';
 import { MembercompanyproductsModule } from './membercompanyproducts/membercompanyproducts.module';
 import { SalesCorporationstaffsModule } from './salescorporationstaffs/salescorporationstaffs.module';
 import { MemberSalestasksModule } from './membersalestasks/membersalestasks.module';
+import { CompanystaffsModule } from './companystaffs/companystaffs.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -30,6 +32,7 @@ import { MemberSalestasksModule } from './membersalestasks/membersalestasks.modu
     MembercompanyproductsModule,
     SalesCorporationstaffsModule,
     MemberSalestasksModule,
+    CompanystaffsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

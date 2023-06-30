@@ -209,7 +209,69 @@ Nest is [MIT licensed](LICENSE).
   }
   ```
 
-## 3. MEMBER CRUD Test   
+## 3. 担当者リスト作成 COMPANY STAFF (tb_company_staff) CRUD & Search  
+
+1. companystaffs all : GET http://localhost:3000/companystaffs   
+
+2. companystaffs search : GET http://localhost:3000/companystaffs/search  
+* body sample :   
+  all : optional  
+  staff_name : like search  
+  corporation_name : like search    
+  ```
+  {
+	  "staff_id": "STFF_000_002",
+    "staff_name": "csm0222",
+    "job_position": "01",
+    "profile_source_type": "LinkedIn",
+    "employee_from_number": "0",
+    "employee_to_number": "1000000",
+    "corporation_name": "AAAA"
+  }
+  ```  
+
+3. companystaffs add : POST http://localhost:3000/companystaffs  
+* body sample :
+  ```
+   {
+    "staff_id": "STFF_000_002",
+    "corporation_id": "0000000003" ,
+    "staff_name": "csm0222@gmail.com" ,
+    "job_position": "02" ,
+    "profile_source_type": "LinkedIn" ,
+    "profile_link": "www.linkedin.com/csm0222" ,
+    "other_information": "etc info" ,
+    "modified_by": "admin"
+  }
+  ```
+
+4. companystaffs update : PATCH http://localhost:3000/companystaffs
+* body sample :  
+  staff_id and corporation_id are update key.
+  ```
+  {
+    "staff_id": "STFF_000_002",
+    "corporation_id": "0000000002" ,
+    "staff_name": "csm0222@gmail.com" ,
+    "job_position": "01" ,
+    "profile_source_type": "LinkedIn" ,
+    "profile_link": "www.linkedin.com/csm0222" ,
+    "other_information": "etc info" ,
+    "modified_by": "admin"
+  }
+
+5. companystaffs delete : DELETE http://localhost:3000/companystaffs
+* body sample :  
+  staff_id and corporation_id are delete key.
+  ```
+  {
+    "staff_id": "STFF_000_002",
+    "corporation_id": "0000000003"
+  }
+  ```
+
+  
+## ETC. MEMBER CRUD Test   
 1. members all : GET http://localhost:3000/members   
 2. members id : GET http://localhost:3000/members/id    
 * body sample 1 : 
@@ -260,5 +322,3 @@ Nest is [MIT licensed](LICENSE).
     "password_expired_day": 19000101
   }
   ```
-
-  
