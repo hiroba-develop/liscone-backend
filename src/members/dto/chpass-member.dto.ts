@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class CreateMemberDTO {
+export class ChangePasswordMemberDTO {
   @IsString()
   member_id: string;
 
@@ -12,6 +12,9 @@ export class CreateMemberDTO {
 
   @IsString()
   password: string;
+
+  @IsString()
+  newpassword: string;
 
   @IsString()
   dormant_status: string;

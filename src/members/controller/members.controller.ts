@@ -12,6 +12,7 @@ import { CreateMemberDTO } from '../dto/create-member.dto';
 import { UpdateMemberDTO } from '../dto/update-member.dto';
 import { MemberEntity } from '../entities/members.entity';
 import { MembersService } from '../service/members.service';
+import { ChangePasswordMemberDTO } from '../dto/chpass-member.dto';
 @Controller('members')
 export class MembersController {
   constructor(private readonly membersService: MembersService) {}
@@ -38,6 +39,12 @@ export class MembersController {
   login(@Body() member: CreateMemberDTO): Promise<MemberEntity> {
     console.log('login');
     return this.membersService.login(member.member_id, member.password);
+  }
+
+  @Post('/changepassword')
+  changepassword(@Body() member: ChangePasswordMemberDTO) {
+    console.log('changepassword');
+    return this.membersService.updatePassword(member);
   }
 
   @Post()
