@@ -55,6 +55,4 @@ export class CorporationEntity {
     
     @Column( {type:"timestamp", nullable:true})
     modified: Date;
-
-
 }

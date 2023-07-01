@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryColumn, JoinColumn, ManyToOne} from 'typeorm';
-import { SalestaskEntity } from './salestasks.entity';
-import { MemberEntity } from './members.entity';
+import { SalestaskEntity } from '../../salestasks/entities/salestasks.entity';
+import { MemberEntity } from '../../members/entities/members.entity';
 
 @Entity('tb_my_sales_task')
 export class MemberSalestaskEntity {

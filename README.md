@@ -131,8 +131,8 @@ Nest is [MIT licensed](LICENSE).
 
 ## 2. 企業リスト作成 CORPORATION(tb_corporation) CRUD & Search   
 
-1. corporation all : GET http://localhost:3000/corporations  
-2. corporation search : GET http://localhost:3000/corporations/search    
+1. corporation all : GET http://localhost:3001/corporations  
+2. corporation search : GET http://localhost:3001/corporations/search    
 * body sample :   
   all : optional
   address : like search
@@ -155,13 +155,13 @@ Nest is [MIT licensed](LICENSE).
   }
   ```  
 
-3. corporation name : GET http://localhost:3000/corporations/name  
+3. corporation name : GET http://localhost:3001/corporations/name  
 * body sample : 
   ```
   { "corporation_name": "株式会社AAAAA" }
   ```
 
-4. corporation add : POST http://localhost:3000/corporations  
+4. corporation add : POST http://localhost:3001/corporations  
 * body sample :
   ```
    {
@@ -184,7 +184,7 @@ Nest is [MIT licensed](LICENSE).
   }
   ```
 
-5. corporation update : PATCH http://localhost:3000/corporations
+5. corporation update : PATCH http://localhost:3001/corporations
   
 * body sample :  
   corporation_id is update key.
@@ -211,9 +211,9 @@ Nest is [MIT licensed](LICENSE).
 
 ## 3. 担当者リスト作成 COMPANY STAFF (tb_company_staff) CRUD & Search  
 
-1. companystaffs all : GET http://localhost:3000/companystaffs   
+1. companystaffs all : GET http://localhost:3001/companystaffs   
 
-2. companystaffs search : GET http://localhost:3000/companystaffs/search  
+2. companystaffs search : GET http://localhost:3001/companystaffs/search  
 * body sample :   
   all : optional  
   staff_name : like search  
@@ -230,7 +230,7 @@ Nest is [MIT licensed](LICENSE).
   }
   ```  
 
-3. companystaffs add : POST http://localhost:3000/companystaffs  
+3. companystaffs add : POST http://localhost:3001/companystaffs  
 * body sample :
   ```
    {
@@ -245,7 +245,7 @@ Nest is [MIT licensed](LICENSE).
   }
   ```
 
-4. companystaffs update : PATCH http://localhost:3000/companystaffs
+4. companystaffs update : PATCH http://localhost:3001/companystaffs
 * body sample :  
   staff_id and corporation_id are update key.
   ```
@@ -260,7 +260,7 @@ Nest is [MIT licensed](LICENSE).
     "modified_by": "admin"
   }
 
-5. companystaffs delete : DELETE http://localhost:3000/companystaffs
+5. companystaffs delete : DELETE http://localhost:3001/companystaffs
 * body sample :  
   staff_id and corporation_id are delete key.
   ```
@@ -270,10 +270,88 @@ Nest is [MIT licensed](LICENSE).
   }
   ```
 
+## 6. 行動ログ action log (tb_sales_task) CRUD & Search  
+
+1. actionlogs all : GET http://localhost:3001/actionlogs   
+
+2. actionlogs search : GET http://localhost:3001/actionlogs/search  
+* body sample :   
+  all : optional  
+
+  member_id : like search  
+  execute_major_result : like search   
+  execute_minor_result : like search   
+
+  corporation_name : like search   
+  corporate_number : like search   
+  sales_list_name : like search   
+  staff_name : like search    
+  member_name : like search    
+  ```
+  {
+      "corporation_name": "AAAA01",
+      "corporate_number": "0000000001",
+      "sales_list_name": "Project01",
+      "staff_name": "sjstomato@gmail.com",
+      "member_name":"SEONGMINCHOI",
+      "execute_major_result":"A001",
+      "execute_minor_result":"Z001",
+      "execute_from_date": "20230701",
+      "execute_to_date": "20230730"
+  }
+  ```  
+
+3. actionlogs add : POST http://localhost:3001/actionlogs 
+* body sample :
+  ```
+  {
+    "task_number": "00002",
+    "member_id": "csm0222@gmail.com",
+    "sales_list_number": "SAL-000-0002",
+    "task_name": "meeting",
+    "sales_target": "0000000002",
+    "deadline": "20230730",
+    "execute_date": "20230702",
+    "execute_result": "A002Z002",
+    "comment": "action log comments... ",
+    "status": "STAT_002",
+    "created_by": "admin",
+    "modified_by": "admin"
+  }
+  ```
+
+4. actionlogs update : PATCH http://localhost:3001/actionlogs
+* body sample :  
+  task_number and member_id are update key.
+  ```
+  {
+    "task_number": "00002",
+      "member_id": "csm0222@gmail.com",
+      "sales_list_number": "SAL-000-0001",
+      "task_name": "meeting1",
+      "sales_target": "0000000001",
+      "deadline": "20230620",
+      "execute_date": "20230601",
+      "execute_result": "A001Z001",
+      "comment": "action log comments1... ",
+      "status": "STAT_001",
+      "modified_by": "admin"
+  }
+
+5. actionlogs delete : DELETE http://localhost:3001/actionlogs
+* body sample :  
+  task_number and member_id are delete key.
+  ```
+  {
+	  "task_number": "00002",
+    "member_id": "csm0222@gmail.com"
+  }
+  ```
+
   
 ## ETC. MEMBER CRUD Test   
-1. members all : GET http://localhost:3000/members   
-2. members id : GET http://localhost:3000/members/id    
+1. members all : GET http://localhost:3001/members   
+2. members id : GET http://localhost:3001/members/id    
 * body sample 1 : 
   ```
   { "member_id": "sjstomato@gmail.com" }
@@ -283,7 +361,7 @@ Nest is [MIT licensed](LICENSE).
   { "member_id": "csm0222@gmail.com" }
   ```  
 
-3. members name : GET http://localhost:3000/members/name  
+3. members name : GET http://localhost:3001/members/name  
 * body sample 1 : 
   ```
   { "member_name": "JUSHINSEO" }
@@ -293,7 +371,7 @@ Nest is [MIT licensed](LICENSE).
   { "member_name": "SEONGMINCHOI" }
   ```  
 
-4. member add : POST http://localhost:3000/members  
+4. member add : POST http://localhost:3001/members  
 * body sample :
   ```
   {
@@ -308,7 +386,7 @@ Nest is [MIT licensed](LICENSE).
   }
   ```
 
-5. member update : PATCH http://localhost:3000/members
+5. member update : PATCH http://localhost:3001/members
   
 * body sample :  
   member_id is update key.
