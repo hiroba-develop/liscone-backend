@@ -1,29 +1,33 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsNumber, IsString } from 'class-validator';
 
-export class CreateSaleslistDTO {  
-    @IsString()
-    sales_list_number: string;
+export class CreateSaleslistDTO {
+  @IsNumber()
+  sales_list_number: number;
 
-    @IsString()
-    member_id: string;
+  company_ids: [];
 
-    @IsString()
-    sales_list_name: string;
+  @IsString()
+  company_id: string;
 
-    @IsString()
-    sales_list_type: string;
+  @IsString()
+  member_id: string;
 
-    @IsString()
-    sales_product_number: string;
+  @IsString()
+  sales_list_name: string;
 
-    @IsString()
-    created_by: string;
+  @IsString()
+  sales_list_type: string;
 
-    @IsString()
-    modified_by: string;
+  @IsString()
+  sales_product_number: string;
 
-    created: Date;
+  @IsString()
+  created_by: string;
 
-    modified: Date;
+  @IsString()
+  modified_by: string;
+
+  created: Date;
+
+  modified: Date;
 }
-

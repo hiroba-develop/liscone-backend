@@ -1,15 +1,10 @@
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateMemberDTO } from '../dto/create-member.dto';
-import { MemberEntity } from '../entities/members.entity';
-import { UpdateMemberDTO } from '../dto/update-member.dto';
 import { ChangePasswordMemberDTO } from '../dto/chpass-member.dto';
+import { CreateMemberDTO } from '../dto/create-member.dto';
+import { UpdateMemberDTO } from '../dto/update-member.dto';
+import { MemberEntity } from '../entities/members.entity';
 
 @Injectable()
 export class MembersService {
@@ -95,17 +90,12 @@ export class MembersService {
     if (member.password != pass) {
       throw new NotFoundException('既存パスワードをご確認ください。');
     }
-    const current = new Date();
-    const today = `${current.getFullYear()}-${
-      current.getMonth() < 10 ? '0' : ''
-    }${current.getMonth() + 1}-${
-      current.getDate() < 10 ? '0' : ''
-    }${current.getDate()}`;
+    const expiredDay = '2100-12-31';
 
     try {
       await this.membersRepository.update(member.member_id, {
         password: member.newpassword,
-        password_expired_day: today,
+        password_expired_day: expiredDay,
       });
     } catch (e) {
       console.log('there is no member having id : ' + member.member_id);

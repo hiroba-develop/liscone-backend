@@ -1,21 +1,12 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity('tb_sales_list')
-export class SaleslistEntity {
-  @PrimaryColumn({ default: null })
+@Entity('tb_sales_corporation')
+export class SalesCorporaitonsListEntity {
+  @PrimaryColumn()
   sales_list_number: number;
 
-  @Column({ length: 256 })
-  member_id: string;
-
-  @Column({ length: 256 })
-  sales_list_name: string;
-
-  @Column({ length: 8 })
-  sales_list_type: string;
-
   @Column({ length: 12 })
-  sales_product_number: string;
+  company_id: string;
 
   @Column({ length: 256 })
   created_by: string;
