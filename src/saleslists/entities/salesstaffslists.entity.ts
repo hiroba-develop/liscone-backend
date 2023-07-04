@@ -1,5 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
-import { SaleslistEntity } from './saleslists.entity';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('tb_sales_corporation_staff')
 export class SalesStaffsListEntity {

@@ -1,4 +1,4 @@
-import { IsDateString, IsOptional, IsString, IsDate } from 'class-validator';
+import { IsString } from 'class-validator';
 import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
 
 export class CreateCompanystaffDTO {

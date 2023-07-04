@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsDateString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class UpdateSaleslistDTO {
   @IsString()

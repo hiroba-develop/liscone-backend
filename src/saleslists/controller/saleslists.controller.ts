@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateSalesCorporationsListDTO } from '../dto/create-salescorporationslist.dto';
 import { CreateSaleslistDTO } from '../dto/create-saleslist.dto';
 import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
 import { SaleslistEntity } from '../entities/saleslists.entity';
@@ -65,7 +64,6 @@ export class SaleslistsController {
         );
       }
     }
-    //TODO 영업목록유형 02일경우 기업담당자목록의 영업목록작성
   }
 
   @Patch()
