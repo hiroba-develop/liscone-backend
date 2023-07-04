@@ -1,47 +1,49 @@
-import { IsDateString, IsOptional, IsString, IsDate } from "class-validator";
+import { IsDateString, IsOptional, IsString, IsDate } from 'class-validator';
+import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
 
 export class CreateCompanystaffDTO {
-    @IsString()
-    staff_id: string;
+  @IsString()
+  staff_id: string;
 
-    @IsString()
-    staff_name: string;
-    
-    @IsString()
-    job_position: string;
-    
-    @IsString()
-    corporation_id: string;
+  @IsString()
+  staff_name: string;
 
-    @IsString()
-    corporation_name: string;
+  @IsString()
+  job_position: string;
 
-    @IsString()
-    employee_number: string;
+  @IsString()
+  corporation_id: string;
 
-    @IsString()
-    employee_from_number: string;
-    
-    @IsString()
-    employee_to_number: string
+  @IsString()
+  corporation_name: string;
 
-    @IsString()
-    profile_source_type: string;
+  @IsString()
+  employee_number: string;
 
-    @IsString()
-    profile_link: string;
-    
-    @IsString()
-    other_information: string;
+  @IsString()
+  employee_from_number: string;
 
-    @IsString()
-    created_by: string;
+  @IsString()
+  employee_to_number: string;
 
-    @IsString()
-    modified_by: string;
+  @IsString()
+  profile_source_type: string;
 
-    created: Date;
-    
-    modified: Date;
+  @IsString()
+  profile_link: string;
+
+  @IsString()
+  other_information: string;
+
+  @IsString()
+  created_by: string;
+
+  @IsString()
+  modified_by: string;
+
+  created: Date;
+
+  modified: Date;
+
+  corporationEntity: CorporationEntity;
 }
-

@@ -44,12 +44,28 @@ export class SaleslistsController {
   }
 
   @Post('/createlist')
-  createSaleslist(@Body() saleslist: CreateSaleslistDTO) {
+  async createSaleslist(@Body() saleslist: CreateSaleslistDTO) {
     console.log('createSaleslist');
-    this.saleslistsService.create(saleslist);
-    for (const companyId of saleslist.company_ids) {
-      this.saleslistsService.createsalescorporations(companyId, saleslist);
+    const createdSalesList = await this.saleslistsService.create(saleslist);
+
+    console.log(saleslist);
+    if (saleslist.sales_list_type === '01') {
+      for (const companyId of saleslist.datas) {
+        this.saleslistsService.createsalescorporations(
+          companyId,
+          createdSalesList,
+        );
+      }
+    } else if (saleslist.sales_list_type === '02') {
+      for (const data of saleslist.datas) {
+        this.saleslistsService.createsalesstaffs(
+          data['staff_id'],
+          data['corporation_id'],
+          createdSalesList,
+        );
+      }
     }
+    //TODO 영업목록유형 02일경우 기업담당자목록의 영업목록작성
   }
 
   @Patch()

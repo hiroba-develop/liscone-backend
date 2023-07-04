@@ -1,8 +1,8 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('tb_sales_list')
 export class SaleslistEntity {
-  @PrimaryColumn({ default: null })
+  @PrimaryGeneratedColumn()
   sales_list_number: number;
 
   @Column({ length: 256 })

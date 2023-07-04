@@ -4,7 +4,9 @@ export class CreateSaleslistDTO {
   @IsNumber()
   sales_list_number: number;
 
-  company_ids: [];
+  datas: [];
+
+  staffLists: object;
 
   @IsString()
   company_id: string;

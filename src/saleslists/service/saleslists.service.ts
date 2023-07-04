@@ -5,6 +5,7 @@ import { CreateSaleslistDTO } from '../dto/create-saleslist.dto';
 import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
+import { SalesStaffsListEntity } from '../entities/salesstaffslists.entity';
 
 @Injectable()
 export class SaleslistsService {
@@ -15,6 +16,9 @@ export class SaleslistsService {
 
     @InjectRepository(SalesCorporaitonsListEntity)
     private salescorporationslistsRepository: Repository<SalesCorporaitonsListEntity>,
+
+    @InjectRepository(SalesStaffsListEntity)
+    private salesstaffslistsRepository: Repository<SalesStaffsListEntity>,
   ) {
     this.dataCount;
   }
@@ -51,19 +55,26 @@ export class SaleslistsService {
   }
 
   async create(saleslist: CreateSaleslistDTO): Promise<SaleslistEntity> {
-    this.dataCount = await this.saleslistsRepository.count();
-    saleslist.sales_list_number = this.dataCount;
-    return this.saleslistsRepository.save(saleslist);
+    return await this.saleslistsRepository.save(saleslist);
   }
 
-  async createsalescorporations(
+  async createsalescorporations(companyId: string, saleslist: SaleslistEntity) {
+    const salescorporationslist = new SalesCorporaitonsListEntity();
+    salescorporationslist.sales_list_number = saleslist.sales_list_number;
+    salescorporationslist.company_id = companyId;
+    await this.salescorporationslistsRepository.save(salescorporationslist);
+  }
+
+  async createsalesstaffs(
+    staffId: string,
     companyId: string,
-    saleslist: CreateSaleslistDTO,
+    saleslist: SaleslistEntity,
   ) {
-    this.dataCount = await this.saleslistsRepository.count();
-    saleslist.sales_list_number = this.dataCount;
-    saleslist.company_id = companyId;
-    await this.salescorporationslistsRepository.save(saleslist);
+    const salescstaffslist = new SalesStaffsListEntity();
+    salescstaffslist.sales_list_number = saleslist.sales_list_number;
+    salescstaffslist.staff_id = staffId;
+    salescstaffslist.corporation_id = companyId;
+    await this.salesstaffslistsRepository.save(salescstaffslist);
   }
 
   async update(saleslist: UpdateSaleslistDTO) {
