@@ -1,15 +1,9 @@
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, Like, LessThan, MoreThan } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateCompanystaffDTO } from '../dto/create-companystaff.dto';
 import { UpdateCompanystaffDTO } from '../dto/update-companystaff.dto';
 import { CompanystaffEntity } from '../entities/companystaffs.entity';
-import { CorporationEntity } from '../../corporations/entities/corporations.entity';
 @Injectable()
 export class CompanystaffsService {
   constructor(
@@ -21,6 +15,31 @@ export class CompanystaffsService {
     return this.companystaffsRepository.find({
       relations: ['corporationEntity'],
     });
+  }
+  async findStaffsIdNameByCompany(
+    corporation_id: string,
+  ): Promise<CompanystaffEntity[]> {
+    return await this.companystaffsRepository.find({
+      select: ['staff_id', 'staff_name'],
+      where: {
+        corporation_id,
+      },
+    });
+  }
+
+  async findStaffsByCompany(
+    corporationId: string,
+  ): Promise<CompanystaffEntity[]> {
+    const query =
+      this.companystaffsRepository.createQueryBuilder('companystaff');
+    query.leftJoinAndSelect(
+      'companystaff.corporationEntity',
+      'corporationEntity',
+    );
+    query.where('corporationEntity.corporation_id = ' + corporationId);
+    const response = await query.getMany();
+    console.log(response);
+    return response;
   }
 
   findAllCompanystaffs(

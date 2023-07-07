@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Patch } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Patch,
+} from '@nestjs/common';
 import { CreateMembercompanyproductDTO } from '../dto/create-membercompanyproduct.dto';
 import { UpdateMembercompanyproductDTO } from '../dto/update-membercompanyproduct.dto';
 import { MembercompanyproductEntity } from '../entities/membercompanyproducts.entity';
@@ -6,47 +15,64 @@ import { MembercompanyproductsService } from '../service/membercompanyproducts.s
 
 @Controller('membercompanyproducts')
 export class MembercompanyproductsController {
-    constructor(private readonly membercompanyproductsService: MembercompanyproductsService) { }
+  constructor(
+    private readonly membercompanyproductsService: MembercompanyproductsService,
+  ) {}
 
-    @Get()
-    getAll(): Promise<MembercompanyproductEntity[]> {
-        console.log("getAll");
-        return this.membercompanyproductsService.findAll();
-    }
+  @Get()
+  getAll(): Promise<MembercompanyproductEntity[]> {
+    console.log('getAll');
+    return this.membercompanyproductsService.findAll();
+  }
 
-    @Get('/productnumber')
-    getMembercompanyproductNumber(@Body() dto: CreateMembercompanyproductDTO): Promise<MembercompanyproductEntity> {
-        console.log("getMembercompanyproductMemberId");
-        return this.membercompanyproductsService.findByMembercompanyproductNumber(dto.product_number);
-    }
+  @Get('/productnumber')
+  getMembercompanyproductNumber(
+    @Body() dto: CreateMembercompanyproductDTO,
+  ): Promise<MembercompanyproductEntity> {
+    console.log('getMembercompanyproductMemberId');
+    return this.membercompanyproductsService.findByMembercompanyproductNumber(
+      dto.product_number,
+    );
+  }
 
-    @Get('/productname')
-    getMembercompanyproductName(@Body() dto: CreateMembercompanyproductDTO): Promise<MembercompanyproductEntity> {
-        console.log("getMembercompanyproductName");
-        return this.membercompanyproductsService.findByMembercompanyproductName(dto.product_name);
-    }
-    
-    @Get('/companycode')
-    getMembercompanyproductCompanycode(@Body() dto: CreateMembercompanyproductDTO): Promise<MembercompanyproductEntity> {
-        console.log("getMembercompanyproductCompanycode");
-        return this.membercompanyproductsService.findByMembercompanyproductCompanycode(dto.company_code);
-    }
+  @Get('/productname')
+  getMembercompanyproductName(
+    @Body() dto: CreateMembercompanyproductDTO,
+  ): Promise<MembercompanyproductEntity> {
+    console.log('getMembercompanyproductName');
+    return this.membercompanyproductsService.findByMembercompanyproductName(
+      dto.product_name,
+    );
+  }
 
-    @Post()
-    createMembercompanyproduct(@Body() membercompanyproduct: CreateMembercompanyproductDTO) {
-        console.log("createMembercompanyproduct");
-        return this.membercompanyproductsService.create(membercompanyproduct);
-    }
+  @Get('/companycode')
+  getMembercompanyproductCompanycode(
+    @Body() dto: CreateMembercompanyproductDTO,
+  ): Promise<MembercompanyproductEntity> {
+    console.log('getMembercompanyproductCompanycode');
+    return this.membercompanyproductsService.findByMembercompanyproductCompanycode(
+      dto.company_code,
+    );
+  }
 
-    @Patch()
-    updateMembercompanyproduct(@Body() membercompanyproduct: UpdateMembercompanyproductDTO) {
-        console.log("updateMembercompanyproduct");
-        return this.membercompanyproductsService.update(membercompanyproduct);
-    }
+  @Post()
+  createMembercompanyproduct(
+    @Body() membercompanyproduct: CreateMembercompanyproductDTO,
+  ) {
+    console.log('createMembercompanyproduct');
+    return this.membercompanyproductsService.create(membercompanyproduct);
+  }
 
-    @Delete(':product_number')
-    removeOne(@Param() product_number: string): Promise<void> {
-        return this.membercompanyproductsService.remove(product_number);
-    }
+  @Patch()
+  updateMembercompanyproduct(
+    @Body() membercompanyproduct: UpdateMembercompanyproductDTO,
+  ) {
+    console.log('updateMembercompanyproduct');
+    return this.membercompanyproductsService.update(membercompanyproduct);
+  }
 
+  @Delete(':product_number')
+  removeOne(@Param() product_number: string): Promise<void> {
+    return this.membercompanyproductsService.remove(product_number);
+  }
 }
