@@ -1,4 +1,14 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
+import { SaleslistEntity } from './saleslists.entity';
 
 @Entity('tb_sales_corporation')
 export class SalesCorporaitonsListEntity {
@@ -6,7 +16,7 @@ export class SalesCorporaitonsListEntity {
   sales_list_number: number;
 
   @PrimaryColumn({ length: 12 })
-  company_id: string;
+  corporation_id: string;
 
   @Column({ length: 256 })
   created_by: string;
@@ -19,4 +29,21 @@ export class SalesCorporaitonsListEntity {
 
   @Column({ type: 'datetime' })
   modified: Date;
+
+  @ManyToOne(() => SaleslistEntity, (saleslist) => saleslist.salesCorporations)
+  @JoinColumn({
+    name: 'sales_list_number',
+    referencedColumnName: 'sales_list_number',
+  })
+  saleslist: SaleslistEntity;
+
+  @OneToOne(
+    () => CorporationEntity,
+    (corporation) => corporation.salesCorporaitonsList,
+  )
+  @JoinColumn({
+    name: 'corporation_id',
+    referencedColumnName: 'corporation_id',
+  })
+  corporation: CorporationEntity;
 }

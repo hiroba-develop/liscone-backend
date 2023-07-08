@@ -24,10 +24,8 @@ export class CorporationsController {
   @Get('/search')
   getCorporation(
     @Body() dto: CreateCorporationDTO,
-    @Req() req,
   ): Promise<CorporationEntity[]> {
     console.log('getCorporationSearch');
-    const { corporationId } = req.query;
     return this.corporationsService.findByCorporationAll(dto);
   }
 
@@ -36,7 +34,7 @@ export class CorporationsController {
     @Body() dto: CreateCorporationDTO,
     @Req() req,
   ): Promise<CorporationEntity[]> {
-    console.log('getCorporationSearch');
+    console.log('getCorporationByIdSearch');
     const { corporationId } = req.query;
     return this.corporationsService.findByCorporationId(corporationId);
   }

@@ -6,6 +6,8 @@ import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SalesStaffsListEntity } from '../entities/salesstaffslists.entity';
+import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
+import { SaleslistCorporationsEntity } from '../entities/saleslistcorporations.entity';
 
 @Injectable()
 export class SaleslistsService {
@@ -19,6 +21,9 @@ export class SaleslistsService {
 
     @InjectRepository(SalesStaffsListEntity)
     private salesstaffslistsRepository: Repository<SalesStaffsListEntity>,
+
+    @InjectRepository(SaleslistCorporationsEntity)
+    private saleslistCorporationsEntity: Repository<SaleslistCorporationsEntity>,
   ) {
     this.dataCount;
   }
@@ -27,12 +32,54 @@ export class SaleslistsService {
     return this.saleslistsRepository.find();
   }
 
-  findBySaleslistMemberId(member_id: string): Promise<SaleslistEntity> {
-    return this.saleslistsRepository.findOne({
+  async findBySaleslistMemberId(member_id: string): Promise<SaleslistEntity[]> {
+    const response = await this.saleslistsRepository.find({
+      select: [
+        'sales_list_number',
+        'sales_list_name',
+        'sales_list_type',
+        'sales_product_number',
+      ],
+      relations: ['memberEntity'],
       where: {
         member_id,
       },
     });
+    console.log(response);
+    return response;
+  }
+
+  async findSaleslistCorporations(
+    sales_list_number: number,
+    sales_list_type: string,
+  ): Promise<SaleslistEntity> {
+    const query = this.saleslistsRepository.createQueryBuilder('saleslist');
+    if (sales_list_type === '01') {
+      query.leftJoinAndSelect(
+        'saleslist.salesCorporations',
+        'salesCorporations',
+      );
+      query.leftJoinAndSelect('salesCorporations.corporation', 'corporation');
+    } else if (sales_list_type === '02') {
+      query.leftJoinAndSelect('saleslist.salesStaffs', 'salesStaffs');
+      query.leftJoinAndSelect('salesStaffs.corporation', 'corporation');
+    }
+    query.where('saleslist.sales_list_number = :sales_list_number', {
+      sales_list_number: sales_list_number,
+    });
+
+    const response = await query.getOne();
+
+    // const response = await this.saleslistsRepository.find({
+    //   relations: ['salesCorporationEntity', 'corporation'],
+    //   where: {
+    //     sales_list_number: sales_list_number,
+    //   },
+    // });
+    // console.log(response);
+
+    console.log(response);
+    return response;
   }
 
   findBySaleslistName(sales_list_name: string): Promise<SaleslistEntity> {
@@ -50,6 +97,7 @@ export class SaleslistsService {
       },
     });
   }
+
   count() {
     return this.saleslistsRepository.count();
   }
@@ -58,22 +106,25 @@ export class SaleslistsService {
     return await this.saleslistsRepository.save(saleslist);
   }
 
-  async createsalescorporations(companyId: string, saleslist: SaleslistEntity) {
+  async createsalescorporations(
+    corporationId: string,
+    saleslist: SaleslistEntity,
+  ) {
     const salescorporationslist = new SalesCorporaitonsListEntity();
     salescorporationslist.sales_list_number = saleslist.sales_list_number;
-    salescorporationslist.company_id = companyId;
+    salescorporationslist.corporation_id = corporationId;
     await this.salescorporationslistsRepository.save(salescorporationslist);
   }
 
   async createsalesstaffs(
     staffId: string,
-    companyId: string,
+    corporationId: string,
     saleslist: SaleslistEntity,
   ) {
     const salescstaffslist = new SalesStaffsListEntity();
     salescstaffslist.sales_list_number = saleslist.sales_list_number;
     salescstaffslist.staff_id = staffId;
-    salescstaffslist.corporation_id = companyId;
+    salescstaffslist.corporation_id = corporationId;
     await this.salesstaffslistsRepository.save(salescstaffslist);
   }
 

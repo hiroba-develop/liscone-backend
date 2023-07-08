@@ -1,5 +1,16 @@
-import { CompanystaffEntity } from 'src/companystaffs/entities/companystaffs.entity';
-import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { CorporationstaffEntity } from 'src/corporationstaffs/entities/corporationstaffs.entity';
+import { SalesCorporaitonsListEntity } from 'src/saleslists/entities/salescorporationslists.entity';
+import { SaleslistEntity } from 'src/saleslists/entities/saleslists.entity';
+import { SalesStaffsListEntity } from 'src/saleslists/entities/salesstaffslists.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 
 @Entity('tb_corporation')
 export class CorporationEntity {
@@ -58,12 +69,32 @@ export class CorporationEntity {
   modified: Date;
 
   @OneToMany(
-    (type) => CompanystaffEntity,
-    (companystaffEntity) => companystaffEntity.corporation_id,
+    (type) => CorporationstaffEntity,
+    (corporationstaffEntity) => corporationstaffEntity.corporation_id,
   )
   @JoinColumn({
     name: 'corporation_id',
     referencedColumnName: 'corporation_id',
   })
-  companystaffEntity: CompanystaffEntity;
+  corporationstaffEntity: CorporationstaffEntity[];
+
+  @OneToOne(
+    () => SalesCorporaitonsListEntity,
+    (salesCorporaitonsList) => salesCorporaitonsList.corporation,
+  )
+  @JoinColumn({
+    name: 'corporation_id',
+    referencedColumnName: 'corporation_id',
+  })
+  salesCorporaitonsList: SalesCorporaitonsListEntity;
+
+  @OneToOne(
+    () => SalesStaffsListEntity,
+    (salesStaffsList) => salesStaffsList.corporation,
+  )
+  @JoinColumn({
+    name: 'corporation_id',
+    referencedColumnName: 'corporation_id',
+  })
+  salesStaffsList: SalesStaffsListEntity;
 }

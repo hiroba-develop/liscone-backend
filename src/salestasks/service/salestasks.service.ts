@@ -1,10 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateSalestaskDTO } from '../dto/create-salestask.dto';
-import { UpdateSalestaskDTO } from '../dto/update-salestask.dto';
-import { SalestaskEntity } from '../entities/salestasks.entity';
 import { SalesTaskDTO } from '../dto/salestask.dto';
+import { SalestaskEntity } from '../entities/salestasks.entity';
 
 @Injectable()
 export class SalestasksService {
@@ -15,7 +13,7 @@ export class SalestasksService {
 
   async findAll(member_id: string): Promise<SalestaskEntity[]> {
     const response = await this.salestasksRepository.find({
-      relations: ['corporationEntity', 'companystaffEntity'],
+      relations: ['corporationEntity', 'corporationstaffEntity'],
       where: {
         member_id,
       },

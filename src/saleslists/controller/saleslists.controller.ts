@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
 } from '@nestjs/common';
 import { CreateSaleslistDTO } from '../dto/create-saleslist.dto';
 import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
@@ -23,9 +24,13 @@ export class SaleslistsController {
   }
 
   @Get('/memberid')
-  getSaleslistId(@Body() dto: CreateSaleslistDTO): Promise<SaleslistEntity> {
+  getSaleslistId(
+    @Body() dto: CreateSaleslistDTO,
+    @Req() req,
+  ): Promise<SaleslistEntity[]> {
+    const { userId } = req.query;
     console.log('getSaleslistMemberId');
-    return this.saleslistsService.findBySaleslistMemberId(dto.member_id);
+    return this.saleslistsService.findBySaleslistMemberId(userId);
   }
 
   @Get('/saleslistname')
@@ -34,6 +39,18 @@ export class SaleslistsController {
     return this.saleslistsService.findBySaleslistName(dto.sales_list_name);
   }
 
+  @Get('/salesliscorporations')
+  getSaleslistCorporations(
+    @Body() dto: CreateSaleslistDTO,
+    @Req() req,
+  ): Promise<SaleslistEntity> {
+    console.log('getSaleslistName');
+    const salesList = req.query;
+    return this.saleslistsService.findSaleslistCorporations(
+      salesList.salesListNumber,
+      salesList.salesListType,
+    );
+  }
   @Get('/saleslistnumber')
   getSaleslistNumber(
     @Body() dto: CreateSaleslistDTO,
@@ -49,9 +66,9 @@ export class SaleslistsController {
 
     console.log(saleslist);
     if (saleslist.sales_list_type === '01') {
-      for (const companyId of saleslist.datas) {
+      for (const corporationId of saleslist.datas) {
         this.saleslistsService.createsalescorporations(
-          companyId,
+          corporationId,
           createdSalesList,
         );
       }

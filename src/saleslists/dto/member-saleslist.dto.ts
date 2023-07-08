@@ -9,7 +9,7 @@ export class CreateSaleslistDTO {
   staffLists: object;
 
   @IsString()
-  corporation_id: string;
+  company_id: string;
 
   @IsString()
   member_id: string;

@@ -1,7 +1,6 @@
-import { IsString } from 'class-validator';
-import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
+import { IsOptional, IsString, IsDateString } from 'class-validator';
 
-export class CreateCompanystaffDTO {
+export class UpdateCorporationstaffDTO {
   @IsString()
   staff_id: string;
 
@@ -44,6 +43,4 @@ export class CreateCompanystaffDTO {
   created: Date;
 
   modified: Date;
-
-  corporationEntity: CorporationEntity;
 }

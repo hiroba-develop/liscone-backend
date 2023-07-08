@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { CorporationEntity } from '../../corporations/entities/corporations.entity';
 
-@Entity('tb_company_staff')
-export class CompanystaffEntity {
+@Entity('tb_corporation_staff')
+export class CorporationstaffEntity {
   @PrimaryColumn()
   staff_id: string;
 

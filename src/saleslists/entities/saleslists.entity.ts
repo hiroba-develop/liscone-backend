@@ -1,4 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { MemberEntity } from 'src/members/entities/members.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { SalesCorporaitonsListEntity } from './salescorporationslists.entity';
+import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
+import { SalesStaffsListEntity } from './salesstaffslists.entity';
 
 @Entity('tb_sales_list')
 export class SaleslistEntity {
@@ -28,4 +39,31 @@ export class SaleslistEntity {
 
   @Column({ type: 'datetime' })
   modified: Date;
+
+  @ManyToOne(() => MemberEntity, (memberEntity) => memberEntity.member_id)
+  @JoinColumn({
+    name: 'member_id',
+    referencedColumnName: 'member_id',
+  })
+  memberEntity: MemberEntity;
+
+  @OneToMany(
+    () => SalesCorporaitonsListEntity,
+    (salesCorporations) => salesCorporations.saleslist,
+  )
+  @JoinColumn({
+    name: 'sales_list_number',
+    referencedColumnName: 'sales_list_number',
+  })
+  salesCorporations: SalesCorporaitonsListEntity[];
+
+  @OneToMany(
+    () => SalesStaffsListEntity,
+    (salesCorporations) => salesCorporations.saleslist,
+  )
+  @JoinColumn({
+    name: 'sales_list_number',
+    referencedColumnName: 'sales_list_number',
+  })
+  salesStaffs: SalesStaffsListEntity[];
 }

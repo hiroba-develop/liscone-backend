@@ -1,106 +1,150 @@
-import { Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, Like, LessThan, MoreThan } from 'typeorm';
 import { CreateActionlogDTO } from '../dto/create-actionlog.dto';
 import { UpdateActionlogDTO } from '../dto/update-actionlog.dto';
-import { ActionlogEntity} from '../entities/actionlogs.entity';
+import { ActionlogEntity } from '../entities/actionlogs.entity';
 
 @Injectable()
 export class ActionlogsService {
-    constructor(
-        @InjectRepository(ActionlogEntity)
-        private actionlogsRepository: Repository<ActionlogEntity>,
-    ) { }
+  constructor(
+    @InjectRepository(ActionlogEntity)
+    private actionlogsRepository: Repository<ActionlogEntity>,
+  ) {}
 
-    findAll(): Promise<ActionlogEntity[]> {
-        return this.actionlogsRepository.find({relations:['corporationEntity']});
+  findAll(): Promise<ActionlogEntity[]> {
+    return this.actionlogsRepository.find({ relations: ['corporationEntity'] });
+  }
+
+  findAllActionlogs(
+    createActionlog: CreateActionlogDTO,
+  ): Promise<ActionlogEntity[]> {
+    let query = this.actionlogsRepository.createQueryBuilder('actionlog');
+    query.leftJoinAndSelect('actionlog.corporationEntity', 'corporationEntity');
+    query.leftJoinAndSelect('actionlog.saleslistEntity', 'saleslistEntity');
+    query.leftJoinAndSelect(
+      'actionlog.companystaffEntity',
+      'companystaffEntity',
+    );
+    query.leftJoinAndSelect('actionlog.memberEntity', 'memberEntity');
+
+    if (typeof createActionlog.task_number !== 'undefined') {
+      query.andWhere('task_number = :task_number', {
+        task_number: createActionlog.task_number,
+      });
+    }
+    if (typeof createActionlog.member_id !== 'undefined') {
+      query.andWhere('actionlog.member_id LIKE :member_id', {
+        member_id: `%${createActionlog.member_id}%`,
+      });
+    }
+    if (typeof createActionlog.execute_major_result !== 'undefined') {
+      query.andWhere('execute_result LIKE :execute_major_result', {
+        execute_major_result: `${createActionlog.execute_major_result}%`,
+      });
+    }
+    if (typeof createActionlog.execute_minor_result !== 'undefined') {
+      query.andWhere('execute_result LIKE :execute_minor_result', {
+        execute_minor_result: `%${createActionlog.execute_minor_result}`,
+      });
+    }
+    if (
+      typeof createActionlog.execute_from_date !== 'undefined' &&
+      typeof createActionlog.execute_to_date !== 'undefined'
+    ) {
+      query.andWhere(
+        'execute_date Between :execute_from_date AND :execute_to_date',
+        {
+          execute_from_date: createActionlog.execute_from_date,
+          execute_to_date: createActionlog.execute_to_date,
+        },
+      );
     }
 
-    findAllActionlogs(createActionlog: CreateActionlogDTO) : Promise<ActionlogEntity[]> {
-        let query = this.actionlogsRepository.createQueryBuilder("actionlog");
-        query.leftJoinAndSelect("actionlog.corporationEntity", "corporationEntity");
-        query.leftJoinAndSelect("actionlog.saleslistEntity", "saleslistEntity");
-        query.leftJoinAndSelect("actionlog.companystaffEntity", "companystaffEntity");
-        query.leftJoinAndSelect("actionlog.memberEntity", "memberEntity");
-        
-        if(typeof createActionlog.task_number !== 'undefined') {
-            query.andWhere("task_number = :task_number", { task_number: createActionlog.task_number });
-        }
-        if(typeof createActionlog.member_id !== 'undefined') {
-            query.andWhere("actionlog.member_id LIKE :member_id", { member_id: `%${createActionlog.member_id}%` });
-        }
-        if(typeof createActionlog.execute_major_result !== 'undefined') {
-            query.andWhere("execute_result LIKE :execute_major_result", { execute_major_result: `${createActionlog.execute_major_result}%` });
-        }
-        if(typeof createActionlog.execute_minor_result !== 'undefined') {
-            query.andWhere("execute_result LIKE :execute_minor_result", { execute_minor_result: `%${createActionlog.execute_minor_result}` });
-        }
-        if(typeof createActionlog.execute_from_date !== 'undefined' && typeof createActionlog.execute_to_date !== 'undefined') {
-            query.andWhere("execute_date Between :execute_from_date AND :execute_to_date", { execute_from_date: createActionlog.execute_from_date, execute_to_date: createActionlog.execute_to_date });
-        }
-
-        // join
-        if(typeof createActionlog.corporation_name !== 'undefined') {
-            query.andWhere("corporationEntity.corporation_name LIKE :corporation_name", {corporation_name: `%${createActionlog.corporation_name}%`});
-        }
-        if(typeof createActionlog.corporate_number !== 'undefined') {
-            query.andWhere("corporationEntity.corporate_number LIKE :corporate_number", {corporate_number: `%${createActionlog.corporate_number}%`});
-        }
-        if(typeof createActionlog.sales_list_name !== 'undefined') {
-            query.andWhere("saleslistEntity.sales_list_name LIKE :sales_list_name", {sales_list_name: `%${createActionlog.sales_list_name}%`});
-        }
-        if(typeof createActionlog.staff_name !== 'undefined') {
-            query.andWhere("companystaffEntity.staff_name LIKE :staff_name", {staff_name: `%${createActionlog.staff_name}%`});
-        }
-        if(typeof createActionlog.member_name !== 'undefined') {
-            query.andWhere("memberEntity.member_name LIKE :member_name", {member_name: `%${createActionlog.member_name}%`});
-        }
-        return query.getMany();
+    // join
+    if (typeof createActionlog.corporation_name !== 'undefined') {
+      query.andWhere(
+        'corporationEntity.corporation_name LIKE :corporation_name',
+        { corporation_name: `%${createActionlog.corporation_name}%` },
+      );
     }
-    
-    async create(actionlog: CreateActionlogDTO) {
-        await this.actionlogsRepository.save(actionlog)
+    if (typeof createActionlog.corporate_number !== 'undefined') {
+      query.andWhere(
+        'corporationEntity.corporate_number LIKE :corporate_number',
+        { corporate_number: `%${createActionlog.corporate_number}%` },
+      );
+    }
+    if (typeof createActionlog.sales_list_name !== 'undefined') {
+      query.andWhere('saleslistEntity.sales_list_name LIKE :sales_list_name', {
+        sales_list_name: `%${createActionlog.sales_list_name}%`,
+      });
+    }
+    if (typeof createActionlog.staff_name !== 'undefined') {
+      query.andWhere('companystaffEntity.staff_name LIKE :staff_name', {
+        staff_name: `%${createActionlog.staff_name}%`,
+      });
+    }
+    if (typeof createActionlog.member_name !== 'undefined') {
+      query.andWhere('memberEntity.member_name LIKE :member_name', {
+        member_name: `%${createActionlog.member_name}%`,
+      });
+    }
+    return query.getMany();
+  }
+
+  async create(actionlog: CreateActionlogDTO) {
+    await this.actionlogsRepository.save(actionlog);
+  }
+
+  async update(actionlog: CreateActionlogDTO) {
+    const searchActionlog = new CreateActionlogDTO();
+    searchActionlog.task_number = actionlog.task_number;
+    searchActionlog.member_id = actionlog.member_id;
+    const resultsalestask = await this.findAllActionlogs(searchActionlog);
+
+    if (!resultsalestask) {
+      throw new NotFoundException('task_number and member_id is not exist');
     }
 
-    async update(actionlog: CreateActionlogDTO) {
-        const searchActionlog = new CreateActionlogDTO();
-        searchActionlog.task_number= actionlog.task_number;
-        searchActionlog.member_id= actionlog.member_id;
-        const resultsalestask = await this.findAllActionlogs(searchActionlog);
-
-        if (!resultsalestask) {
-            throw new NotFoundException("task_number and member_id is not exist");
-        }
-
-        try{
-            await this.actionlogsRepository.update(
-                {
-                    task_number: actionlog.task_number ,
-                    member_id: actionlog.member_id 
-                }, 
-                {
-                    sales_list_number: actionlog.sales_list_number ,
-                    task_name: actionlog.task_name ,
-                    sales_target: actionlog.sales_target ,
-                    deadline: actionlog.deadline ,
-                    execute_date: actionlog.execute_date ,
-                    execute_result: actionlog.execute_result,
-                    comment: actionlog.comment,
-                    status: actionlog.status,
-                    modified_by: actionlog.modified_by
-                }
-                );
-           return await this.findAllActionlogs(actionlog);
-        } catch (e) {
-            console.log('there is no task_number and member_id : ' + actionlog.task_number + " and " + actionlog.member_id );
-            throw e;
-        }
+    try {
+      await this.actionlogsRepository.update(
+        {
+          task_number: actionlog.task_number,
+          member_id: actionlog.member_id,
+        },
+        {
+          sales_list_number: actionlog.sales_list_number,
+          task_name: actionlog.task_name,
+          sales_target: actionlog.sales_target,
+          deadline: actionlog.deadline,
+          execute_date: actionlog.execute_date,
+          execute_result: actionlog.execute_result,
+          comment: actionlog.comment,
+          status: actionlog.status,
+          modified_by: actionlog.modified_by,
+        },
+      );
+      return await this.findAllActionlogs(actionlog);
+    } catch (e) {
+      console.log(
+        'there is no task_number and member_id : ' +
+          actionlog.task_number +
+          ' and ' +
+          actionlog.member_id,
+      );
+      throw e;
     }
-    
-    async remove(actionlog: UpdateActionlogDTO): Promise<void> {
-        await this.actionlogsRepository.delete({
-            task_number: actionlog.task_number , 
-            member_id: actionlog.member_id
-        });
-    }
+  }
+
+  async remove(actionlog: UpdateActionlogDTO): Promise<void> {
+    await this.actionlogsRepository.delete({
+      task_number: actionlog.task_number,
+      member_id: actionlog.member_id,
+    });
+  }
 }

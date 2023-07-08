@@ -5,12 +5,14 @@ import { SaleslistsController } from './controller/saleslists.controller';
 import { SaleslistsService } from './service/saleslists.service';
 import { SalesCorporaitonsListEntity } from './entities/salescorporationslists.entity';
 import { SalesStaffsListEntity } from './entities/salesstaffslists.entity';
+import { SaleslistCorporationsEntity } from './entities/saleslistcorporations.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([SaleslistEntity]),
     TypeOrmModule.forFeature([SalesCorporaitonsListEntity]),
     TypeOrmModule.forFeature([SalesStaffsListEntity]),
+    TypeOrmModule.forFeature([SaleslistCorporationsEntity]),
   ],
   controllers: [SaleslistsController],
   providers: [SaleslistsService],

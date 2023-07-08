@@ -1,18 +1,8 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { CreateSalestaskDTO } from '../dto/create-salestask.dto';
-import { UpdateSalestaskDTO } from '../dto/update-salestask.dto';
+import { SalesTaskDTO } from '../dto/salestask.dto';
 import { SalestaskEntity } from '../entities/salestasks.entity';
 import { SalestasksService } from '../service/salestasks.service';
-import { SalesTaskDTO } from '../dto/salestask.dto';
 @Controller('salestasks')
 export class SalestasksController {
   constructor(private readonly salestasksService: SalestasksService) {}

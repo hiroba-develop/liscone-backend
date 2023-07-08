@@ -1,4 +1,4 @@
-import { CompanystaffEntity } from 'src/companystaffs/entities/companystaffs.entity';
+import { CorporationstaffEntity } from 'src/corporationstaffs/entities/corporationstaffs.entity';
 import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
 import { Column, Entity, PrimaryColumn, JoinColumn, ManyToOne } from 'typeorm';
 
@@ -62,10 +62,10 @@ export class SalestaskEntity {
 
   // 담당자명
   @ManyToOne(
-    (type) => CompanystaffEntity,
-    (companystaffEntity) => [
-      companystaffEntity.corporation_id,
-      companystaffEntity.staff_id,
+    (type) => CorporationstaffEntity,
+    (corporationstaffEntity) => [
+      corporationstaffEntity.corporation_id,
+      corporationstaffEntity.staff_id,
     ],
   )
   @JoinColumn([
@@ -78,5 +78,5 @@ export class SalestaskEntity {
       referencedColumnName: 'staff_id',
     },
   ])
-  companystaffEntity: CompanystaffEntity;
+  corporationstaffEntity: CorporationstaffEntity;
 }
