@@ -12,6 +12,7 @@ import { CreateSaleslistDTO } from '../dto/create-saleslist.dto';
 import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SaleslistsService } from '../service/saleslists.service';
+import { CreateSalesCorporationsListDTO } from '../dto/create-salescorporationslist.dto';
 @Controller('saleslists')
 export class SaleslistsController {
   private dataCount: number;
@@ -31,6 +32,15 @@ export class SaleslistsController {
     const { userId } = req.query;
     console.log('getSaleslistMemberId');
     return this.saleslistsService.findBySaleslistMemberId(userId);
+  }
+  @Get('/byListNumber')
+  getSaleslist(
+    @Body() dto: CreateSaleslistDTO,
+    @Req() req,
+  ): Promise<SaleslistEntity[]> {
+    const { listNum } = req.query;
+    console.log('getSaleslistMemberId');
+    return this.saleslistsService.findBySaleslistMemberId(listNum);
   }
 
   @Get('/saleslistname')
@@ -81,6 +91,28 @@ export class SaleslistsController {
         );
       }
     }
+  }
+
+  @Post('/tranStatusChange')
+  tranStatusChange(@Body() salesCorpration: CreateSalesCorporationsListDTO) {
+    console.log('tranStatusChange');
+    const updateSalesCorp = this.saleslistsService.updateTranStatus(
+      salesCorpration.transaction_status,
+      salesCorpration.sales_list_number,
+      salesCorpration.corporation_id,
+    );
+    return updateSalesCorp;
+  }
+
+  @Post('/memoChange')
+  memoChange(@Body() salesCorpration: CreateSalesCorporationsListDTO) {
+    console.log('memoChange');
+    const updateMemo = this.saleslistsService.updateMemo(
+      salesCorpration.memo,
+      salesCorpration.sales_list_number,
+      salesCorpration.corporation_id,
+    );
+    return updateMemo;
   }
 
   @Patch()

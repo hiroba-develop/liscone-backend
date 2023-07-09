@@ -6,8 +6,7 @@ import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SalesStaffsListEntity } from '../entities/salesstaffslists.entity';
-import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
-import { SaleslistCorporationsEntity } from '../entities/saleslistcorporations.entity';
+import { CreateSalesCorporationsListDTO } from '../dto/create-salescorporationslist.dto';
 
 @Injectable()
 export class SaleslistsService {
@@ -21,9 +20,6 @@ export class SaleslistsService {
 
     @InjectRepository(SalesStaffsListEntity)
     private salesstaffslistsRepository: Repository<SalesStaffsListEntity>,
-
-    @InjectRepository(SaleslistCorporationsEntity)
-    private saleslistCorporationsEntity: Repository<SaleslistCorporationsEntity>,
   ) {
     this.dataCount;
   }
@@ -49,6 +45,22 @@ export class SaleslistsService {
     return response;
   }
 
+  async findBySaleslistNnmber(listNum: number): Promise<SaleslistEntity[]> {
+    const response = await this.saleslistsRepository.find({
+      select: [
+        'sales_list_number',
+        'sales_list_name',
+        'sales_list_type',
+        'sales_product_number',
+      ],
+      where: {
+        sales_list_number: listNum,
+      },
+    });
+    console.log(response);
+    return response;
+  }
+
   async findSaleslistCorporations(
     sales_list_number: number,
     sales_list_type: string,
@@ -67,6 +79,9 @@ export class SaleslistsService {
     query.where('saleslist.sales_list_number = :sales_list_number', {
       sales_list_number: sales_list_number,
     });
+    if (sales_list_type === '02') {
+      query.groupBy('saleslist.sales_list_number,salesStaffs.corporation_id');
+    }
 
     const response = await query.getOne();
 
@@ -96,10 +111,6 @@ export class SaleslistsService {
         sales_list_number,
       },
     });
-  }
-
-  count() {
-    return this.saleslistsRepository.count();
   }
 
   async create(saleslist: CreateSaleslistDTO): Promise<SaleslistEntity> {
@@ -151,6 +162,36 @@ export class SaleslistsService {
       );
       throw e;
     }
+  }
+
+  async updateTranStatus(
+    transactionStatus: string,
+    saleListNum: number,
+    corporationId: string,
+  ) {
+    await this.salescorporationslistsRepository.update(
+      {
+        sales_list_number: saleListNum,
+        corporation_id: corporationId,
+      },
+      {
+        transaction_status: transactionStatus,
+      },
+    );
+    return this.findBySaleslistNumber(saleListNum);
+  }
+
+  async updateMemo(memo: string, saleListNum: number, corporationId: string) {
+    await this.salescorporationslistsRepository.update(
+      {
+        sales_list_number: saleListNum,
+        corporation_id: corporationId,
+      },
+      {
+        memo: memo,
+      },
+    );
+    return this.findBySaleslistNumber(saleListNum);
   }
 
   async remove(sales_list_number: string): Promise<void> {

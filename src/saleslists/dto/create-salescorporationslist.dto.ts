@@ -1,13 +1,17 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateSalesCorporationsListDTO {
-  @IsString()
+  @IsNumber()
   sales_list_number: number;
 
-  company_ids: [];
+  @IsString()
+  corporation_id: string;
 
   @IsString()
-  company_code: string;
+  transaction_status: string;
+
+  @IsString()
+  memo: string;
 
   @IsString()
   created_by: string;
