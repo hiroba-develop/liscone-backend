@@ -9,4 +9,4 @@ import { ActionlogsService } from './service/actionlogs.service';
   controllers: [ActionlogsController],
   providers: [ActionlogsService],
 })
-export class ActionlogsModule { }
+export class ActionlogsModule {}

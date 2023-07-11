@@ -11,6 +11,7 @@ import { SalesCorporationstaffsModule } from './salescorporationstaffs/salescorp
 import { SaleslistsModule } from './saleslists/saleslists.module';
 import { SalestasksModule } from './salestasks/salestasks.module';
 import { ConfigModule } from '@nestjs/config';
+import { ActionlogsModule } from './actionlogs/actionlogs.module';
 // import { UsersModule } from './users/users.module';
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ConfigModule } from '@nestjs/config';
     SalesCorporationstaffsModule,
     MemberSalestasksModule,
     CorporationstaffsModule,
+    ActionlogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

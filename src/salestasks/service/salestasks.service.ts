@@ -50,6 +50,7 @@ export class SalestasksService {
     await this.salestasksRepository.save({
       member_id: salestask.member_id,
       execute_date: salestask.execute_date,
+      execute_result: salestask.execute_result,
       task_name: salestask.task_name,
       sales_list_number: salestask.sales_list_number,
       sales_corporation_id: salestask.sales_corporation_id,

@@ -7,19 +7,22 @@ import { MemberEntity } from '../../members/entities/members.entity';
 @Entity('tb_sales_task')
 export class ActionlogEntity {
   @PrimaryColumn()
-  task_number: string;
+  task_number: number;
 
-  @PrimaryColumn()
+  @Column()
   member_id: string;
 
-  @PrimaryColumn()
+  @Column()
   sales_list_number: string;
 
   @Column({ length: 8 })
   task_name: string;
 
+  @Column({ length: 13 })
+  sales_corporation_id: string;
+
   @Column({ length: 12 })
-  sales_target: string;
+  sales_staff_id: string;
 
   @Column({ length: 8 })
   deadline: string;
@@ -53,7 +56,10 @@ export class ActionlogEntity {
     (type) => CorporationEntity,
     (corporationEntity) => corporationEntity.corporation_id,
   )
-  @JoinColumn({ name: 'sales_target', referencedColumnName: 'corporation_id' })
+  @JoinColumn({
+    name: 'sales_corporation_id',
+    referencedColumnName: 'corporation_id',
+  })
   corporationEntity: CorporationEntity;
 
   // 리스트
@@ -70,9 +76,12 @@ export class ActionlogEntity {
   // 담당자
   @ManyToOne(
     (type) => CorporationstaffEntity,
-    (companystaffs) => companystaffs.corporation_id,
+    (corporationstaffEntity) => corporationstaffEntity.corporation_id,
   )
-  @JoinColumn({ name: 'sales_target', referencedColumnName: 'corporation_id' })
+  @JoinColumn([
+    { name: 'sales_corporation_id', referencedColumnName: 'corporation_id' },
+    { name: 'sales_staff_id', referencedColumnName: 'staff_id' },
+  ])
   corporationstaffEntity: CorporationstaffEntity;
 
   // 회원명

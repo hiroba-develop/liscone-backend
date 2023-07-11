@@ -1,11 +1,6 @@
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, Like, LessThan, MoreThan } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateActionlogDTO } from '../dto/create-actionlog.dto';
 import { UpdateActionlogDTO } from '../dto/update-actionlog.dto';
 import { ActionlogEntity } from '../entities/actionlogs.entity';
@@ -21,15 +16,30 @@ export class ActionlogsService {
     return this.actionlogsRepository.find({ relations: ['corporationEntity'] });
   }
 
-  findAllActionlogs(
-    createActionlog: CreateActionlogDTO,
-  ): Promise<ActionlogEntity[]> {
-    let query = this.actionlogsRepository.createQueryBuilder('actionlog');
+  findSalesListActionlogs(salesListNumber: string): Promise<ActionlogEntity[]> {
+    const query = this.actionlogsRepository.createQueryBuilder('actionlog');
     query.leftJoinAndSelect('actionlog.corporationEntity', 'corporationEntity');
     query.leftJoinAndSelect('actionlog.saleslistEntity', 'saleslistEntity');
     query.leftJoinAndSelect(
-      'actionlog.companystaffEntity',
-      'companystaffEntity',
+      'actionlog.corporationstaffEntity',
+      'corporationstaffEntity',
+    );
+    query.leftJoinAndSelect('actionlog.memberEntity', 'memberEntity');
+    query.where('actionlog.sales_list_number = :sales_list_number', {
+      sales_list_number: salesListNumber,
+    });
+    return query.getMany();
+  }
+
+  findAllActionlogs(
+    createActionlog: CreateActionlogDTO,
+  ): Promise<ActionlogEntity[]> {
+    const query = this.actionlogsRepository.createQueryBuilder('actionlog');
+    query.leftJoinAndSelect('actionlog.corporationEntity', 'corporationEntity');
+    query.leftJoinAndSelect('actionlog.saleslistEntity', 'saleslistEntity');
+    query.leftJoinAndSelect(
+      'actionlog.corporationstaffEntity',
+      'corporationstaffEntity',
     );
     query.leftJoinAndSelect('actionlog.memberEntity', 'memberEntity');
 
@@ -120,7 +130,8 @@ export class ActionlogsService {
         {
           sales_list_number: actionlog.sales_list_number,
           task_name: actionlog.task_name,
-          sales_target: actionlog.sales_target,
+          sales_corporation_id: actionlog.sales_corporation_id,
+          sales_staff_id: actionlog.sales_staff_id,
           deadline: actionlog.deadline,
           execute_date: actionlog.execute_date,
           execute_result: actionlog.execute_result,
