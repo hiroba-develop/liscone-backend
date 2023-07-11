@@ -1,5 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { CorporationEntity } from '../../corporations/entities/corporations.entity';
+import { SalesStaffsListEntity } from 'src/saleslists/entities/salesstaffslists.entity';
 
 @Entity('tb_corporation_staff')
 export class CorporationstaffEntity {
@@ -37,7 +45,7 @@ export class CorporationstaffEntity {
   modified: Date;
 
   @ManyToOne(
-    (type) => CorporationEntity,
+    () => CorporationEntity,
     (corporationEntity) => corporationEntity.corporation_id,
   )
   @JoinColumn({
@@ -45,4 +53,14 @@ export class CorporationstaffEntity {
     referencedColumnName: 'corporation_id',
   })
   corporationEntity: CorporationEntity;
+
+  @OneToOne(
+    () => SalesStaffsListEntity,
+    (salesStaffsList) => salesStaffsList.staff,
+  )
+  @JoinColumn({
+    name: 'staff_id',
+    referencedColumnName: 'staff_id',
+  })
+  salesStaffsList: SalesStaffsListEntity;
 }

@@ -1,12 +1,10 @@
 import { CorporationstaffEntity } from 'src/corporationstaffs/entities/corporationstaffs.entity';
 import { SalesCorporaitonsListEntity } from 'src/saleslists/entities/salescorporationslists.entity';
-import { SaleslistEntity } from 'src/saleslists/entities/saleslists.entity';
 import { SalesStaffsListEntity } from 'src/saleslists/entities/salesstaffslists.entity';
 import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryColumn,

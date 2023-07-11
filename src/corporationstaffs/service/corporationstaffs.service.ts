@@ -42,6 +42,35 @@ export class CorporationstaffsService {
     return response;
   }
 
+  async findStaffsBySalesList(
+    salesListNumber: string,
+  ): Promise<CorporationstaffEntity[]> {
+    const query =
+      this.CorporationstaffsRepository.createQueryBuilder('Corporationstaff');
+    query.leftJoinAndSelect(
+      'Corporationstaff.salesStaffsList',
+      'salesStaffsList',
+    );
+    query.leftJoinAndSelect(
+      'Corporationstaff.corporationEntity',
+      'corporationEntity',
+    );
+    query.where('salesStaffsList.sales_list_number = ' + salesListNumber);
+    const response = await query.getMany();
+    console.log(response);
+    return response;
+  }
+
+  findCorporationstaffsById(
+    staff_id: string,
+  ): Promise<CorporationstaffEntity[]> {
+    return this.CorporationstaffsRepository.find({
+      where: {
+        staff_id,
+      },
+    });
+  }
+
   findAllCorporationstaffs(
     createCorporationstaff: CreateCorporationstaffDTO,
   ): Promise<CorporationstaffEntity[]> {

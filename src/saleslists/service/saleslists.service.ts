@@ -89,6 +89,34 @@ export class SaleslistsService {
     return response;
   }
 
+  async findSaleslistStaff(
+    sales_list_number: number,
+    sales_list_type: string,
+  ): Promise<SaleslistEntity> {
+    const query = this.saleslistsRepository.createQueryBuilder('saleslist');
+    if (sales_list_type === '01') {
+      query.leftJoinAndSelect(
+        'saleslist.salesCorporations',
+        'salesCorporations',
+      );
+      query.leftJoinAndSelect('salesCorporations.corporation', 'corporation');
+    } else if (sales_list_type === '02') {
+      query.leftJoinAndSelect('saleslist.salesStaffs', 'salesStaffs');
+      query.leftJoinAndSelect('salesStaffs.corporation', 'corporation');
+    }
+    query.where('saleslist.sales_list_number = :sales_list_number', {
+      sales_list_number: sales_list_number,
+    });
+    if (sales_list_type === '02') {
+      query.groupBy('saleslist.sales_list_number,salesStaffs.corporation_id');
+    }
+
+    const response = await query.getOne();
+
+    console.log(response);
+    return response;
+  }
+
   findSalesCorporationInfo(
     sales_list_number: number,
     corporation_id: string,

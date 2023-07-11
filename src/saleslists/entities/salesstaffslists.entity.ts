@@ -8,6 +8,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { SaleslistEntity } from './saleslists.entity';
+import { CorporationstaffEntity } from 'src/corporationstaffs/entities/corporationstaffs.entity';
 
 @Entity('tb_sales_corporation_staff')
 export class SalesStaffsListEntity {
@@ -17,7 +18,7 @@ export class SalesStaffsListEntity {
   @PrimaryColumn({ length: 12 })
   corporation_id: string;
 
-  @PrimaryColumn({ length: 12 })
+  @Column({ length: 12 })
   staff_id: string;
 
   @Column({ length: 256 })
@@ -48,4 +49,11 @@ export class SalesStaffsListEntity {
     referencedColumnName: 'sales_list_number',
   })
   saleslist: SaleslistEntity;
+
+  @OneToOne(() => CorporationstaffEntity, (staff) => staff.salesStaffsList)
+  @JoinColumn({
+    name: 'staff_id',
+    referencedColumnName: 'staff_id',
+  })
+  staff: CorporationstaffEntity;
 }

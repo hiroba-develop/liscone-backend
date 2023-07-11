@@ -38,6 +38,17 @@ export class CorporationstaffsController {
     );
   }
 
+  @Get('/bySalesList')
+  getStaffsBySalesList(
+    @Body() dto: CreateCorporationstaffDTO,
+    @Req() req,
+  ): Promise<CorporationstaffEntity[]> {
+    console.log('getStaffsIdNameByCorporation');
+    const { salesListNumber } = req.query;
+    console.log('getStaffsIdNameByCorporation');
+    return this.corporationstaffsService.findStaffsBySalesList(salesListNumber);
+  }
+
   @Get('/byCorporation')
   getStaffsByCorporation(
     @Body() dto: CreateCorporationstaffDTO,
@@ -53,6 +64,15 @@ export class CorporationstaffsController {
   ): Promise<CorporationstaffEntity[]> {
     console.log('Corporationstaff search');
     return this.corporationstaffsService.findAllCorporationstaffs(dto);
+  }
+  @Get('/byId')
+  getCorporationstaffById(
+    @Body() dto: CreateCorporationstaffDTO,
+    @Req() req,
+  ): Promise<CorporationstaffEntity[]> {
+    console.log('Corporationstaff search byId');
+    const { staff_id } = req.query;
+    return this.corporationstaffsService.findCorporationstaffsById(staff_id);
   }
 
   @Post()
