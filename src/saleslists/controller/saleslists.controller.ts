@@ -13,6 +13,7 @@ import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SaleslistsService } from '../service/saleslists.service';
 import { CreateSalesCorporationsListDTO } from '../dto/create-salescorporationslist.dto';
+import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 @Controller('saleslists')
 export class SaleslistsController {
   private dataCount: number;
@@ -49,18 +50,32 @@ export class SaleslistsController {
     return this.saleslistsService.findBySaleslistName(dto.sales_list_name);
   }
 
-  @Get('/salesliscorporations')
+  @Get('/saleslistcorporations')
   getSaleslistCorporations(
     @Body() dto: CreateSaleslistDTO,
     @Req() req,
   ): Promise<SaleslistEntity> {
-    console.log('getSaleslistName');
+    console.log('getSaleslistCorporations');
     const salesList = req.query;
     return this.saleslistsService.findSaleslistCorporations(
       salesList.salesListNumber,
       salesList.salesListType,
     );
   }
+
+  @Get('/salescorporationinfo')
+  getSalesCorporationInfo(
+    @Body() dto: CreateSalesCorporationsListDTO,
+    @Req() req,
+  ): Promise<SalesCorporaitonsListEntity> {
+    console.log('getSalesCorporationInfo');
+    const salesCorp = req.query;
+    return this.saleslistsService.findSalesCorporationInfo(
+      salesCorp.sales_list_number,
+      salesCorp.corporation_id,
+    );
+  }
+
   @Get('/saleslistnumber')
   getSaleslistNumber(
     @Body() dto: CreateSaleslistDTO,

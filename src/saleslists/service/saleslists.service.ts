@@ -85,16 +85,20 @@ export class SaleslistsService {
 
     const response = await query.getOne();
 
-    // const response = await this.saleslistsRepository.find({
-    //   relations: ['salesCorporationEntity', 'corporation'],
-    //   where: {
-    //     sales_list_number: sales_list_number,
-    //   },
-    // });
-    // console.log(response);
-
     console.log(response);
     return response;
+  }
+
+  findSalesCorporationInfo(
+    sales_list_number: number,
+    corporation_id: string,
+  ): Promise<SalesCorporaitonsListEntity> {
+    return this.salescorporationslistsRepository.findOne({
+      where: {
+        sales_list_number,
+        corporation_id,
+      },
+    });
   }
 
   findBySaleslistName(sales_list_name: string): Promise<SaleslistEntity> {

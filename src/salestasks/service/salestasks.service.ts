@@ -49,6 +49,7 @@ export class SalestasksService {
   async create(salestask: SalesTaskDTO) {
     await this.salestasksRepository.save({
       member_id: salestask.member_id,
+      execute_date: salestask.execute_date,
       task_name: salestask.task_name,
       sales_list_number: salestask.sales_list_number,
       sales_corporation_id: salestask.sales_corporation_id,
