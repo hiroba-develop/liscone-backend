@@ -14,6 +14,8 @@ import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SaleslistsService } from '../service/saleslists.service';
 import { CreateSalesCorporationsListDTO } from '../dto/create-salescorporationslist.dto';
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
+import { CreateSalesStaffsListDTO } from '../dto/create-salesstaffslist.dto';
+import { SalesStaffsListEntity } from '../entities/salesstaffslists.entity';
 @Controller('saleslists')
 export class SaleslistsController {
   private dataCount: number;
@@ -59,7 +61,6 @@ export class SaleslistsController {
     const salesList = req.query;
     return this.saleslistsService.findSaleslistCorporations(
       salesList.salesListNumber,
-      salesList.salesListType,
     );
   }
 
@@ -74,6 +75,16 @@ export class SaleslistsController {
       salesCorp.sales_list_number,
       salesCorp.corporation_id,
     );
+  }
+
+  @Get('/salesliststaffs')
+  getSaleslistStaffs(
+    @Body() dto: CreateSalesStaffsListDTO,
+    @Req() req,
+  ): Promise<SaleslistEntity> {
+    console.log('getSaleslistCorporations');
+    const salesList = req.query;
+    return this.saleslistsService.findSaleslistStaff(salesList.salesListNumber);
   }
 
   @Get('/saleslistnumber')
@@ -108,10 +119,12 @@ export class SaleslistsController {
     }
   }
 
-  @Post('/tranStatusChange')
-  tranStatusChange(@Body() salesCorpration: CreateSalesCorporationsListDTO) {
-    console.log('tranStatusChange');
-    const updateSalesCorp = this.saleslistsService.updateTranStatus(
+  @Post('/corpTranStatusChange')
+  corpTranStatusChange(
+    @Body() salesCorpration: CreateSalesCorporationsListDTO,
+  ) {
+    console.log('corpTranStatusChange');
+    const updateSalesCorp = this.saleslistsService.updateCorpTranStatus(
       salesCorpration.transaction_status,
       salesCorpration.sales_list_number,
       salesCorpration.corporation_id,
@@ -119,13 +132,37 @@ export class SaleslistsController {
     return updateSalesCorp;
   }
 
-  @Post('/memoChange')
-  memoChange(@Body() salesCorpration: CreateSalesCorporationsListDTO) {
-    console.log('memoChange');
-    const updateMemo = this.saleslistsService.updateMemo(
+  @Post('/corpMemoChange')
+  corpMemoChange(@Body() salesCorpration: CreateSalesCorporationsListDTO) {
+    console.log('corpMemoChange');
+    const updateMemo = this.saleslistsService.updateCorpMemo(
       salesCorpration.memo,
       salesCorpration.sales_list_number,
       salesCorpration.corporation_id,
+    );
+    return updateMemo;
+  }
+
+  @Post('/staffTranStatusChange')
+  staffTranStatusChange(@Body() salesStaff: CreateSalesStaffsListDTO) {
+    console.log('staffTranStatusChange');
+    const updateSalesCorp = this.saleslistsService.updateStaffTranStatus(
+      salesStaff.transaction_status,
+      salesStaff.sales_list_number,
+      salesStaff.corporation_id,
+      salesStaff.staff_id,
+    );
+    return updateSalesCorp;
+  }
+
+  @Post('/staffMemoChange')
+  taffMemoChange(@Body() salesStaff: CreateSalesStaffsListDTO) {
+    console.log('staffMemoChange');
+    const updateMemo = this.saleslistsService.updateStaffMemo(
+      salesStaff.memo,
+      salesStaff.sales_list_number,
+      salesStaff.corporation_id,
+      salesStaff.staff_id,
     );
     return updateMemo;
   }

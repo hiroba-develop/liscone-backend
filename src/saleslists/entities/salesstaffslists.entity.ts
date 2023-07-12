@@ -21,6 +21,12 @@ export class SalesStaffsListEntity {
   @Column({ length: 12 })
   staff_id: string;
 
+  @Column({ length: 8 })
+  transaction_status: string;
+
+  @Column({ length: 256 })
+  memo: string;
+
   @Column({ length: 256 })
   created_by: string;
 

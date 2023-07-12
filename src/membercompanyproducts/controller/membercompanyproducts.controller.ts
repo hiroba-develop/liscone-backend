@@ -4,9 +4,9 @@ import {
   Delete,
   Get,
   Param,
-  Post,
-  Put,
   Patch,
+  Post,
+  Req,
 } from '@nestjs/common';
 import { CreateMembercompanyproductDTO } from '../dto/create-membercompanyproduct.dto';
 import { UpdateMembercompanyproductDTO } from '../dto/update-membercompanyproduct.dto';
@@ -23,6 +23,15 @@ export class MembercompanyproductsController {
   getAll(): Promise<MembercompanyproductEntity[]> {
     console.log('getAll');
     return this.membercompanyproductsService.findAll();
+  }
+
+  @Get('/byCompId')
+  getCompanyProducts(@Req() req): Promise<MembercompanyproductEntity[]> {
+    const { companyCode } = req.query;
+    console.log('getAll');
+    return this.membercompanyproductsService.findByMembercompanyproductCompanycode(
+      companyCode,
+    );
   }
 
   @Get('/productnumber')
@@ -42,16 +51,6 @@ export class MembercompanyproductsController {
     console.log('getMembercompanyproductName');
     return this.membercompanyproductsService.findByMembercompanyproductName(
       dto.product_name,
-    );
-  }
-
-  @Get('/companycode')
-  getMembercompanyproductCompanycode(
-    @Body() dto: CreateMembercompanyproductDTO,
-  ): Promise<MembercompanyproductEntity> {
-    console.log('getMembercompanyproductCompanycode');
-    return this.membercompanyproductsService.findByMembercompanyproductCompanycode(
-      dto.company_code,
     );
   }
 
