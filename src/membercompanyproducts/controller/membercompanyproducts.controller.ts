@@ -27,10 +27,10 @@ export class MembercompanyproductsController {
 
   @Get('/byCompId')
   getCompanyProducts(@Req() req): Promise<MembercompanyproductEntity[]> {
-    const { companyCode } = req.query;
+    const { coId } = req.query;
     console.log('getAll');
     return this.membercompanyproductsService.findByMembercompanyproductCompanycode(
-      companyCode,
+      coId,
     );
   }
 
