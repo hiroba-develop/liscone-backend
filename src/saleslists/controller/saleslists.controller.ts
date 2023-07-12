@@ -8,14 +8,16 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
+import { CreateSalesCorporationsListDTO } from '../dto/create-salescorporationslist.dto';
 import { CreateSaleslistDTO } from '../dto/create-saleslist.dto';
+import { CreateSalesStaffsListDTO } from '../dto/create-salesstaffslist.dto';
+import { SalesCorporationsTaskDTO } from '../dto/salescorporationstask.dto';
 import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
+import { SalesListStatistics } from '../entities/salesListView.entity';
+import { SalesListCorporations } from '../entities/salesListcorporationsview.entity';
+import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SaleslistsService } from '../service/saleslists.service';
-import { CreateSalesCorporationsListDTO } from '../dto/create-salescorporationslist.dto';
-import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
-import { CreateSalesStaffsListDTO } from '../dto/create-salesstaffslist.dto';
-import { SalesStaffsListEntity } from '../entities/salesstaffslists.entity';
 @Controller('saleslists')
 export class SaleslistsController {
   private dataCount: number;
@@ -36,6 +38,13 @@ export class SaleslistsController {
     console.log('getSaleslistMemberId');
     return this.saleslistsService.findBySaleslistMemberId(userId);
   }
+
+  @Get('/statistic')
+  getSaleslistStatistic(): Promise<SalesListStatistics[]> {
+    console.log('getSaleslistStatistic');
+    return this.saleslistsService.getSaleslistStatistic();
+  }
+
   @Get('/byListNumber')
   getSaleslist(
     @Body() dto: CreateSaleslistDTO,
@@ -54,9 +63,9 @@ export class SaleslistsController {
 
   @Get('/saleslistcorporations')
   getSaleslistCorporations(
-    @Body() dto: CreateSaleslistDTO,
+    @Body() dto: SalesCorporationsTaskDTO,
     @Req() req,
-  ): Promise<SaleslistEntity> {
+  ): Promise<SalesListCorporations[]> {
     console.log('getSaleslistCorporations');
     const salesList = req.query;
     return this.saleslistsService.findSaleslistCorporations(

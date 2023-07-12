@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateSaleslistDTO } from '../dto/create-saleslist.dto';
 import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
+import { SalesListCorporations } from '../entities/salesListcorporationsview.entity';
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SalesStaffsListEntity } from '../entities/salesstaffslists.entity';
-import { CreateSalesCorporationsListDTO } from '../dto/create-salescorporationslist.dto';
+import { SalesListStatistics } from '../entities/salesListView.entity';
 
 @Injectable()
 export class SaleslistsService {
@@ -20,6 +21,12 @@ export class SaleslistsService {
 
     @InjectRepository(SalesStaffsListEntity)
     private salesstaffslistsRepository: Repository<SalesStaffsListEntity>,
+
+    @InjectRepository(SalesListStatistics)
+    private salesListViewRepository: Repository<SalesListStatistics>,
+
+    @InjectRepository(SalesListCorporations)
+    private salesListCorporationsRepository: Repository<SalesListCorporations>,
   ) {
     this.dataCount;
   }
@@ -45,6 +52,10 @@ export class SaleslistsService {
     return response;
   }
 
+  async getSaleslistStatistic(): Promise<SalesListStatistics[]> {
+    return this.salesListViewRepository.find();
+  }
+
   async findBySaleslistNnmber(listNum: number): Promise<SaleslistEntity[]> {
     const response = await this.saleslistsRepository.find({
       select: [
@@ -63,16 +74,12 @@ export class SaleslistsService {
 
   async findSaleslistCorporations(
     sales_list_number: number,
-  ): Promise<SaleslistEntity> {
-    const query = this.saleslistsRepository.createQueryBuilder('saleslist');
-    query.leftJoinAndSelect('saleslist.salesCorporations', 'salesCorporations');
-    query.leftJoinAndSelect('salesCorporations.corporation', 'corporation');
-    query.where('saleslist.sales_list_number = :sales_list_number', {
-      sales_list_number: sales_list_number,
+  ): Promise<SalesListCorporations[]> {
+    const response = this.salesListCorporationsRepository.find({
+      where: {
+        sales_list_number: sales_list_number,
+      },
     });
-
-    const response = await query.getOne();
-
     console.log(response);
     return response;
   }
