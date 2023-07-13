@@ -32,7 +32,7 @@ export class ActionlogsController {
     @Body() dto: CreateActionlogDTO,
     @Req() req,
   ): Promise<ActionlogEntity[]> {
-    const salesListNumber = req.query;
+    const { salesListNumber } = req.query;
     console.log('actionlog search');
     return this.actionlogsService.findSalesListActionlogs(salesListNumber);
   }
