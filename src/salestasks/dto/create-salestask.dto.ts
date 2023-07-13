@@ -1,44 +1,46 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsString } from 'class-validator';
 
-export class CreateSalestaskDTO {    
-    @IsString()
-    task_number: string;
+export class CreateSalestaskDTO {
+  @IsString()
+  task_number: string;
 
-    @IsString()
-    comment: string;
+  @IsString()
+  comment: string;
 
-    @IsString()
-    created_by: string;
+  @IsString()
+  created_by: string;
 
-    @IsString()
-    deadline: string;
+  @IsString()
+  deadline: string;
 
-    @IsString()
-    execute_date: string;
+  @IsString()
+  execute_date: string;
 
-    @IsString()
-    execute_result: string;
+  @IsString()
+  execute_big_result: string;
 
-    @IsString()
-    member_id: string;
+  @IsString()
+  execute_small_result: string;
 
-    @IsString()
-    modified_by: string;
+  @IsString()
+  member_id: string;
 
-    @IsString()
-    sales_list_number: string;
+  @IsString()
+  modified_by: string;
 
-    @IsString()
-    sales_target: string;
+  @IsString()
+  sales_list_number: string;
 
-    @IsString()
-    status: string;
+  @IsString()
+  sales_target: string;
 
-    @IsString()
-    task_name: string;
+  @IsString()
+  status: string;
 
-    created: Date;
-    
-    modified: Date;
+  @IsString()
+  task_name: string;
+
+  created: Date;
+
+  modified: Date;
 }
-

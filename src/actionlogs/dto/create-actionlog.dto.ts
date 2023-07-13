@@ -38,7 +38,10 @@ export class CreateActionlogDTO {
   execute_minor_result: string;
 
   @IsString()
-  execute_result: string;
+  execute_big_result: string;
+
+  @IsString()
+  execute_small_result: string;
 
   @IsString()
   comment: string;

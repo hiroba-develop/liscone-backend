@@ -17,7 +17,10 @@ export class SalesTaskDTO {
   execute_date: string;
 
   @IsString()
-  execute_result: string;
+  execute_big_result: string;
+
+  @IsString()
+  execute_small_result: string;
 
   @IsString()
   member_id: string;

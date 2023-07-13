@@ -31,7 +31,10 @@ export class ActionlogEntity {
   execute_date: string;
 
   @Column({ length: 8 })
-  execute_result: string;
+  execute_big_result: string;
+
+  @Column({ length: 8 })
+  execute_small_result: string;
 
   @Column({ length: 256 })
   comment: string;
@@ -53,7 +56,7 @@ export class ActionlogEntity {
 
   // 기업명
   @ManyToOne(
-    (type) => CorporationEntity,
+    () => CorporationEntity,
     (corporationEntity) => corporationEntity.corporation_id,
   )
   @JoinColumn({
@@ -64,7 +67,7 @@ export class ActionlogEntity {
 
   // 리스트
   @ManyToOne(
-    (type) => SaleslistEntity,
+    () => SaleslistEntity,
     (saleslists) => saleslists.sales_list_number,
   )
   @JoinColumn({
@@ -75,7 +78,7 @@ export class ActionlogEntity {
 
   // 담당자
   @ManyToOne(
-    (type) => CorporationstaffEntity,
+    () => CorporationstaffEntity,
     (corporationstaffEntity) => corporationstaffEntity.corporation_id,
   )
   @JoinColumn([
@@ -85,7 +88,7 @@ export class ActionlogEntity {
   corporationstaffEntity: CorporationstaffEntity;
 
   // 회원명
-  @ManyToOne((type) => MemberEntity, (members) => members.member_id)
+  @ManyToOne(() => MemberEntity, (members) => members.member_id)
   @JoinColumn({ name: 'member_id', referencedColumnName: 'member_id' })
   memberEntity: MemberEntity;
 }

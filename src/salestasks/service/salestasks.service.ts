@@ -50,7 +50,8 @@ export class SalestasksService {
     await this.salestasksRepository.save({
       member_id: salestask.member_id,
       execute_date: salestask.execute_date,
-      execute_result: salestask.execute_result,
+      execute_big_result: salestask.execute_big_result,
+      execute_small_result: salestask.execute_small_result,
       task_name: salestask.task_name,
       sales_list_number: salestask.sales_list_number,
       sales_corporation_id: salestask.sales_corporation_id,
@@ -70,7 +71,8 @@ export class SalestasksService {
     try {
       await this.salestasksRepository.update(salestask.task_number, {
         execute_date: salestask.execute_date,
-        execute_result: salestask.execute_result,
+        execute_big_result: salestask.execute_big_result,
+        execute_small_result: salestask.execute_small_result,
       });
       return await this.findBySalestaskTaskNumber(salestask.task_number);
     } catch (e) {
