@@ -52,8 +52,12 @@ export class SaleslistsService {
     return response;
   }
 
-  async getSaleslistStatistic(): Promise<SalesListStatistics[]> {
-    return this.salesListViewRepository.find();
+  async getSaleslistStatistic(member_id): Promise<SalesListStatistics[]> {
+    return this.salesListViewRepository.find({
+      where: {
+        member_id,
+      },
+    });
   }
 
   async findBySaleslistNnmber(listNum: number): Promise<SaleslistEntity[]> {

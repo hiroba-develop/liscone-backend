@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Patch,
+  Req,
 } from '@nestjs/common';
 import { CreateMemberDTO } from '../dto/create-member.dto';
 import { UpdateMemberDTO } from '../dto/update-member.dto';
@@ -27,6 +28,12 @@ export class MembersController {
   getMemberId(@Body() dto: CreateMemberDTO): Promise<MemberEntity> {
     console.log('getMemberId');
     return this.membersService.findByMemberId(dto.member_id);
+  }
+  @Get('/byCompId')
+  getMembersByCompanyCode(@Req() req): Promise<MemberEntity[]> {
+    const { companyCode } = req.query;
+    console.log('getMembersByCompanyCode');
+    return this.membersService.findByCompanycode(companyCode);
   }
 
   @Get('/name')

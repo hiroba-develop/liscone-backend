@@ -8,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SalesCorporaitonsListEntity } from './salescorporationslists.entity';
-import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
 import { SalesStaffsListEntity } from './salesstaffslists.entity';
 
 @Entity('tb_sales_list')

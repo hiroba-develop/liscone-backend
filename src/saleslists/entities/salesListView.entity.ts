@@ -87,6 +87,7 @@ import { ViewColumn, ViewEntity } from 'typeorm';
           END
       END)
   END AS expectSales,
+  tm.member_id,
   tm.member_name,
   sl.sales_list_type
 FROM
@@ -117,8 +118,13 @@ export class SalesListStatistics {
   contractCount: number;
   @ViewColumn()
   expectSales: number;
+
+  @ViewColumn()
+  member_id: string;
+
   @ViewColumn()
   member_name: string;
+
   @ViewColumn()
   sales_list_type: string;
 }

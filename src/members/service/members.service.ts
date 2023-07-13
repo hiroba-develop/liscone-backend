@@ -24,6 +24,13 @@ export class MembersService {
       },
     });
   }
+  findByCompanycode(company_code: string): Promise<MemberEntity[]> {
+    return this.membersRepository.find({
+      where: {
+        company_code,
+      },
+    });
+  }
 
   findByAuth(member_id: string, password: string): Promise<MemberEntity> {
     return this.membersRepository.findOne({
@@ -55,7 +62,7 @@ export class MembersService {
     const resultMember = await this.findByAuth(member_id, password);
     if (null == resultMember) {
       throw new NotFoundException(
-        'アカウント情報がありません。メールアドレスとパスワードをご確認ください。',
+        'メールアドレスとパスワードが正しいかご確認ください。',
       );
     }
     return resultMember;

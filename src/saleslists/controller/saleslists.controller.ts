@@ -40,9 +40,11 @@ export class SaleslistsController {
   }
 
   @Get('/statistic')
-  getSaleslistStatistic(): Promise<SalesListStatistics[]> {
+  getSaleslistStatistic(@Req() req): Promise<SalesListStatistics[]> {
     console.log('getSaleslistStatistic');
-    return this.saleslistsService.getSaleslistStatistic();
+    const { userId } = req.query;
+    console.log('getSaleslistMemberId');
+    return this.saleslistsService.getSaleslistStatistic(userId);
   }
 
   @Get('/byListNumber')
