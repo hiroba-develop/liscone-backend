@@ -4,16 +4,15 @@ import {
   Delete,
   Get,
   Param,
-  Post,
-  Put,
   Patch,
+  Post,
   Req,
 } from '@nestjs/common';
+import { ChangePasswordMemberDTO } from '../dto/chpass-member.dto';
 import { CreateMemberDTO } from '../dto/create-member.dto';
 import { UpdateMemberDTO } from '../dto/update-member.dto';
 import { MemberEntity } from '../entities/members.entity';
 import { MembersService } from '../service/members.service';
-import { ChangePasswordMemberDTO } from '../dto/chpass-member.dto';
 @Controller('members')
 export class MembersController {
   constructor(private readonly membersService: MembersService) {}

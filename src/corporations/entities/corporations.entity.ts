@@ -67,7 +67,7 @@ export class CorporationEntity {
   modified: Date;
 
   @OneToMany(
-    (type) => CorporationstaffEntity,
+    () => CorporationstaffEntity,
     (corporationstaffEntity) => corporationstaffEntity.corporation_id,
   )
   @JoinColumn({

@@ -113,9 +113,14 @@ export class SalesListStatistics {
   @ViewColumn()
   proceedCount: number;
   @ViewColumn()
+  progressCount: number;
+
+  @ViewColumn()
   projectCount: number;
+
   @ViewColumn()
   contractCount: number;
+
   @ViewColumn()
   expectSales: number;
 
