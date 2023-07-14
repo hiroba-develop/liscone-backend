@@ -8,6 +8,7 @@ import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SalesStaffsListEntity } from '../entities/salesstaffslists.entity';
 import { SalesListStatistics } from '../entities/salesListView.entity';
+import { SalesListProceed } from '../entities/salesListProceedView.entity';
 
 @Injectable()
 export class SaleslistsService {
@@ -27,6 +28,9 @@ export class SaleslistsService {
 
     @InjectRepository(SalesListCorporations)
     private salesListCorporationsRepository: Repository<SalesListCorporations>,
+
+    @InjectRepository(SalesListProceed)
+    private salesListProceedRepository: Repository<SalesListProceed>,
   ) {
     this.dataCount;
   }
@@ -86,6 +90,37 @@ export class SaleslistsService {
     });
     console.log(response);
     return response;
+  }
+
+  async getSaleslistProceed(
+    member_id: string,
+    sales_list_number: string,
+    created_dateFrom: string,
+    created_dateTo: string,
+  ): Promise<SalesListProceed> {
+    const query =
+      this.salesListProceedRepository.createQueryBuilder('saleslistproceed');
+    if (member_id !== '' && member_id !== null) {
+      query.andWhere('member_id = :member_id', {
+        member_id: `${member_id}`,
+      });
+    }
+    if (sales_list_number !== '' && sales_list_number !== null) {
+      query.andWhere('sales_list_number = :sales_list_number', {
+        sales_list_number: `${sales_list_number}`,
+      });
+    }
+    if (created_dateFrom !== '' && created_dateFrom !== null) {
+      query.andWhere('created >= :created_dateFrom', {
+        created_dateFrom: created_dateFrom,
+      });
+    }
+    if (created_dateTo !== '' && created_dateTo !== null) {
+      query.andWhere('created <= :created_dateTo', {
+        created_dateTo: created_dateTo,
+      });
+    }
+    return query.getOne();
   }
 
   async findSaleslistStaff(

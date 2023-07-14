@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class SalesTaskDTO {
   @IsString()
@@ -28,8 +28,8 @@ export class SalesTaskDTO {
   @IsString()
   modified_by: string;
 
-  @IsString()
-  sales_list_number: string;
+  @IsNumber()
+  sales_list_number: number;
 
   @IsString()
   sales_corporation_id: string;

@@ -1,5 +1,6 @@
 import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
 import { CorporationstaffEntity } from 'src/corporationstaffs/entities/corporationstaffs.entity';
+import { SaleslistEntity } from 'src/saleslists/entities/saleslists.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('tb_sales_task')
@@ -28,8 +29,8 @@ export class SalestaskEntity {
   @Column({ length: 256 })
   member_id: string;
 
-  @Column({ length: 12 })
-  sales_list_number: string;
+  @Column()
+  sales_list_number: number;
 
   @Column({ length: 12 })
   sales_corporation_id: string;
@@ -51,7 +52,6 @@ export class SalestaskEntity {
 
   @Column({ type: 'timestamp', nullable: true })
   modified: Date;
-
   // 기업명
   @ManyToOne(
     () => CorporationEntity,
@@ -82,4 +82,12 @@ export class SalestaskEntity {
     },
   ])
   corporationstaffEntity: CorporationstaffEntity;
+
+  // 영업리스트
+  @ManyToOne(() => SaleslistEntity, (saleslist) => saleslist.sales_list_number)
+  @JoinColumn({
+    name: 'sales_list_number',
+    referencedColumnName: 'sales_list_number',
+  })
+  saleslist: SaleslistEntity;
 }

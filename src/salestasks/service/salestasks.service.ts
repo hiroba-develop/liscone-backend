@@ -3,12 +3,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SalesTaskDTO } from '../dto/salestask.dto';
 import { SalestaskEntity } from '../entities/salestasks.entity';
+import { BigResult } from '../entities/salesTaskBRView.entity';
+import { SmallResult } from '../entities/salesTaskSRView.entity';
 
 @Injectable()
 export class SalestasksService {
   constructor(
     @InjectRepository(SalestaskEntity)
     private salestasksRepository: Repository<SalestaskEntity>,
+    @InjectRepository(BigResult)
+    private salesTaskBRRepository: Repository<BigResult>,
+    @InjectRepository(SmallResult)
+    private salesTaskSRRepository: Repository<SmallResult>,
   ) {}
 
   async findAll(member_id: string): Promise<SalestaskEntity[]> {
@@ -44,6 +50,148 @@ export class SalestasksService {
         task_number,
       },
     });
+  }
+  findBySalestaskTaskBR(
+    member_id: string,
+    sales_list_number: string,
+    execute_dateFrom: string,
+    execute_dateTo: string,
+  ): Promise<SalestaskEntity> {
+    const query = this.salestasksRepository.createQueryBuilder('st');
+    query.select(
+      'count(case when st.execute_big_result = "BR01" then 1 end) as BR01',
+    );
+    query.addSelect(
+      'count(case when st.execute_big_result = "BR02" then 1 end) as BR02',
+    );
+    query.addSelect(
+      'count(case when st.execute_big_result = "BR03" then 1 end) as BR03',
+    );
+    query.addSelect(
+      'count(case when st.execute_big_result = "BR04" then 1 end) as BR04',
+    );
+    query.addSelect(
+      'count(case when st.execute_big_result = "BR05" then 1 end) as BR05',
+    );
+    query.leftJoin('st.saleslist', 'saleslist');
+    if (member_id !== '' && member_id !== null) {
+      query.andWhere('st.member_id = :member_id', {
+        member_id: `${member_id}`,
+      });
+    }
+    if (sales_list_number !== '' && sales_list_number !== null) {
+      query.andWhere('st.sales_list_number = :sales_list_number', {
+        sales_list_number: `${sales_list_number}`,
+      });
+    }
+    if (execute_dateFrom !== '' && execute_dateFrom !== null) {
+      query.andWhere('st.execute_date >= :execute_dateFrom', {
+        execute_dateFrom: execute_dateFrom,
+      });
+    }
+    if (execute_dateTo !== '' && execute_dateTo !== null) {
+      query.andWhere('st.execute_date <= :execute_dateTo', {
+        execute_dateTo: execute_dateTo,
+      });
+    }
+    query.groupBy('saleslist.sales_list_number');
+    return query.getRawOne();
+  }
+
+  findBySalestaskTaskSR(
+    member_id: string,
+    sales_list_number: string,
+    execute_dateFrom: string,
+    execute_dateTo: string,
+  ): Promise<SalestaskEntity> {
+    const query = this.salestasksRepository.createQueryBuilder('st');
+    query.select(
+      'count(case when st.execute_small_result = "SR01" then 1 end) as SR01',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR02" then 1 end) as SR02',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR03" then 1 end) as SR03',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR04" then 1 end) as SR04',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR05" then 1 end) as SR05',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR06" then 1 end) as SR06',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR07" then 1 end) as SR07',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR08" then 1 end) as SR08',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR09" then 1 end) as SR09',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR10" then 1 end) as SR10',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR11" then 1 end) as SR11',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR12" then 1 end) as SR12',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR13" then 1 end) as SR13',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR14" then 1 end) as SR14',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR15" then 1 end) as SR15',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR16" then 1 end) as SR16',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR17" then 1 end) as SR17',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR18" then 1 end) as SR18',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR19" then 1 end) as SR19',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR20" then 1 end) as SR20',
+    );
+    query.addSelect(
+      'count(case when st.execute_small_result = "SR21" then 1 end) as SR21',
+    );
+    query.leftJoin('st.saleslist', 'saleslist');
+    if (member_id !== '' && member_id !== null) {
+      query.andWhere('st.member_id = :member_id', {
+        member_id: `${member_id}`,
+      });
+    }
+    if (sales_list_number !== '' && sales_list_number !== null) {
+      query.andWhere('st.sales_list_number = :sales_list_number', {
+        sales_list_number: `${sales_list_number}`,
+      });
+    }
+    if (execute_dateFrom !== '' && execute_dateFrom !== null) {
+      query.andWhere('st.execute_date >= :execute_dateFrom', {
+        execute_dateFrom: execute_dateFrom,
+      });
+    }
+    if (execute_dateTo !== '' && execute_dateTo !== null) {
+      query.andWhere('st.execute_date <= :execute_dateTo', {
+        execute_dateTo: execute_dateTo,
+      });
+    }
+    query.groupBy('saleslist.sales_list_number');
+    const response = query.getRawOne();
+    return response;
   }
 
   async create(salestask: SalesTaskDTO) {

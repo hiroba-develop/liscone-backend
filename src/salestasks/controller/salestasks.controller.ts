@@ -3,6 +3,8 @@ import { CreateSalestaskDTO } from '../dto/create-salestask.dto';
 import { SalesTaskDTO } from '../dto/salestask.dto';
 import { SalestaskEntity } from '../entities/salestasks.entity';
 import { SalestasksService } from '../service/salestasks.service';
+import { BigResult } from '../entities/salesTaskBRView.entity';
+import { SmallResult } from '../entities/salesTaskSRView.entity';
 @Controller('salestasks')
 export class SalestasksController {
   constructor(private readonly salestasksService: SalestasksService) {}
@@ -27,6 +29,32 @@ export class SalestasksController {
   getSalestaskName(@Body() dto: CreateSalestaskDTO): Promise<SalestaskEntity> {
     console.log('getSalestaskName');
     return this.salestasksService.findBySalestaskTaskName(dto.task_name);
+  }
+
+  @Get('/taskBR')
+  getSalestaskBR(@Req() req): Promise<SalestaskEntity> {
+    console.log('getSalestaskBR');
+    const { member_id, sales_list_number, execute_dateFrom, execute_dateTo } =
+      req.query;
+    return this.salestasksService.findBySalestaskTaskBR(
+      member_id,
+      sales_list_number,
+      execute_dateFrom,
+      execute_dateTo,
+    );
+  }
+
+  @Get('/taskSR')
+  getSalestaskSR(@Req() req): Promise<SalestaskEntity> {
+    console.log('getSalestaskSR');
+    const { member_id, sales_list_number, execute_dateFrom, execute_dateTo } =
+      req.query;
+    return this.salestasksService.findBySalestaskTaskSR(
+      member_id,
+      sales_list_number,
+      execute_dateFrom,
+      execute_dateTo,
+    );
   }
 
   @Get('/tasknumber')

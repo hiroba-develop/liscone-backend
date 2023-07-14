@@ -19,6 +19,9 @@ export class SaleslistViewDTO {
   expectSales: number;
 
   @IsString()
+  member_id: string;
+
+  @IsString()
   member_name: string;
 
   @IsString()

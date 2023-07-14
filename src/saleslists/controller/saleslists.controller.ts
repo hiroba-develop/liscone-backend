@@ -18,6 +18,8 @@ import { SalesListCorporations } from '../entities/salesListcorporationsview.ent
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SaleslistsService } from '../service/saleslists.service';
+import { SalesListProceed } from '../entities/salesListProceedView.entity';
+import { SaleslistViewDTO } from '../dto/saleslistView.dto';
 @Controller('saleslists')
 export class SaleslistsController {
   private dataCount: number;
@@ -43,8 +45,20 @@ export class SaleslistsController {
   getSaleslistStatistic(@Req() req): Promise<SalesListStatistics[]> {
     console.log('getSaleslistStatistic');
     const { userId } = req.query;
-    console.log('getSaleslistMemberId');
     return this.saleslistsService.getSaleslistStatistic(userId);
+  }
+
+  @Get('/proceed')
+  getSaleslistProceed(@Req() req): Promise<SalesListProceed> {
+    console.log('getSaleslistProceed');
+    const { member_id, sales_list_number, created_dateFrom, created_dateTo } =
+      req.query;
+    return this.saleslistsService.getSaleslistProceed(
+      member_id,
+      sales_list_number,
+      created_dateFrom,
+      created_dateTo,
+    );
   }
 
   @Get('/byListNumber')

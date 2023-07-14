@@ -7,6 +7,7 @@ import { SalesCorporaitonsListEntity } from './entities/salescorporationslists.e
 import { SalesStaffsListEntity } from './entities/salesstaffslists.entity';
 import { SalesListCorporations } from './entities/salesListcorporationsview.entity';
 import { SalesListStatistics } from './entities/salesListView.entity';
+import { SalesListProceed } from './entities/salesListProceedView.entity';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SalesListStatistics } from './entities/salesListView.entity';
     TypeOrmModule.forFeature([SalesStaffsListEntity]),
     TypeOrmModule.forFeature([SalesListCorporations]),
     TypeOrmModule.forFeature([SalesListStatistics]),
+    TypeOrmModule.forFeature([SalesListProceed]),
   ],
   controllers: [SaleslistsController],
   providers: [SaleslistsService],
