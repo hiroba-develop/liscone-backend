@@ -36,7 +36,11 @@ export class SaleslistsService {
   }
 
   findAll(): Promise<SaleslistEntity[]> {
-    return this.saleslistsRepository.find();
+    return this.saleslistsRepository.find({
+      order: {
+        created: 'DESC',
+      },
+    });
   }
 
   async findBySaleslistMemberId(member_id: string): Promise<SaleslistEntity[]> {
@@ -51,6 +55,9 @@ export class SaleslistsService {
       where: {
         member_id,
       },
+      order: {
+        created: 'DESC',
+      },
     });
     console.log(response);
     return response;
@@ -60,6 +67,9 @@ export class SaleslistsService {
     return this.salesListViewRepository.find({
       where: {
         member_id,
+      },
+      order: {
+        created: 'DESC',
       },
     });
   }

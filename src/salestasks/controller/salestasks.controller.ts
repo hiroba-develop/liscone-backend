@@ -3,8 +3,6 @@ import { CreateSalestaskDTO } from '../dto/create-salestask.dto';
 import { SalesTaskDTO } from '../dto/salestask.dto';
 import { SalestaskEntity } from '../entities/salestasks.entity';
 import { SalestasksService } from '../service/salestasks.service';
-import { BigResult } from '../entities/salesTaskBRView.entity';
-import { SmallResult } from '../entities/salesTaskSRView.entity';
 @Controller('salestasks')
 export class SalestasksController {
   constructor(private readonly salestasksService: SalestasksService) {}

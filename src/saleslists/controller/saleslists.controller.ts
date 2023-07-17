@@ -13,13 +13,12 @@ import { CreateSaleslistDTO } from '../dto/create-saleslist.dto';
 import { CreateSalesStaffsListDTO } from '../dto/create-salesstaffslist.dto';
 import { SalesCorporationsTaskDTO } from '../dto/salescorporationstask.dto';
 import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
+import { SalesListProceed } from '../entities/salesListProceedView.entity';
 import { SalesListStatistics } from '../entities/salesListView.entity';
 import { SalesListCorporations } from '../entities/salesListcorporationsview.entity';
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SaleslistsService } from '../service/saleslists.service';
-import { SalesListProceed } from '../entities/salesListProceedView.entity';
-import { SaleslistViewDTO } from '../dto/saleslistView.dto';
 @Controller('saleslists')
 export class SaleslistsController {
   private dataCount: number;

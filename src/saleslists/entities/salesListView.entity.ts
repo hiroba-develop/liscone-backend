@@ -132,4 +132,6 @@ export class SalesListStatistics {
 
   @ViewColumn()
   sales_list_type: string;
+  @ViewColumn()
+  created: Date;
 }
