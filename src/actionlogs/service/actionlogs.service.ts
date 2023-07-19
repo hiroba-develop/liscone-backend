@@ -16,7 +16,10 @@ export class ActionlogsService {
     return this.actionlogsRepository.find({ relations: ['corporationEntity'] });
   }
 
-  findSalesListActionlogs(salesListNumber: string): Promise<ActionlogEntity[]> {
+  findSalesListActionlogs({
+    salesList,
+    listDetails,
+  }): Promise<ActionlogEntity[]> {
     const query = this.actionlogsRepository.createQueryBuilder('actionlog');
     query.leftJoinAndSelect('actionlog.corporationEntity', 'corporationEntity');
     query.leftJoinAndSelect('actionlog.saleslistEntity', 'saleslistEntity');
@@ -26,8 +29,20 @@ export class ActionlogsService {
     );
     query.leftJoinAndSelect('actionlog.memberEntity', 'memberEntity');
     query.where('actionlog.sales_list_number = :sales_list_number', {
-      sales_list_number: salesListNumber,
+      sales_list_number: salesList.sales_list_number,
     });
+    if (salesList.sales_list_type === '01') {
+      query.andWhere('actionlog.sales_corporation_id = :sales_corporation_id', {
+        sales_corporation_id: listDetails.corporation_id,
+      });
+    } else if (salesList.sales_list_type === '02') {
+      query.andWhere('actionlog.sales_corporation_id = :sales_corporation_id', {
+        sales_corporation_id: listDetails.corporation_id,
+      });
+      query.andWhere('actionlog.sales_staff_id = :sales_staff_id', {
+        sales_staff_id: listDetails.staff_id,
+      });
+    }
     return query.getMany();
   }
 
