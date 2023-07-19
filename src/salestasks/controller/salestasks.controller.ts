@@ -8,13 +8,9 @@ export class SalestasksController {
   constructor(private readonly salestasksService: SalestasksService) {}
 
   @Get()
-  getAll(
-    @Body() dto: CreateSalestaskDTO,
-    @Req() req,
-  ): Promise<SalestaskEntity[]> {
+  getAll(): Promise<SalestaskEntity[]> {
     console.log('getAll');
-    const { userId } = req.query;
-    return this.salestasksService.findAll(userId);
+    return this.salestasksService.findAll();
   }
 
   @Get('/memberid')

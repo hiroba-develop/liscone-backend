@@ -17,12 +17,9 @@ export class SalestasksService {
     private salesTaskSRRepository: Repository<SmallResult>,
   ) {}
 
-  async findAll(member_id: string): Promise<SalestaskEntity[]> {
+  async findAll(): Promise<SalestaskEntity[]> {
     const response = await this.salestasksRepository.find({
       relations: ['corporationEntity', 'corporationstaffEntity'],
-      where: {
-        member_id,
-      },
     });
     console.log(response);
     return response;
