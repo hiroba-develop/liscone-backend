@@ -103,21 +103,21 @@ export class SaleslistsService {
   }
 
   async getSaleslistProceed(
-    member_id: string,
-    sales_list_number: string,
+    member_id: [],
+    sales_list_number: [],
     created_dateFrom: string,
     created_dateTo: string,
   ): Promise<SalesListProceed> {
     const query =
       this.salesListProceedRepository.createQueryBuilder('saleslistproceed');
-    if (member_id !== '' && member_id !== null) {
-      query.andWhere('member_id = :member_id', {
-        member_id: `${member_id}`,
+    if (member_id !== null) {
+      query.andWhere('member_id IN (:member_id)', {
+        member_id: member_id,
       });
     }
-    if (sales_list_number !== '' && sales_list_number !== null) {
-      query.andWhere('sales_list_number = :sales_list_number', {
-        sales_list_number: `${sales_list_number}`,
+    if (sales_list_number !== null) {
+      query.andWhere('sales_list_number IN (:sales_list_number)', {
+        sales_list_number: sales_list_number,
       });
     }
     if (created_dateFrom !== '' && created_dateFrom !== null) {

@@ -49,8 +49,8 @@ export class SalestasksService {
     });
   }
   findBySalestaskTaskBR(
-    member_id: string,
-    sales_list_number: string,
+    member_id: [],
+    sales_list_number: [],
     execute_dateFrom: string,
     execute_dateTo: string,
   ): Promise<SalestaskEntity> {
@@ -71,14 +71,14 @@ export class SalestasksService {
       'count(case when st.execute_big_result = "BR05" then 1 end) as BR05',
     );
     query.leftJoin('st.saleslist', 'saleslist');
-    if (member_id !== '' && member_id !== null) {
-      query.andWhere('st.member_id = :member_id', {
-        member_id: `${member_id}`,
+    if (member_id !== null) {
+      query.andWhere('st.member_id IN (:member_id)', {
+        member_id: member_id,
       });
     }
-    if (sales_list_number !== '' && sales_list_number !== null) {
-      query.andWhere('st.sales_list_number = :sales_list_number', {
-        sales_list_number: `${sales_list_number}`,
+    if (sales_list_number !== null) {
+      query.andWhere('st.sales_list_number IN (:sales_list_number)', {
+        sales_list_number: sales_list_number,
       });
     }
     if (execute_dateFrom !== '' && execute_dateFrom !== null) {
@@ -96,8 +96,8 @@ export class SalestasksService {
   }
 
   findBySalestaskTaskSR(
-    member_id: string,
-    sales_list_number: string,
+    member_id: [],
+    sales_list_number: [],
     execute_dateFrom: string,
     execute_dateTo: string,
   ): Promise<SalestaskEntity> {
@@ -166,14 +166,14 @@ export class SalestasksService {
       'count(case when st.execute_small_result = "SR21" then 1 end) as SR21',
     );
     query.leftJoin('st.saleslist', 'saleslist');
-    if (member_id !== '' && member_id !== null) {
-      query.andWhere('st.member_id = :member_id', {
-        member_id: `${member_id}`,
+    if (member_id !== null) {
+      query.andWhere('st.member_id IN (:member_id)', {
+        member_id: member_id,
       });
     }
-    if (sales_list_number !== '' && sales_list_number !== null) {
-      query.andWhere('st.sales_list_number = :sales_list_number', {
-        sales_list_number: `${sales_list_number}`,
+    if (sales_list_number !== null) {
+      query.andWhere('st.sales_list_number IN (:sales_list_number)', {
+        sales_list_number: sales_list_number,
       });
     }
     if (execute_dateFrom !== '' && execute_dateFrom !== null) {
