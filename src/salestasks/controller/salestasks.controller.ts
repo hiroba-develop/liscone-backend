@@ -77,12 +77,6 @@ export class SalestasksController {
     return this.salestasksService.updateSalesTask(salestask);
   }
 
-  //   @Patch()
-  //   updateSalestask(@Body() salestask: UpdateSalestaskDTO) {
-  //     console.log('updateSalestask');
-  //     return this.salestasksService.update(salestask);
-  //   }
-
   @Post('/deleteTask')
   removeOne(@Body() task_number: string): Promise<void> {
     return this.salestasksService.remove(task_number);

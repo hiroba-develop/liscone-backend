@@ -70,6 +70,9 @@ export class SalestasksService {
     query.addSelect(
       'count(case when st.execute_big_result = "BR05" then 1 end) as BR05',
     );
+    query.addSelect(
+      'count(case when st.execute_big_result = "BR06" then 1 end) as BR06',
+    );
     query.leftJoin('st.saleslist', 'saleslist');
     if (member_id !== null) {
       query.andWhere('st.member_id IN (:member_id)', {

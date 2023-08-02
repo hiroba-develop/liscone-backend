@@ -5,7 +5,8 @@ import { ViewColumn, ViewEntity } from 'typeorm';
   count(case when st.execute_big_result = 'BR02' then 1 end) as BR02,
   count(case when st.execute_big_result = 'BR03' then 1 end) as BR03,
   count(case when st.execute_big_result = 'BR04' then 1 end) as BR04,
-  count(case when st.execute_big_result = 'BR05' then 1 end) as BR05
+  count(case when st.execute_big_result = 'BR05' then 1 end) as BR05,
+  count(case when st.execute_big_result = 'BR06' then 1 end) as BR06
   from tb_sales_task st left join tb_sales_list sl ON st.sales_list_number = sl.sales_list_number
   GROUP BY sl.sales_list_number;`,
 })
@@ -22,4 +23,6 @@ export class BigResult {
   BR04: number;
   @ViewColumn()
   BR05: number;
+  @ViewColumn()
+  BR06: number;
 }
