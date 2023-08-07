@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateSaleslistDTO } from '../dto/create-saleslist.dto';
@@ -110,6 +114,8 @@ export class SaleslistsService {
   ): Promise<SalesListProceed> {
     const query =
       this.salesListProceedRepository.createQueryBuilder('saleslistproceed');
+    query.select('sum(saleslistproceed.listCount)', 'listCount');
+    query.addSelect('sum(saleslistproceed.proceedCount)', 'proceedCount');
     if (member_id !== null) {
       query.andWhere('member_id IN (:member_id)', {
         member_id: member_id,
@@ -130,7 +136,7 @@ export class SaleslistsService {
         created_dateTo: created_dateTo,
       });
     }
-    return query.getOne();
+    return query.getRawOne();
   }
 
   async findSaleslistStaff(
@@ -178,6 +184,14 @@ export class SaleslistsService {
   }
 
   async create(saleslist: CreateSaleslistDTO): Promise<SaleslistEntity> {
+    const resultsaleslist = await this.findBySaleslistName(
+      saleslist.sales_list_name,
+    );
+    if (resultsaleslist) {
+      throw new NotAcceptableException(
+        '同じ名前のリストを登録することはできません。リスト名変えてください。',
+      );
+    }
     return await this.saleslistsRepository.save(saleslist);
   }
 

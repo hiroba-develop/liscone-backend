@@ -1,4 +1,4 @@
-import { ViewColumn, ViewEntity } from 'typeorm';
+import { Column, ViewColumn, ViewEntity } from 'typeorm';
 
 @ViewEntity({
   expression: `SELECT 
@@ -38,6 +38,7 @@ export class SalesListProceed {
 
   @ViewColumn()
   sales_list_name: string;
+
   @ViewColumn()
   listCount: number;
 
@@ -49,4 +50,10 @@ export class SalesListProceed {
 
   @ViewColumn()
   member_name: string;
+
+  @Column()
+  totalListCount: number;
+
+  @Column()
+  totalProceedCount: number;
 }
