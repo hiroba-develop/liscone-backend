@@ -1,6 +1,6 @@
-import { CorporationstaffEntity } from 'src/corporationstaffs/entities/corporationstaffs.entity';
-import { SalesCorporaitonsListEntity } from 'src/saleslists/entities/salescorporationslists.entity';
-import { SalesStaffsListEntity } from 'src/saleslists/entities/salesstaffslists.entity';
+import { CorporationstaffEntity } from '../../corporationstaffs/entities/corporationstaffs.entity';
+import { SalesCorporaitonsListEntity } from '../../saleslists/entities/salescorporationslists.entity';
+import { SalesStaffsListEntity } from '../../saleslists/entities/salesstaffslists.entity';
 import {
   Column,
   Entity,

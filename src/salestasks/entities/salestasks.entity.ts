@@ -1,6 +1,6 @@
-import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
-import { CorporationstaffEntity } from 'src/corporationstaffs/entities/corporationstaffs.entity';
-import { SaleslistEntity } from 'src/saleslists/entities/saleslists.entity';
+import { CorporationEntity } from '../../corporations/entities/corporations.entity';
+import { CorporationstaffEntity } from '../../corporationstaffs/entities/corporationstaffs.entity';
+import { SaleslistEntity } from '../../saleslists/entities/saleslists.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('tb_sales_task')

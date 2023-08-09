@@ -7,7 +7,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { CorporationEntity } from '../../corporations/entities/corporations.entity';
-import { SalesStaffsListEntity } from 'src/saleslists/entities/salesstaffslists.entity';
+import { SalesStaffsListEntity } from '../../saleslists/entities/salesstaffslists.entity';
 
 @Entity('tb_corporation_staff')
 export class CorporationstaffEntity {

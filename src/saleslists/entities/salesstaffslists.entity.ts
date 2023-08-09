@@ -1,4 +1,4 @@
-import { CorporationEntity } from 'src/corporations/entities/corporations.entity';
+import { CorporationEntity } from '../../corporations/entities/corporations.entity';
 import {
   Column,
   Entity,
@@ -8,7 +8,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { SaleslistEntity } from './saleslists.entity';
-import { CorporationstaffEntity } from 'src/corporationstaffs/entities/corporationstaffs.entity';
+import { CorporationstaffEntity } from '../../corporationstaffs/entities/corporationstaffs.entity';
 
 @Entity('tb_sales_corporation_staff')
 export class SalesStaffsListEntity {
