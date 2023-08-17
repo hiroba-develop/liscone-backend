@@ -25,82 +25,189 @@ export class CorporationsService {
 
   findByCorporationAll(
     corporation: CreateCorporationDTO,
+    searchCorporateNumber: string,
+    searchCorporationName: string,
+    searchIndustry: string,
+    searchPrefectures: string,
+    searchRepresentativePhoneNumber: string,
+    searchCorporationListStatus: string,
+    searchMinSalesAmount: string,
+    searchMaxSalesAmount: string,
+    searchMinEmployeeNumber: string,
+    searchMaxEmployeeNumber: string,
+    searchMinEstablishmentYear: string,
+    searchMaxEstablishmentYear: string,
+    searchMinCapitalStock: string,
+    searchMaxCapitalStock: string,
   ): Promise<CorporationEntity[]> {
+    console.log(searchCorporationListStatus);
     let query =
       this.corporationsRepository.createQueryBuilder('tb_corporation');
-    if (typeof corporation.corporation_id !== 'undefined') {
-      query.andWhere('corporation_id = :corporation_id', {
-        corporation_id: corporation.corporation_id,
-      });
-    }
-    if (typeof corporation.corporate_number !== 'undefined') {
-      query.andWhere('corporate_number = :corporate_number', {
+    // 法人番号
+    if (searchCorporateNumber !== '') {
+      query.andWhere('corporate_number = :searchCorporateNumber', {
         corporate_number: corporation.corporate_number,
+        searchCorporateNumber: searchCorporateNumber,
       });
     }
-    if (typeof corporation.corporation_name !== 'undefined') {
-      query.andWhere('corporation_name = :corporation_name', {
+    // 会社名・法人名
+    if (searchCorporationName !== '') {
+      query.andWhere('corporation_name = :searchCorporationName', {
         corporation_name: corporation.corporation_name,
+        searchCorporationName: searchCorporationName,
       });
     }
-    if (typeof corporation.business_category !== 'undefined') {
-      query.andWhere('business_category = :business_category', {
+    // 業種
+    if (searchIndustry !== '') {
+      query.andWhere('business_category LIKE :searchIndustry', {
         business_category: corporation.business_category,
+        searchIndustry: `%${searchIndustry}%`,
       });
     }
-    if (typeof corporation.representative_phone_number !== 'undefined') {
+    // 都道府県
+    if (searchPrefectures !== '') {
+      query.andWhere('address LIKE :searchPrefectures', {
+        address: corporation.address,
+        searchPrefectures: `%${searchPrefectures}%`,
+      });
+    }
+    // 電話番号
+    if (searchRepresentativePhoneNumber !== '') {
       query.andWhere(
-        'representative_phone_number = :representative_phone_number',
+        'representative_phone_number = :searchRepresentativePhoneNumber',
         {
           representative_phone_number: corporation.representative_phone_number,
+          searchRepresentativePhoneNumber: searchRepresentativePhoneNumber,
         },
       );
     }
-    if (typeof corporation.listing_status !== 'undefined') {
-      query.andWhere('listing_status = :listing_status', {
+    // 上場
+    if (searchCorporationListStatus !== '') {
+      query.andWhere('listing_status LIKE :searchCorporationListStatus', {
         listing_status: corporation.listing_status,
+        searchCorporationListStatus: `%${searchCorporationListStatus}%`,
       });
     }
-    if (typeof corporation.address !== 'undefined') {
-      query = query.andWhere('address LIKE :address', {
-        address: `%${corporation.address}%`,
-      });
+    // 売上
+    if (searchMinSalesAmount === '' && searchMaxSalesAmount !== '') {
+      query = query.andWhere(
+        'sales_amount BETWEEN :searchMinSalesAmount AND :searchMaxSalesAmount ',
+        {
+          searchMinSalesAmount: 0,
+          searchMaxSalesAmount: searchMaxSalesAmount,
+        },
+      );
+    }
+    if (searchMinSalesAmount !== '' && searchMaxSalesAmount === '') {
+      query = query.andWhere(
+        'sales_amount BETWEEN :searchMinSalesAmount AND :searchMaxSalesAmount ',
+        {
+          searchMinSalesAmount: searchMinSalesAmount,
+          searchMaxSalesAmount: 100000000000000,
+        },
+      );
+    }
+    if (searchMinSalesAmount !== '' && searchMaxSalesAmount !== '') {
+      query = query.andWhere(
+        'sales_amount BETWEEN :searchMinSalesAmount AND :searchMaxSalesAmount ',
+        {
+          searchMinSalesAmount: searchMinSalesAmount,
+          searchMaxSalesAmount: searchMaxSalesAmount,
+        },
+      );
+    }
+    // 従業員数
+    if (searchMinEmployeeNumber === '' && searchMaxEmployeeNumber !== '') {
+      query = query.andWhere(
+        'employee_number BETWEEN :searchMinEmployeeNumber AND :searchMaxEmployeeNumber ',
+        {
+          searchMinEmployeeNumber: 0,
+          searchMaxEmployeeNumber: searchMaxEmployeeNumber,
+        },
+      );
+    }
+    if (searchMinEmployeeNumber !== '' && searchMaxEmployeeNumber === '') {
+      query = query.andWhere(
+        'employee_number BETWEEN :searchMinEmployeeNumber AND :searchMaxEmployeeNumber ',
+        {
+          searchMinEmployeeNumber: searchMinEmployeeNumber,
+          searchMaxEmployeeNumber: 10000000,
+        },
+      );
+    }
+    if (searchMinEmployeeNumber !== '' && searchMaxEmployeeNumber !== '') {
+      query = query.andWhere(
+        'employee_number BETWEEN :searchMinEmployeeNumber AND :searchMaxEmployeeNumber ',
+        {
+          searchMinEmployeeNumber: searchMinEmployeeNumber,
+          searchMaxEmployeeNumber: searchMaxEmployeeNumber,
+        },
+      );
+    }
+    // 設立
+    if (
+      searchMinEstablishmentYear === '' &&
+      searchMaxEstablishmentYear !== ''
+    ) {
+      query = query.andWhere(
+        'establishment_year BETWEEN :searchMinEstablishmentYear AND :searchMaxEstablishmentYear ',
+        {
+          searchMinEstablishmentYear: 0,
+          searchMaxEstablishmentYear: searchMaxEstablishmentYear,
+        },
+      );
     }
     if (
-      typeof corporation.sales_from_amount !== 'undefined' &&
-      typeof corporation.sales_to_amount !== 'undefined'
+      searchMinEstablishmentYear !== '' &&
+      searchMaxEstablishmentYear === ''
     ) {
-      query = query.andWhere('sales_amount BETWEEN :from1 AND :to1 ', {
-        from1: corporation.sales_from_amount,
-        to1: corporation.sales_to_amount,
-      });
+      query = query.andWhere(
+        'establishment_year BETWEEN :searchMinEstablishmentYear AND :searchMaxEstablishmentYear ',
+        {
+          searchMinEstablishmentYear: searchMinEstablishmentYear,
+          searchMaxEstablishmentYear: 3000,
+        },
+      );
     }
     if (
-      typeof corporation.employee_from_number !== 'undefined' &&
-      typeof corporation.employee_to_number !== 'undefined'
+      searchMinEstablishmentYear !== '' &&
+      searchMaxEstablishmentYear !== ''
     ) {
-      query = query.andWhere('employee_number BETWEEN :from2 AND :to2 ', {
-        from2: corporation.employee_from_number,
-        to2: corporation.employee_to_number,
-      });
+      query = query.andWhere(
+        'establishment_year BETWEEN :searchMinEstablishmentYear AND :searchMaxEstablishmentYear ',
+        {
+          searchMinEstablishmentYear: searchMinEstablishmentYear,
+          searchMaxEstablishmentYear: searchMaxEstablishmentYear,
+        },
+      );
     }
-    if (
-      typeof corporation.establishment_from_year !== 'undefined' &&
-      typeof corporation.establishment_to_year !== 'undefined'
-    ) {
-      query = query.andWhere('establishment_year BETWEEN :from3 AND :to3 ', {
-        from3: corporation.establishment_from_year,
-        to3: corporation.establishment_to_year,
-      });
+    // 資本金
+    if (searchMinCapitalStock === '' && searchMaxCapitalStock !== '') {
+      query = query.andWhere(
+        'capital_stock BETWEEN :searchMinCapitalStock AND :searchMaxCapitalStock ',
+        {
+          searchMinCapitalStock: 0,
+          searchMaxCapitalStock: searchMaxCapitalStock,
+        },
+      );
     }
-    if (
-      typeof corporation.capital_from_stock !== 'undefined' &&
-      typeof corporation.capital_to_stock !== 'undefined'
-    ) {
-      query = query.andWhere('capital_stock BETWEEN :from4 AND :to4 ', {
-        from4: corporation.capital_from_stock,
-        to4: corporation.capital_to_stock,
-      });
+    if (searchMinCapitalStock !== '' && searchMaxCapitalStock === '') {
+      query = query.andWhere(
+        'capital_stock BETWEEN :searchMinCapitalStock AND :searchMaxCapitalStock ',
+        {
+          searchMinCapitalStock: searchMinCapitalStock,
+          searchMaxCapitalStock: 100000000000000,
+        },
+      );
+    }
+    if (searchMinCapitalStock !== '' && searchMaxCapitalStock !== '') {
+      query = query.andWhere(
+        'capital_stock BETWEEN :searchMinCapitalStock AND :searchMaxCapitalStock ',
+        {
+          searchMinCapitalStock: searchMinCapitalStock,
+          searchMaxCapitalStock: searchMaxCapitalStock,
+        },
+      );
     }
     const response = query.getMany();
     console.log(response);
@@ -119,8 +226,40 @@ export class CorporationsService {
     await this.corporationsRepository.save(corporation);
   }
 
-  async update(corporation: CreateCorporationDTO) {
-    const resultcorporation = await this.findByCorporationAll(corporation);
+  async update(
+    corporation: CreateCorporationDTO,
+    searchCorporateNumber: string,
+    searchCorporationName: string,
+    searchIndustry: string,
+    searchPrefectures: string,
+    searchRepresentativePhoneNumber: string,
+    searchCorporationListStatus: string,
+    searchMinSalesAmount: string,
+    searchMaxSalesAmount: string,
+    searchMinEmployeeNumber: string,
+    searchMaxEmployeeNumber: string,
+    searchMinEstablishmentYear: string,
+    searchMaxEstablishmentYear: string,
+    searchMinCapitalStock: string,
+    searchMaxCapitalStock: string,
+  ) {
+    const resultcorporation = await this.findByCorporationAll(
+      corporation,
+      searchCorporateNumber,
+      searchCorporationName,
+      searchIndustry,
+      searchPrefectures,
+      searchRepresentativePhoneNumber,
+      searchCorporationListStatus,
+      searchMinSalesAmount,
+      searchMaxSalesAmount,
+      searchMinEmployeeNumber,
+      searchMaxEmployeeNumber,
+      searchMinEstablishmentYear,
+      searchMaxEstablishmentYear,
+      searchMinCapitalStock,
+      searchMaxCapitalStock,
+    );
     if (!resultcorporation) {
       throw new NotFoundException('corporation id is not exist');
     }
@@ -142,7 +281,23 @@ export class CorporationsService {
         sales_amount: corporation.sales_amount,
         zip_code: corporation.zip_code,
       });
-      return await this.findByCorporationAll(corporation);
+      return await this.findByCorporationAll(
+        corporation,
+        searchCorporateNumber,
+        searchCorporationName,
+        searchIndustry,
+        searchPrefectures,
+        searchRepresentativePhoneNumber,
+        searchCorporationListStatus,
+        searchMinSalesAmount,
+        searchMaxSalesAmount,
+        searchMinEmployeeNumber,
+        searchMaxEmployeeNumber,
+        searchMinEstablishmentYear,
+        searchMaxEstablishmentYear,
+        searchMinCapitalStock,
+        searchMaxCapitalStock,
+      );
     } catch (e) {
       console.log('there is no corporation having id : ' + corporation);
       throw e;

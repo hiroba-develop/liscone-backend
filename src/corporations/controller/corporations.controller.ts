@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Req,
+  Query,
 } from '@nestjs/common';
 import { CreateCorporationDTO } from '../dto/create-corporation.dto';
 import { CorporationEntity } from '../entities/corporations.entity';
@@ -24,9 +25,40 @@ export class CorporationsController {
   @Get('/search')
   getCorporation(
     @Body() dto: CreateCorporationDTO,
+    @Query('searchCorporateNumber') searchCorporateNumber: string,
+    @Query('searchCorporationName') searchCorporationName: string,
+    @Query('searchIndustry') searchIndustry: string,
+    @Query('searchPrefectures') searchPrefectures: string,
+    @Query('searchRepresentativePhoneNumber')
+    searchRepresentativePhoneNumber: string,
+    @Query('searchCorporationListStatus') searchCorporationListStatus: string,
+    @Query('searchMinSalesAmount') searchMinSalesAmount: string,
+    @Query('searchMaxSalesAmount') searchMaxSalesAmount: string,
+    @Query('searchMinEmployeeNumber') searchMinEmployeeNumber: string,
+    @Query('searchMaxEmployeeNumber') searchMaxEmployeeNumber: string,
+    @Query('searchMinEstablishmentYear') searchMinEstablishmentYear: string,
+    @Query('searchMaxEstablishmentYear') searchMaxEstablishmentYear: string,
+    @Query('searchMinCapitalStock') searchMinCapitalStock: string,
+    @Query('searchMaxCapitalStock') searchMaxCapitalStock: string,
   ): Promise<CorporationEntity[]> {
     console.log('getCorporationSearch');
-    return this.corporationsService.findByCorporationAll(dto);
+    return this.corporationsService.findByCorporationAll(
+      dto,
+      searchCorporateNumber,
+      searchCorporationName,
+      searchIndustry,
+      searchPrefectures,
+      searchRepresentativePhoneNumber,
+      searchCorporationListStatus,
+      searchMinSalesAmount,
+      searchMaxSalesAmount,
+      searchMinEmployeeNumber,
+      searchMaxEmployeeNumber,
+      searchMinEstablishmentYear,
+      searchMaxEstablishmentYear,
+      searchMinCapitalStock,
+      searchMaxCapitalStock,
+    );
   }
 
   @Get('/byId')
@@ -54,9 +86,42 @@ export class CorporationsController {
   }
 
   @Patch()
-  updateCorporation(@Body() corporation: CreateCorporationDTO) {
+  updateCorporation(
+    @Body() corporation: CreateCorporationDTO,
+    @Query('searchCorporateNumber') searchCorporateNumber: string,
+    @Query('searchCorporationName') searchCorporationName: string,
+    @Query('searchIndustry') searchIndustry: string,
+    @Query('searchPrefectures') searchPrefectures: string,
+    @Query('searchRepresentativePhoneNumber')
+    searchRepresentativePhoneNumber: string,
+    @Query('searchCorporationListStatus') searchCorporationListStatus: string,
+    @Query('searchMinSalesAmount') searchMinSalesAmount: string,
+    @Query('searchMaxSalesAmount') searchMaxSalesAmount: string,
+    @Query('searchMinEmployeeNumber') searchMinEmployeeNumber: string,
+    @Query('searchMaxEmployeeNumber') searchMaxEmployeeNumber: string,
+    @Query('searchMinEstablishmentYear') searchMinEstablishmentYear: string,
+    @Query('searchMaxEstablishmentYear') searchMaxEstablishmentYear: string,
+    @Query('searchMinCapitalStock') searchMinCapitalStock: string,
+    @Query('searchMaxCapitalStock') searchMaxCapitalStock: string,
+  ) {
     console.log('updateCorporation');
-    return this.corporationsService.update(corporation);
+    return this.corporationsService.update(
+      corporation,
+      searchCorporateNumber,
+      searchCorporationName,
+      searchIndustry,
+      searchPrefectures,
+      searchRepresentativePhoneNumber,
+      searchCorporationListStatus,
+      searchMinSalesAmount,
+      searchMaxSalesAmount,
+      searchMinEmployeeNumber,
+      searchMaxEmployeeNumber,
+      searchMinEstablishmentYear,
+      searchMaxEstablishmentYear,
+      searchMinCapitalStock,
+      searchMaxCapitalStock,
+    );
   }
 
   @Delete(':id')
