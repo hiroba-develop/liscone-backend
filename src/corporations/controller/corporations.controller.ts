@@ -61,6 +61,45 @@ export class CorporationsController {
     );
   }
 
+  @Get('/searchCount')
+  getCorporationCount(
+    @Body() dto: CreateCorporationDTO,
+    @Query('searchCorporateNumber') searchCorporateNumber: string,
+    @Query('searchCorporationName') searchCorporationName: string,
+    @Query('searchIndustry') searchIndustry: string,
+    @Query('searchPrefectures') searchPrefectures: string,
+    @Query('searchRepresentativePhoneNumber')
+    searchRepresentativePhoneNumber: string,
+    @Query('searchCorporationListStatus') searchCorporationListStatus: string,
+    @Query('searchMinSalesAmount') searchMinSalesAmount: string,
+    @Query('searchMaxSalesAmount') searchMaxSalesAmount: string,
+    @Query('searchMinEmployeeNumber') searchMinEmployeeNumber: string,
+    @Query('searchMaxEmployeeNumber') searchMaxEmployeeNumber: string,
+    @Query('searchMinEstablishmentYear') searchMinEstablishmentYear: string,
+    @Query('searchMaxEstablishmentYear') searchMaxEstablishmentYear: string,
+    @Query('searchMinCapitalStock') searchMinCapitalStock: string,
+    @Query('searchMaxCapitalStock') searchMaxCapitalStock: string,
+  ): Promise<number> {
+    console.log('getCorporationSearchCount');
+    return this.corporationsService.findByCorporationAllCount(
+      dto,
+      searchCorporateNumber,
+      searchCorporationName,
+      searchIndustry,
+      searchPrefectures,
+      searchRepresentativePhoneNumber,
+      searchCorporationListStatus,
+      searchMinSalesAmount,
+      searchMaxSalesAmount,
+      searchMinEmployeeNumber,
+      searchMaxEmployeeNumber,
+      searchMinEstablishmentYear,
+      searchMaxEstablishmentYear,
+      searchMinCapitalStock,
+      searchMaxCapitalStock,
+    );
+  }
+
   @Get('/byId')
   getCorporationById(
     @Body() dto: CreateCorporationDTO,

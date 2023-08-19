@@ -40,7 +40,6 @@ export class CorporationsService {
     searchMinCapitalStock: string,
     searchMaxCapitalStock: string,
   ): Promise<CorporationEntity[]> {
-    console.log(searchCorporationListStatus);
     let query =
       this.corporationsRepository.createQueryBuilder('tb_corporation');
     // 法人番号
@@ -210,6 +209,196 @@ export class CorporationsService {
       );
     }
     const response = query.getMany();
+    console.log(response);
+    return response;
+  }
+
+  findByCorporationAllCount(
+    corporation: CreateCorporationDTO,
+    searchCorporateNumber: string,
+    searchCorporationName: string,
+    searchIndustry: string,
+    searchPrefectures: string,
+    searchRepresentativePhoneNumber: string,
+    searchCorporationListStatus: string,
+    searchMinSalesAmount: string,
+    searchMaxSalesAmount: string,
+    searchMinEmployeeNumber: string,
+    searchMaxEmployeeNumber: string,
+    searchMinEstablishmentYear: string,
+    searchMaxEstablishmentYear: string,
+    searchMinCapitalStock: string,
+    searchMaxCapitalStock: string,
+  ): Promise<number> {
+    let query =
+      this.corporationsRepository.createQueryBuilder('tb_corporation');
+    // 法人番号
+    if (searchCorporateNumber !== '') {
+      query.andWhere('corporate_number = :searchCorporateNumber', {
+        corporate_number: corporation.corporate_number,
+        searchCorporateNumber: searchCorporateNumber,
+      });
+    }
+    // 会社名・法人名
+    if (searchCorporationName !== '') {
+      query.andWhere('corporation_name = :searchCorporationName', {
+        corporation_name: corporation.corporation_name,
+        searchCorporationName: searchCorporationName,
+      });
+    }
+    // 業種
+    if (searchIndustry !== '') {
+      query.andWhere('business_category LIKE :searchIndustry', {
+        business_category: corporation.business_category,
+        searchIndustry: `%${searchIndustry}%`,
+      });
+    }
+    // 都道府県
+    if (searchPrefectures !== '') {
+      query.andWhere('address LIKE :searchPrefectures', {
+        address: corporation.address,
+        searchPrefectures: `%${searchPrefectures}%`,
+      });
+    }
+    // 電話番号
+    if (searchRepresentativePhoneNumber !== '') {
+      query.andWhere(
+        'representative_phone_number = :searchRepresentativePhoneNumber',
+        {
+          representative_phone_number: corporation.representative_phone_number,
+          searchRepresentativePhoneNumber: searchRepresentativePhoneNumber,
+        },
+      );
+    }
+    // 上場
+    if (searchCorporationListStatus !== '') {
+      query.andWhere('listing_status LIKE :searchCorporationListStatus', {
+        listing_status: corporation.listing_status,
+        searchCorporationListStatus: `%${searchCorporationListStatus}%`,
+      });
+    }
+    // 売上
+    if (searchMinSalesAmount === '' && searchMaxSalesAmount !== '') {
+      query = query.andWhere(
+        'sales_amount BETWEEN :searchMinSalesAmount AND :searchMaxSalesAmount ',
+        {
+          searchMinSalesAmount: 0,
+          searchMaxSalesAmount: searchMaxSalesAmount,
+        },
+      );
+    }
+    if (searchMinSalesAmount !== '' && searchMaxSalesAmount === '') {
+      query = query.andWhere(
+        'sales_amount BETWEEN :searchMinSalesAmount AND :searchMaxSalesAmount ',
+        {
+          searchMinSalesAmount: searchMinSalesAmount,
+          searchMaxSalesAmount: 100000000000000,
+        },
+      );
+    }
+    if (searchMinSalesAmount !== '' && searchMaxSalesAmount !== '') {
+      query = query.andWhere(
+        'sales_amount BETWEEN :searchMinSalesAmount AND :searchMaxSalesAmount ',
+        {
+          searchMinSalesAmount: searchMinSalesAmount,
+          searchMaxSalesAmount: searchMaxSalesAmount,
+        },
+      );
+    }
+    // 従業員数
+    if (searchMinEmployeeNumber === '' && searchMaxEmployeeNumber !== '') {
+      query = query.andWhere(
+        'employee_number BETWEEN :searchMinEmployeeNumber AND :searchMaxEmployeeNumber ',
+        {
+          searchMinEmployeeNumber: 0,
+          searchMaxEmployeeNumber: searchMaxEmployeeNumber,
+        },
+      );
+    }
+    if (searchMinEmployeeNumber !== '' && searchMaxEmployeeNumber === '') {
+      query = query.andWhere(
+        'employee_number BETWEEN :searchMinEmployeeNumber AND :searchMaxEmployeeNumber ',
+        {
+          searchMinEmployeeNumber: searchMinEmployeeNumber,
+          searchMaxEmployeeNumber: 10000000,
+        },
+      );
+    }
+    if (searchMinEmployeeNumber !== '' && searchMaxEmployeeNumber !== '') {
+      query = query.andWhere(
+        'employee_number BETWEEN :searchMinEmployeeNumber AND :searchMaxEmployeeNumber ',
+        {
+          searchMinEmployeeNumber: searchMinEmployeeNumber,
+          searchMaxEmployeeNumber: searchMaxEmployeeNumber,
+        },
+      );
+    }
+    // 設立
+    if (
+      searchMinEstablishmentYear === '' &&
+      searchMaxEstablishmentYear !== ''
+    ) {
+      query = query.andWhere(
+        'establishment_year BETWEEN :searchMinEstablishmentYear AND :searchMaxEstablishmentYear ',
+        {
+          searchMinEstablishmentYear: 0,
+          searchMaxEstablishmentYear: searchMaxEstablishmentYear,
+        },
+      );
+    }
+    if (
+      searchMinEstablishmentYear !== '' &&
+      searchMaxEstablishmentYear === ''
+    ) {
+      query = query.andWhere(
+        'establishment_year BETWEEN :searchMinEstablishmentYear AND :searchMaxEstablishmentYear ',
+        {
+          searchMinEstablishmentYear: searchMinEstablishmentYear,
+          searchMaxEstablishmentYear: 3000,
+        },
+      );
+    }
+    if (
+      searchMinEstablishmentYear !== '' &&
+      searchMaxEstablishmentYear !== ''
+    ) {
+      query = query.andWhere(
+        'establishment_year BETWEEN :searchMinEstablishmentYear AND :searchMaxEstablishmentYear ',
+        {
+          searchMinEstablishmentYear: searchMinEstablishmentYear,
+          searchMaxEstablishmentYear: searchMaxEstablishmentYear,
+        },
+      );
+    }
+    // 資本金
+    if (searchMinCapitalStock === '' && searchMaxCapitalStock !== '') {
+      query = query.andWhere(
+        'capital_stock BETWEEN :searchMinCapitalStock AND :searchMaxCapitalStock ',
+        {
+          searchMinCapitalStock: 0,
+          searchMaxCapitalStock: searchMaxCapitalStock,
+        },
+      );
+    }
+    if (searchMinCapitalStock !== '' && searchMaxCapitalStock === '') {
+      query = query.andWhere(
+        'capital_stock BETWEEN :searchMinCapitalStock AND :searchMaxCapitalStock ',
+        {
+          searchMinCapitalStock: searchMinCapitalStock,
+          searchMaxCapitalStock: 100000000000000,
+        },
+      );
+    }
+    if (searchMinCapitalStock !== '' && searchMaxCapitalStock !== '') {
+      query = query.andWhere(
+        'capital_stock BETWEEN :searchMinCapitalStock AND :searchMaxCapitalStock ',
+        {
+          searchMinCapitalStock: searchMinCapitalStock,
+          searchMaxCapitalStock: searchMaxCapitalStock,
+        },
+      );
+    }
+    const response = query.getCount();
     console.log(response);
     return response;
   }
