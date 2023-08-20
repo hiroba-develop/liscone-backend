@@ -19,7 +19,7 @@ export class SalestasksService {
 
   async findAll(): Promise<SalestaskEntity[]> {
     const response = await this.salestasksRepository.find({
-      relations: ['corporationEntity', 'corporationstaffEntity'],
+      relations: ['corporationEntity', 'corporationstaffEntity', 'memberslist'],
     });
     console.log(response);
     return response;

@@ -1,6 +1,7 @@
 import { CorporationEntity } from '../../corporations/entities/corporations.entity';
 import { CorporationstaffEntity } from '../../corporationstaffs/entities/corporationstaffs.entity';
 import { SaleslistEntity } from '../../saleslists/entities/saleslists.entity';
+import { MemberEntity } from '../../members/entities/members.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('tb_sales_task')
@@ -90,4 +91,11 @@ export class SalestaskEntity {
     referencedColumnName: 'sales_list_number',
   })
   saleslist: SaleslistEntity;
+
+  @ManyToOne(() => MemberEntity, (memberslist) => memberslist.member_id)
+  @JoinColumn({
+    name: 'member_id',
+    referencedColumnName: 'member_id',
+  })
+  memberslist: MemberEntity;
 }
