@@ -17,6 +17,19 @@ export class MembersService {
     return this.membersRepository.find();
   }
 
+  findAllMemberId(
+    member_id: string,
+    memberId: string,
+  ): Promise<MemberEntity[]> {
+    const query = this.membersRepository
+      .createQueryBuilder('members')
+      .where('member_id = :memberId', {
+        member_id: member_id,
+        memberId: memberId,
+      });
+    return query.getMany();
+  }
+
   findByMemberId(member_id: string): Promise<MemberEntity> {
     return this.membersRepository.findOne({
       where: {

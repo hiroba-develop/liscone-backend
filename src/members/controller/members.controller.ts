@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Req,
+  Query,
 } from '@nestjs/common';
 import { ChangePasswordMemberDTO } from '../dto/chpass-member.dto';
 import { CreateMemberDTO } from '../dto/create-member.dto';
@@ -28,6 +29,15 @@ export class MembersController {
     console.log('getMemberId');
     return this.membersService.findByMemberId(dto.member_id);
   }
+  @Get('/allMemberId')
+  getAllMemberId(
+    @Body() dto: CreateMemberDTO,
+    @Query('memberId') memberId: string,
+  ): Promise<MemberEntity[]> {
+    console.log('getAllMemberId');
+    return this.membersService.findAllMemberId(dto.member_id, memberId);
+  }
+
   @Get('/byCompId')
   getMembersByCompanyCode(@Req() req): Promise<MemberEntity[]> {
     const { companyCode } = req.query;

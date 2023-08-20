@@ -48,6 +48,7 @@ export class ActionlogsService {
 
   findAllActionlogs(
     createActionlog: CreateActionlogDTO,
+    companyCode: string,
   ): Promise<ActionlogEntity[]> {
     const query = this.actionlogsRepository.createQueryBuilder('actionlog');
     query.leftJoinAndSelect('actionlog.corporationEntity', 'corporationEntity');
@@ -114,9 +115,9 @@ export class ActionlogsService {
         staff_name: `%${createActionlog.staff_name}%`,
       });
     }
-    if (typeof createActionlog.member_name !== 'undefined') {
-      query.andWhere('memberEntity.member_name LIKE :member_name', {
-        member_name: `%${createActionlog.member_name}%`,
+    if (companyCode !== '') {
+      query.andWhere('memberEntity.company_code = :companyCode', {
+        companyCode: companyCode,
       });
     }
     return query.getMany();
@@ -126,11 +127,15 @@ export class ActionlogsService {
     await this.actionlogsRepository.save(actionlog);
   }
 
-  async update(actionlog: CreateActionlogDTO) {
+  async update(actionlog: CreateActionlogDTO, companyCode: string) {
     const searchActionlog = new CreateActionlogDTO();
     searchActionlog.task_number = actionlog.task_number;
     searchActionlog.member_id = actionlog.member_id;
-    const resultsalestask = await this.findAllActionlogs(searchActionlog);
+    companyCode = '';
+    const resultsalestask = await this.findAllActionlogs(
+      searchActionlog,
+      companyCode,
+    );
 
     if (!resultsalestask) {
       throw new NotFoundException('task_number and member_id is not exist');
@@ -156,7 +161,7 @@ export class ActionlogsService {
           modified_by: actionlog.modified_by,
         },
       );
-      return await this.findAllActionlogs(actionlog);
+      return await this.findAllActionlogs(actionlog, companyCode);
     } catch (e) {
       console.log(
         'there is no task_number and member_id : ' +

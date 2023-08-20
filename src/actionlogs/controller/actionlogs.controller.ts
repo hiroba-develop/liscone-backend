@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Req,
+  Query,
 } from '@nestjs/common';
 import { CreateActionlogDTO } from '../dto/create-actionlog.dto';
 import { ActionlogEntity } from '../entities/actionlogs.entity';
@@ -22,9 +23,12 @@ export class ActionlogsController {
   }
 
   @Get('/search')
-  getAllActionlog(@Body() dto: CreateActionlogDTO): Promise<ActionlogEntity[]> {
+  getAllActionlog(
+    @Body() dto: CreateActionlogDTO,
+    @Query('companyCode') companyCode: string,
+  ): Promise<ActionlogEntity[]> {
     console.log('actionlog search');
-    return this.actionlogsService.findAllActionlogs(dto);
+    return this.actionlogsService.findAllActionlogs(dto, companyCode);
   }
 
   @Get('/salesListActions')
@@ -47,9 +51,9 @@ export class ActionlogsController {
   }
 
   @Patch()
-  updateSalestask(@Body() actionlog: CreateActionlogDTO) {
+  updateSalestask(@Body() actionlog: CreateActionlogDTO, companyCode: string) {
     console.log('updateActionlog');
-    return this.actionlogsService.update(actionlog);
+    return this.actionlogsService.update(actionlog, companyCode);
   }
 
   @Delete()
