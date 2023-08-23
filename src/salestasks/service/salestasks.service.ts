@@ -25,6 +25,23 @@ export class SalestasksService {
     return response;
   }
 
+  findByCompanyCode(companyCode: string): Promise<SalestaskEntity[]> {
+    const query = this.salestasksRepository.createQueryBuilder('salestask');
+    query.leftJoinAndSelect('salestask.corporationEntity', 'corporationEntity');
+    query.leftJoinAndSelect(
+      'salestask.corporationstaffEntity',
+      'corporationstaffEntity',
+    );
+    query.leftJoinAndSelect('salestask.memberslist', 'memberslist');
+
+    if (companyCode !== '') {
+      query.andWhere('memberslist.company_code = :companyCode', {
+        companyCode: companyCode,
+      });
+    }
+    return query.getMany();
+  }
+
   findBySalestaskMemberId(member_id: string): Promise<SalestaskEntity> {
     return this.salestasksRepository.findOne({
       where: {

@@ -16,6 +16,7 @@ export class CorporationstaffsService {
       relations: ['corporationEntity'],
     });
   }
+
   async findStaffsIdNameByCorporation(
     corporation_id: string,
   ): Promise<CorporationstaffEntity[]> {
@@ -69,6 +70,47 @@ export class CorporationstaffsService {
         staff_id,
       },
     });
+  }
+
+  findAllCorporationstaffsSearch(
+    searchCorporationName: string,
+    searchJobPosition: string,
+    searchProfileSourceType: string,
+    searchStaffName: string,
+  ): Promise<CorporationstaffEntity[]> {
+    const query =
+      this.CorporationstaffsRepository.createQueryBuilder('Corporationstaff');
+    query.leftJoinAndSelect(
+      'Corporationstaff.corporationEntity',
+      'corporationEntity',
+    );
+    if (searchCorporationName !== '') {
+      query.andWhere(
+        'corporationEntity.corporation_name = :searchCorporationName',
+        {
+          searchCorporationName: `%${searchCorporationName}%`,
+        },
+      );
+    }
+    if (searchJobPosition !== '') {
+      query.andWhere('Corporationstaff.job_position = :searchJobPosition', {
+        searchJobPosition: `%${searchJobPosition}%`,
+      });
+    }
+    if (searchProfileSourceType !== '') {
+      query.andWhere(
+        'Corporationstaff.profile_source_type = :searchProfileSourceType',
+        {
+          searchProfileSourceType: searchProfileSourceType,
+        },
+      );
+    }
+    if (searchStaffName !== '') {
+      query.andWhere('Corporationstaff.staff_name = :searchStaffName', {
+        searchStaffName: `%${searchStaffName}%`,
+      });
+    }
+    return query.getMany();
   }
 
   findAllCorporationstaffs(

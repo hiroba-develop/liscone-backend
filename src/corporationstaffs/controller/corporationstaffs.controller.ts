@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Req,
+  Query,
 } from '@nestjs/common';
 import { CreateCorporationstaffDTO } from '../dto/create-corporationstaff.dto';
 import { CorporationstaffEntity } from '../entities/corporationstaffs.entity';
@@ -23,6 +24,23 @@ export class CorporationstaffsController {
   ): Promise<CorporationstaffEntity[]> {
     console.log('getAll');
     return this.corporationstaffsService.findAllCorporationstaffs(dto);
+  }
+
+  @Get('/search')
+  getAllSearch(
+    @Body() dto: CreateCorporationstaffDTO[],
+    @Query('searchCorporationName') searchCorporationName: string,
+    @Query('searchJobPosition') searchJobPosition: string,
+    @Query('searchProfileSourceType') searchProfileSourceType: string,
+    @Query('searchStaffName') searchStaffName: string,
+  ): Promise<CorporationstaffEntity[]> {
+    console.log('getAll');
+    return this.corporationstaffsService.findAllCorporationstaffsSearch(
+      searchCorporationName,
+      searchJobPosition,
+      searchProfileSourceType,
+      searchStaffName,
+    );
   }
 
   @Get('/id_name_byCorporation')

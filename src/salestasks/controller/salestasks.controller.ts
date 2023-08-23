@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Query } from '@nestjs/common';
 import { CreateSalestaskDTO } from '../dto/create-salestask.dto';
 import { SalesTaskDTO } from '../dto/salestask.dto';
 import { SalestaskEntity } from '../entities/salestasks.entity';
@@ -11,6 +11,15 @@ export class SalestasksController {
   getAll(): Promise<SalestaskEntity[]> {
     console.log('getAll');
     return this.salestasksService.findAll();
+  }
+
+  @Get('/companyCode')
+  getCompanyCode(
+    @Body() dto: CreateSalestaskDTO[],
+    @Query('companyCode') companyCode: string,
+  ): Promise<SalestaskEntity[]> {
+    console.log('getSalestaskMemberId');
+    return this.salestasksService.findByCompanyCode(companyCode);
   }
 
   @Get('/memberid')
