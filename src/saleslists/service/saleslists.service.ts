@@ -47,6 +47,18 @@ export class SaleslistsService {
     });
   }
 
+  findByCompanyCode(companyCode: string): Promise<SaleslistEntity[]> {
+    const query = this.saleslistsRepository.createQueryBuilder('saleslists');
+    query.innerJoinAndSelect('saleslists.memberEntity', 'memberEntity');
+
+    if (companyCode !== '') {
+      query.andWhere('memberEntity.company_code = :companyCode', {
+        companyCode: companyCode,
+      });
+    }
+    return query.getMany();
+  }
+
   async findBySaleslistMemberId(member_id: string): Promise<SaleslistEntity[]> {
     const response = await this.saleslistsRepository.find({
       select: [

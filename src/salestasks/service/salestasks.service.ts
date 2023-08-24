@@ -26,7 +26,9 @@ export class SalestasksService {
   }
 
   findByCompanyCode(companyCode: string): Promise<SalestaskEntity[]> {
-    const query = this.salestasksRepository.createQueryBuilder('salestask');
+    const query = this.salestasksRepository
+      .createQueryBuilder('salestask')
+      .orderBy('salestask.created', 'DESC');
     query.leftJoinAndSelect('salestask.corporationEntity', 'corporationEntity');
     query.leftJoinAndSelect(
       'salestask.corporationstaffEntity',

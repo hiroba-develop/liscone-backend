@@ -34,7 +34,7 @@ export class CorporationstaffsController {
     @Query('searchProfileSourceType') searchProfileSourceType: string,
     @Query('searchStaffName') searchStaffName: string,
   ): Promise<CorporationstaffEntity[]> {
-    console.log('getAll');
+    console.log('getAllSearch');
     return this.corporationstaffsService.findAllCorporationstaffsSearch(
       searchCorporationName,
       searchJobPosition,

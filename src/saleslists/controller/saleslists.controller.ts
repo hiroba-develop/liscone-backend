@@ -8,6 +8,7 @@ import {
   Post,
   Req,
   Res,
+  Query,
 } from '@nestjs/common';
 import { CreateSalesCorporationsListDTO } from '../dto/create-salescorporationslist.dto';
 import { CreateSaleslistDTO } from '../dto/create-saleslist.dto';
@@ -29,6 +30,15 @@ export class SaleslistsController {
   getAll(): Promise<SaleslistEntity[]> {
     console.log('getAll');
     return this.saleslistsService.findAll();
+  }
+
+  @Get('/companyCode')
+  getCompanyCode(
+    @Body() dto: SaleslistEntity[],
+    @Query('companyCode') companyCode: string,
+  ): Promise<SaleslistEntity[]> {
+    console.log('getCompanyCode');
+    return this.saleslistsService.findByCompanyCode(companyCode);
   }
 
   @Get('/memberid')

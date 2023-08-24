@@ -18,7 +18,7 @@ export class SalestasksController {
     @Body() dto: CreateSalestaskDTO[],
     @Query('companyCode') companyCode: string,
   ): Promise<SalestaskEntity[]> {
-    console.log('getSalestaskMemberId');
+    console.log('getCompanyCode');
     return this.salestasksService.findByCompanyCode(companyCode);
   }
 
