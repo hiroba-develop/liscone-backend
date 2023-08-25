@@ -88,13 +88,13 @@ export class CorporationstaffsService {
       query.andWhere(
         'corporationEntity.corporation_name = :searchCorporationName',
         {
-          searchCorporationName: `%${searchCorporationName}%`,
+          searchCorporationName: searchCorporationName,
         },
       );
     }
     if (searchJobPosition !== '') {
       query.andWhere('Corporationstaff.job_position = :searchJobPosition', {
-        searchJobPosition: `%${searchJobPosition}%`,
+        searchJobPosition: searchJobPosition,
       });
     }
     if (searchProfileSourceType !== '') {
@@ -107,7 +107,7 @@ export class CorporationstaffsService {
     }
     if (searchStaffName !== '') {
       query.andWhere('Corporationstaff.staff_name = :searchStaffName', {
-        searchStaffName: `%${searchStaffName}%`,
+        searchStaffName: searchStaffName,
       });
     }
     return query.getMany();
