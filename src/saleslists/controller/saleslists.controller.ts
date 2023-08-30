@@ -18,6 +18,7 @@ import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
 import { SalesListProceed } from '../entities/salesListProceedView.entity';
 import { SalesListStatistics } from '../entities/salesListView.entity';
 import { SalesListCorporations } from '../entities/salesListcorporationsview.entity';
+import { SalesListcorporationDetail } from '../entities/salesListcorporationDetail.entity';
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SaleslistsService } from '../service/saleslists.service';
@@ -95,6 +96,18 @@ export class SaleslistsController {
     console.log('getSaleslistCorporations');
     const salesList = req.query;
     return this.saleslistsService.findSaleslistCorporations(
+      salesList.salesListNumber,
+    );
+  }
+
+  @Get('/saleslistcorporationsDetail')
+  getSaleslistCorporationsDetail(
+    @Body() dto: SalesCorporationsTaskDTO,
+    @Req() req,
+  ): Promise<SalesListcorporationDetail[]> {
+    console.log('getSaleslistCorporationsDetail');
+    const salesList = req.query;
+    return this.saleslistsService.findSaleslistCorporationsDetail(
       salesList.salesListNumber,
     );
   }

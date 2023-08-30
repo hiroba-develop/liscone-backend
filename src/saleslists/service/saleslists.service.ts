@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { CreateSaleslistDTO } from '../dto/create-saleslist.dto';
 import { UpdateSaleslistDTO } from '../dto/update-saleslist.dto';
 import { SalesListCorporations } from '../entities/salesListcorporationsview.entity';
+import { SalesListcorporationDetail } from '../entities/salesListcorporationDetail.entity';
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SalesStaffsListEntity } from '../entities/salesstaffslists.entity';
@@ -32,6 +33,9 @@ export class SaleslistsService {
 
     @InjectRepository(SalesListCorporations)
     private salesListCorporationsRepository: Repository<SalesListCorporations>,
+
+    @InjectRepository(SalesListcorporationDetail)
+    private salesListcorporationDetailRepository: Repository<SalesListcorporationDetail>,
 
     @InjectRepository(SalesListProceed)
     private salesListProceedRepository: Repository<SalesListProceed>,
@@ -116,6 +120,27 @@ export class SaleslistsService {
     });
     console.log(response);
     return response;
+  }
+
+  async findSaleslistCorporationsDetail(
+    sales_list_number: number,
+  ): Promise<SalesListcorporationDetail[]> {
+    const query =
+      this.salesListcorporationDetailRepository.createQueryBuilder(
+        'saleslists',
+      );
+    query.innerJoinAndSelect(
+      'saleslists.corporationEntity',
+      'corporationEntity',
+    );
+    query.innerJoinAndSelect('saleslists.saleslistEntity', 'saleslistEntity');
+
+    if (sales_list_number !== null) {
+      query.andWhere('saleslists.sales_list_number = :salesListNumber', {
+        salesListNumber: sales_list_number,
+      });
+    }
+    return query.getMany();
   }
 
   async getSaleslistProceed(

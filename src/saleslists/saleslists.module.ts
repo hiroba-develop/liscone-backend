@@ -6,6 +6,7 @@ import { SaleslistsService } from './service/saleslists.service';
 import { SalesCorporaitonsListEntity } from './entities/salescorporationslists.entity';
 import { SalesStaffsListEntity } from './entities/salesstaffslists.entity';
 import { SalesListCorporations } from './entities/salesListcorporationsview.entity';
+import { SalesListcorporationDetail } from './entities/salesListcorporationDetail.entity';
 import { SalesListStatistics } from './entities/salesListView.entity';
 import { SalesListProceed } from './entities/salesListProceedView.entity';
 
@@ -15,6 +16,7 @@ import { SalesListProceed } from './entities/salesListProceedView.entity';
     TypeOrmModule.forFeature([SalesCorporaitonsListEntity]),
     TypeOrmModule.forFeature([SalesStaffsListEntity]),
     TypeOrmModule.forFeature([SalesListCorporations]),
+    TypeOrmModule.forFeature([SalesListcorporationDetail]),
     TypeOrmModule.forFeature([SalesListStatistics]),
     TypeOrmModule.forFeature([SalesListProceed]),
   ],
