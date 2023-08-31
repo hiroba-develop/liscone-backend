@@ -72,7 +72,7 @@ export class CorporationstaffsService {
     });
   }
 
-  findAllCorporationstaffsSearch(
+  findAllCorporationstaffsSearchChick(
     searchCorporationName: string,
     searchJobPosition: string,
     searchProfileSourceType: string,
@@ -111,6 +111,47 @@ export class CorporationstaffsService {
       });
     }
     return query.getMany();
+  }
+
+  findAllCorporationstaffsSearchChickCount(
+    searchCorporationName: string,
+    searchJobPosition: string,
+    searchProfileSourceType: string,
+    searchStaffName: string,
+  ): Promise<number> {
+    const query =
+      this.CorporationstaffsRepository.createQueryBuilder('Corporationstaff');
+    query.leftJoinAndSelect(
+      'Corporationstaff.corporationEntity',
+      'corporationEntity',
+    );
+    if (searchCorporationName !== '') {
+      query.andWhere(
+        'corporationEntity.corporation_name = :searchCorporationName',
+        {
+          searchCorporationName: searchCorporationName,
+        },
+      );
+    }
+    if (searchJobPosition !== '') {
+      query.andWhere('Corporationstaff.job_position = :searchJobPosition', {
+        searchJobPosition: searchJobPosition,
+      });
+    }
+    if (searchProfileSourceType !== '') {
+      query.andWhere(
+        'Corporationstaff.profile_source_type = :searchProfileSourceType',
+        {
+          searchProfileSourceType: searchProfileSourceType,
+        },
+      );
+    }
+    if (searchStaffName !== '') {
+      query.andWhere('Corporationstaff.staff_name = :searchStaffName', {
+        searchStaffName: searchStaffName,
+      });
+    }
+    return query.getCount();
   }
 
   findAllCorporationstaffs(

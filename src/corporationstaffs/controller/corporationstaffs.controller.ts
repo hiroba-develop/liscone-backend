@@ -26,7 +26,7 @@ export class CorporationstaffsController {
     return this.corporationstaffsService.findAllCorporationstaffs(dto);
   }
 
-  @Get('/search')
+  @Get('/searchChick')
   getAllSearch(
     @Body() dto: CreateCorporationstaffDTO[],
     @Query('searchCorporationName') searchCorporationName: string,
@@ -35,7 +35,24 @@ export class CorporationstaffsController {
     @Query('searchStaffName') searchStaffName: string,
   ): Promise<CorporationstaffEntity[]> {
     console.log('getAllSearch');
-    return this.corporationstaffsService.findAllCorporationstaffsSearch(
+    return this.corporationstaffsService.findAllCorporationstaffsSearchChick(
+      searchCorporationName,
+      searchJobPosition,
+      searchProfileSourceType,
+      searchStaffName,
+    );
+  }
+
+  @Get('/searchChickCount')
+  getAllSearchCount(
+    @Body() dto: CreateCorporationstaffDTO[],
+    @Query('searchCorporationName') searchCorporationName: string,
+    @Query('searchJobPosition') searchJobPosition: string,
+    @Query('searchProfileSourceType') searchProfileSourceType: string,
+    @Query('searchStaffName') searchStaffName: string,
+  ): Promise<number> {
+    console.log('getAllSearch');
+    return this.corporationstaffsService.findAllCorporationstaffsSearchChickCount(
       searchCorporationName,
       searchJobPosition,
       searchProfileSourceType,
