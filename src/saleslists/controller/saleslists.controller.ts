@@ -129,7 +129,7 @@ export class SaleslistsController {
   getSaleslistStaffs(
     @Body() dto: CreateSalesStaffsListDTO,
     @Req() req,
-  ): Promise<SaleslistEntity> {
+  ): Promise<SaleslistEntity[]> {
     console.log('getSaleslistCorporations');
     const salesList = req.query;
     return this.saleslistsService.findSaleslistStaff(salesList.salesListNumber);
