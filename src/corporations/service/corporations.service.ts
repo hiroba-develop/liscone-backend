@@ -51,9 +51,9 @@ export class CorporationsService {
     }
     // 会社名・法人名
     if (searchCorporationName !== '') {
-      query.andWhere('corporation_name = :searchCorporationName', {
+      query.andWhere('corporation_name LIKE :searchCorporationName', {
         corporation_name: corporation.corporation_name,
-        searchCorporationName: searchCorporationName,
+        searchCorporationName: `%${searchCorporationName}%`,
       });
     }
     // 業種
@@ -241,9 +241,9 @@ export class CorporationsService {
     }
     // 会社名・法人名
     if (searchCorporationName !== '') {
-      query.andWhere('corporation_name = :searchCorporationName', {
+      query.andWhere('corporation_name LIKE :searchCorporationName', {
         corporation_name: corporation.corporation_name,
-        searchCorporationName: searchCorporationName,
+        searchCorporationName: `%${searchCorporationName}%`,
       });
     }
     // 業種

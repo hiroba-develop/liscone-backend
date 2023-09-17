@@ -86,15 +86,15 @@ export class CorporationstaffsService {
     );
     if (searchCorporationName !== '') {
       query.andWhere(
-        'corporationEntity.corporation_name = :searchCorporationName',
+        'corporationEntity.corporation_name LIKE :searchCorporationName',
         {
-          searchCorporationName: searchCorporationName,
+          searchCorporationName: `%${searchCorporationName}%`,
         },
       );
     }
     if (searchJobPosition !== '') {
-      query.andWhere('Corporationstaff.job_position = :searchJobPosition', {
-        searchJobPosition: searchJobPosition,
+      query.andWhere('Corporationstaff.job_position LIKE :searchJobPosition', {
+        searchJobPosition: `%${searchJobPosition}%`,
       });
     }
     if (searchProfileSourceType !== '') {
@@ -127,15 +127,15 @@ export class CorporationstaffsService {
     );
     if (searchCorporationName !== '') {
       query.andWhere(
-        'corporationEntity.corporation_name = :searchCorporationName',
+        'corporationEntity.corporation_name LIKE :searchCorporationName',
         {
-          searchCorporationName: searchCorporationName,
+          searchCorporationName: `%${searchCorporationName}%`,
         },
       );
     }
     if (searchJobPosition !== '') {
-      query.andWhere('Corporationstaff.job_position = :searchJobPosition', {
-        searchJobPosition: searchJobPosition,
+      query.andWhere('Corporationstaff.job_position LIKE :searchJobPosition', {
+        searchJobPosition: `%${searchJobPosition}%`,
       });
     }
     if (searchProfileSourceType !== '') {
