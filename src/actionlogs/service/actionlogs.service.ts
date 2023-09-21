@@ -37,10 +37,10 @@ export class ActionlogsService {
       });
     } else if (salesList.sales_list_type === '02') {
       query.andWhere('actionlog.sales_corporation_id = :sales_corporation_id', {
-        sales_corporation_id: listDetails.corporation_id,
+        sales_corporation_id: listDetails.salesStaffs_corporation_id,
       });
       query.andWhere('actionlog.sales_staff_id = :sales_staff_id', {
-        sales_staff_id: listDetails.staff_id,
+        sales_staff_id: listDetails.salesStaffs_staff_id,
       });
     }
     return query.getMany();
