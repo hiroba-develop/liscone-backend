@@ -137,10 +137,10 @@ export class SaleslistsController {
 
   @Get('/saleslistnumber')
   getSaleslistNumber(
-    @Body() dto: CreateSaleslistDTO,
+    @Query('salesListNumber') salesListNumber: number,
   ): Promise<SaleslistEntity> {
     console.log('getSaleslistNumber');
-    return this.saleslistsService.findBySaleslistNumber(dto.sales_list_number);
+    return this.saleslistsService.findBySaleslistNumber(salesListNumber);
   }
 
   @Post('/createlist')

@@ -212,12 +212,12 @@ export class SaleslistsService {
     });
   }
 
-  findBySaleslistNumber(sales_list_number: number): Promise<SaleslistEntity> {
-    return this.saleslistsRepository.findOne({
-      where: {
-        sales_list_number,
-      },
+  findBySaleslistNumber(salesListNumber: number): Promise<SaleslistEntity> {
+    const query = this.saleslistsRepository.createQueryBuilder('saleslist');
+    query.where('saleslist.sales_list_number = :salesListNumber', {
+      salesListNumber: salesListNumber,
     });
+    return query.getRawOne();
   }
 
   async create(saleslist: CreateSaleslistDTO): Promise<SaleslistEntity> {
