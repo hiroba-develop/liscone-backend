@@ -240,6 +240,7 @@ export class SalestasksService {
         execute_date: salestask.execute_date,
         execute_big_result: salestask.execute_big_result,
         execute_small_result: salestask.execute_small_result,
+        sales_staff_id: salestask.sales_staff_id,
       });
       return await this.findBySalestaskTaskNumber(salestask.task_number);
     } catch (e) {
@@ -260,6 +261,7 @@ export class SalestasksService {
         task_name: salestask.task_name,
         deadline: salestask.deadline,
         member_id: salestask.member_id,
+        comment: salestask.comment,
       });
       return await this.findBySalestaskTaskNumber(salestask.task_number);
     } catch (e) {
