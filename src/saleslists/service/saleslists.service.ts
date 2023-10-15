@@ -12,6 +12,7 @@ import { SalesListcorporationDetail } from '../entities/salesListcorporationDeta
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SalesStaffsListEntity } from '../entities/salesstaffslists.entity';
+import { SalesImportsListEntity } from '../entities/salesimportslists.entity';
 import { SalesListStatistics } from '../entities/salesListView.entity';
 import { SalesListProceed } from '../entities/salesListProceedView.entity';
 
@@ -27,6 +28,9 @@ export class SaleslistsService {
 
     @InjectRepository(SalesStaffsListEntity)
     private salesstaffslistsRepository: Repository<SalesStaffsListEntity>,
+
+    @InjectRepository(SalesImportsListEntity)
+    private salesimportslistsRepository: Repository<SalesImportsListEntity>,
 
     @InjectRepository(SalesListStatistics)
     private salesListViewRepository: Repository<SalesListStatistics>,
@@ -252,6 +256,14 @@ export class SaleslistsService {
     salescstaffslist.staff_id = staffId;
     salescstaffslist.corporation_id = corporationId;
     await this.salesstaffslistsRepository.save(salescstaffslist);
+  }
+
+  async createsalesimports(data: any, saleslist: SaleslistEntity) {
+    const salesimportslist = new SalesImportsListEntity();
+    salesimportslist.sales_list_number = saleslist.sales_list_number;
+    salesimportslist.corporation_id = data;
+    salesimportslist.memo = data.memo;
+    await this.salesimportslistsRepository.save(salesimportslist);
   }
 
   async update(saleslist: UpdateSaleslistDTO) {
