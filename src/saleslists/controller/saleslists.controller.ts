@@ -19,6 +19,7 @@ import { SalesListProceed } from '../entities/salesListProceedView.entity';
 import { SalesListStatistics } from '../entities/salesListView.entity';
 import { SalesListCorporations } from '../entities/salesListcorporationsview.entity';
 import { SalesListcorporationDetail } from '../entities/salesListcorporationDetail.entity';
+import { SalesImportsListEntity } from '../entities/salesimportslists.entity';
 import { SalesCorporaitonsListEntity } from '../entities/salescorporationslists.entity';
 import { SaleslistEntity } from '../entities/saleslists.entity';
 import { SaleslistsService } from '../service/saleslists.service';
@@ -108,6 +109,18 @@ export class SaleslistsController {
     console.log('getSaleslistCorporationsDetail');
     const salesList = req.query;
     return this.saleslistsService.findSaleslistCorporationsDetail(
+      salesList.salesListNumber,
+    );
+  }
+
+  @Get('/saleslistimportsDetail')
+  getSaleslistImportsDetail(
+    @Body() dto: SalesCorporationsTaskDTO,
+    @Req() req,
+  ): Promise<SalesImportsListEntity[]> {
+    console.log('getSaleslistImportsDetail');
+    const salesList = req.query;
+    return this.saleslistsService.findSaleslistImportsDetail(
       salesList.salesListNumber,
     );
   }
