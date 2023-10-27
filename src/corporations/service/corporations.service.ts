@@ -408,6 +408,7 @@ export class CorporationsService {
     corporateNumber: string,
     homePage: string,
     corporationName: string,
+    zipCode: string,
   ): Promise<CorporationEntity[]> {
     let whereCheck = 0;
     let query =
@@ -438,10 +439,17 @@ export class CorporationsService {
       corporationName !== '' &&
       whereCheck === 0
     ) {
-      whereCheck = 1;
       query.andWhere('corporation_name LIKE :corporationName', {
         corporation_name: corporation.corporation_name,
         corporationName: `%${corporationName}%`,
+      });
+    }
+    // 郵便番号
+    if (zipCode !== undefined && zipCode !== '' && whereCheck === 0) {
+      whereCheck = 1;
+      query.andWhere('zip_code LIKE :zipCode', {
+        zip_code: corporation.zip_code,
+        zipCode: `%${zipCode}%`,
       });
     }
     const response = query.take(5).getMany();
