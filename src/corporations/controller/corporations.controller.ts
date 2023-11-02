@@ -106,7 +106,6 @@ export class CorporationsController {
     @Query('corporateNumber') corporateNumber: string,
     @Query('homePage') homePage: string,
     @Query('corporationName') corporationName: string,
-    @Query('zipCode') zipCode: string,
   ): Promise<CorporationEntity[]> {
     console.log('getCorporationSearch');
     return this.corporationsService.findByCorporationImport(
@@ -114,7 +113,6 @@ export class CorporationsController {
       corporateNumber,
       homePage,
       corporationName,
-      zipCode,
     );
   }
 
