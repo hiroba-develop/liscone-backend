@@ -147,19 +147,6 @@ export class SaleslistsService {
     return query.getMany();
   }
 
-  async findSaleslistImportsDetail(
-    sales_list_number: number,
-  ): Promise<SalesImportsListEntity[]> {
-    const query =
-      this.salesimportslistsRepository.createQueryBuilder('saleslists');
-    if (sales_list_number !== null) {
-      query.andWhere('saleslists.sales_list_number = :salesListNumber', {
-        salesListNumber: sales_list_number,
-      });
-    }
-    return query.getMany();
-  }
-
   async getSaleslistProceed(
     member_id: [],
     sales_list_number: [],
@@ -275,57 +262,7 @@ export class SaleslistsService {
     const salesimportslist = new SalesImportsListEntity();
     salesimportslist.sales_list_number = saleslist.sales_list_number;
     salesimportslist.corporation_id = data;
-    salesimportslist.corporation_name = data.corporation_name;
-    salesimportslist.memo = data.import_other;
-    if (data.import_address === undefined) {
-      salesimportslist.address = data.address;
-    } else {
-      salesimportslist.address = data.import_address;
-    }
-    if (data.import_homePage === undefined) {
-      salesimportslist.home_page = data.home_page;
-    } else {
-      salesimportslist.home_page = data.import_homePage;
-    }
-    if (data.import_representativeName === undefined) {
-      salesimportslist.representative_name = data.representative_name;
-    } else {
-      salesimportslist.representative_name = data.import_representativeName;
-    }
-    if (data.import_representativePhoneNumber === undefined) {
-      salesimportslist.representative_phone_number =
-        data.representative_phone_number;
-    } else {
-      salesimportslist.representative_phone_number =
-        data.import_representativePhoneNumber;
-    }
-    if (data.import_zipCode === undefined) {
-      salesimportslist.zip_code = data.zip_code;
-    } else {
-      salesimportslist.zip_code = data.import_zipCode;
-    }
-    if (Number.isNaN(data.import_capitalStock)) {
-      salesimportslist.capital_stock = data.capital_stock;
-    } else {
-      salesimportslist.capital_stock = data.import_capitalStock;
-    }
-    if (Number.isNaN(data.import_employeeNumber)) {
-      salesimportslist.employee_number = data.employee_number;
-    } else {
-      salesimportslist.employee_number = data.import_employeeNumber;
-    }
-    if (Number.isNaN(data.import_establishmentYear)) {
-      salesimportslist.establishment_year = data.establishment_year;
-    } else {
-      salesimportslist.establishment_year = data.import_establishmentYear;
-    }
-    if (Number.isNaN(data.import_salesAmount)) {
-      salesimportslist.sales_amount = data.sales_amount;
-    } else {
-      salesimportslist.sales_amount = data.import_salesAmount;
-    }
-    salesimportslist.listing_status = data.listing_status;
-
+    salesimportslist.memo = data.memo;
     await this.salesimportslistsRepository.save(salesimportslist);
   }
 
