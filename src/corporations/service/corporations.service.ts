@@ -413,11 +413,7 @@ export class CorporationsService {
     let query =
       this.corporationsRepository.createQueryBuilder('tb_corporation');
     // 法人番号
-    if (
-      corporateNumber !== undefined &&
-      corporateNumber !== '' &&
-      whereCheck === 0
-    ) {
+    if (corporateNumber !== undefined && whereCheck === 0) {
       whereCheck = 1;
       query.andWhere('corporate_number = :corporateNumber', {
         corporate_number: corporation.corporate_number,
@@ -425,19 +421,15 @@ export class CorporationsService {
       });
     }
     // ホームページ
-    if (homePage !== undefined && homePage !== '' && whereCheck === 0) {
+    if (homePage !== undefined && whereCheck === 0) {
       whereCheck = 1;
-      query.andWhere('home_page LIKE :homePage', {
+      query.andWhere('home_page  :homePage', {
         home_page: corporation.home_page,
-        homePage: `%${homePage}%`,
+        homePage: homePage,
       });
     }
     // 会社名・法人名
-    if (
-      corporationName !== undefined &&
-      corporationName !== '' &&
-      whereCheck === 0
-    ) {
+    if (corporationName !== undefined && whereCheck === 0) {
       whereCheck = 1;
       query.andWhere('corporation_name LIKE :corporationName', {
         corporation_name: corporation.corporation_name,
