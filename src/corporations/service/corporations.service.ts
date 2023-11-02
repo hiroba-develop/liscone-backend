@@ -403,44 +403,6 @@ export class CorporationsService {
     return response;
   }
 
-  findByCorporationImport(
-    corporation: CreateCorporationDTO,
-    corporateNumber: string,
-    homePage: string,
-    corporationName: string,
-  ): Promise<CorporationEntity[]> {
-    let whereCheck = 0;
-    let query =
-      this.corporationsRepository.createQueryBuilder('tb_corporation');
-    // 法人番号
-    if (corporateNumber !== undefined && whereCheck === 0) {
-      whereCheck = 1;
-      query.andWhere('corporate_number = :corporateNumber', {
-        corporate_number: corporation.corporate_number,
-        corporateNumber: corporateNumber,
-      });
-    }
-    // ホームページ
-    if (homePage !== undefined && whereCheck === 0) {
-      whereCheck = 1;
-      query.andWhere('home_page  :homePage', {
-        home_page: corporation.home_page,
-        homePage: homePage,
-      });
-    }
-    // 会社名・法人名
-    if (corporationName !== undefined && whereCheck === 0) {
-      whereCheck = 1;
-      query.andWhere('corporation_name LIKE :corporationName', {
-        corporation_name: corporation.corporation_name,
-        corporationName: `%${corporationName}%`,
-      });
-    }
-    const response = query.take(5).getMany();
-    console.log(response);
-    return response;
-  }
-
   findByCorporationName(corporation_name: string): Promise<CorporationEntity> {
     return this.corporationsRepository.findOne({
       where: {

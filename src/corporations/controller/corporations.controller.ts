@@ -100,22 +100,6 @@ export class CorporationsController {
     );
   }
 
-  @Get('/searchImport')
-  getSearchImport(
-    @Body() dto: CreateCorporationDTO,
-    @Query('corporateNumber') corporateNumber: string,
-    @Query('homePage') homePage: string,
-    @Query('corporationName') corporationName: string,
-  ): Promise<CorporationEntity[]> {
-    console.log('getCorporationSearch');
-    return this.corporationsService.findByCorporationImport(
-      dto,
-      corporateNumber,
-      homePage,
-      corporationName,
-    );
-  }
-
   @Get('/byId')
   getCorporationById(
     @Body() dto: CreateCorporationDTO,

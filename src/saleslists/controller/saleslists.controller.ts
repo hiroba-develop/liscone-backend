@@ -164,10 +164,6 @@ export class SaleslistsController {
           createdSalesList,
         );
       }
-    } else if (saleslist.sales_list_type === '03') {
-      for (const data of saleslist.datas) {
-        this.saleslistsService.createsalesimports(data, createdSalesList);
-      }
     }
   }
 
