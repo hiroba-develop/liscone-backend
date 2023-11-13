@@ -74,7 +74,16 @@ export class CorporationstaffsService {
 
   findAllCorporationstaffsSearchChick(
     searchCorporationName: string,
-    searchJobPosition: string,
+    searchJobPosition1: string,
+    searchJobPosition2: string,
+    searchJobPosition3: string,
+    searchJobPosition4: string,
+    searchJobPosition5: string,
+    searchDepartment1: string,
+    searchDepartment2: string,
+    searchDepartment3: string,
+    searchDepartment4: string,
+    searchDepartment5: string,
     searchProfileSourceType: string,
     searchStaffName: string,
   ): Promise<CorporationstaffEntity[]> {
@@ -84,7 +93,11 @@ export class CorporationstaffsService {
       'Corporationstaff.corporationEntity',
       'corporationEntity',
     );
-    if (searchCorporationName !== '') {
+    if (
+      searchCorporationName !== undefined &&
+      searchCorporationName !== '' &&
+      searchCorporationName !== null
+    ) {
       query.andWhere(
         'corporationEntity.corporation_name LIKE :searchCorporationName',
         {
@@ -92,12 +105,139 @@ export class CorporationstaffsService {
         },
       );
     }
-    if (searchJobPosition !== '') {
-      query.andWhere('Corporationstaff.job_position LIKE :searchJobPosition', {
-        searchJobPosition: `%${searchJobPosition}%`,
+    if (
+      searchJobPosition5 !== undefined &&
+      searchJobPosition5 !== '' &&
+      searchJobPosition5 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchJobPosition1 OR Corporationstaff.job_position LIKE :searchJobPosition2 OR Corporationstaff.job_position LIKE :searchJobPosition3 OR Corporationstaff.job_position LIKE :searchJobPosition4 OR Corporationstaff.job_position LIKE :searchJobPosition5)',
+        {
+          searchJobPosition1: `%${searchJobPosition1}%`,
+          searchJobPosition2: `%${searchJobPosition2}%`,
+          searchJobPosition3: `%${searchJobPosition3}%`,
+          searchJobPosition4: `%${searchJobPosition4}%`,
+          searchJobPosition5: `%${searchJobPosition5}%`,
+        },
+      );
+    } else if (
+      searchJobPosition4 !== undefined &&
+      searchJobPosition4 !== '' &&
+      searchJobPosition4 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchJobPosition1 OR Corporationstaff.job_position LIKE :searchJobPosition2 OR Corporationstaff.job_position LIKE :searchJobPosition3 OR Corporationstaff.job_position LIKE :searchJobPosition4 )',
+        {
+          searchJobPosition1: `%${searchJobPosition1}%`,
+          searchJobPosition2: `%${searchJobPosition2}%`,
+          searchJobPosition3: `%${searchJobPosition3}%`,
+          searchJobPosition4: `%${searchJobPosition4}%`,
+        },
+      );
+    } else if (
+      searchJobPosition3 !== undefined &&
+      searchJobPosition3 !== '' &&
+      searchJobPosition3 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchJobPosition1 OR Corporationstaff.job_position LIKE :searchJobPosition2 OR Corporationstaff.job_position LIKE :searchJobPosition3)',
+        {
+          searchJobPosition1: `%${searchJobPosition1}%`,
+          searchJobPosition2: `%${searchJobPosition2}%`,
+          searchJobPosition3: `%${searchJobPosition3}%`,
+        },
+      );
+    } else if (
+      searchJobPosition2 !== undefined &&
+      searchJobPosition2 !== '' &&
+      searchJobPosition2 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchJobPosition1 OR Corporationstaff.job_position LIKE :searchJobPosition2 )',
+        {
+          searchJobPosition1: `%${searchJobPosition1}%`,
+          searchJobPosition2: `%${searchJobPosition2}%`,
+        },
+      );
+    } else if (
+      searchJobPosition1 !== undefined &&
+      searchJobPosition1 !== '' &&
+      searchJobPosition1 !== null
+    ) {
+      query.andWhere('Corporationstaff.job_position LIKE :searchJobPosition1', {
+        searchJobPosition1: `%${searchJobPosition1}%`,
       });
     }
-    if (searchProfileSourceType !== '') {
+
+    if (
+      searchDepartment5 !== undefined &&
+      searchDepartment5 !== '' &&
+      searchDepartment5 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchDepartment1 OR Corporationstaff.job_position LIKE :searchDepartment2 OR Corporationstaff.job_position LIKE :searchDepartment3 OR Corporationstaff.job_position LIKE :searchDepartment4 OR Corporationstaff.job_position LIKE :searchDepartment5)',
+        {
+          searchDepartment1: `%${searchDepartment1}%`,
+          searchDepartment2: `%${searchDepartment2}%`,
+          searchDepartment3: `%${searchDepartment3}%`,
+          searchDepartment4: `%${searchDepartment4}%`,
+          searchDepartment5: `%${searchDepartment5}%`,
+        },
+      );
+    } else if (
+      searchDepartment4 !== undefined &&
+      searchDepartment4 !== '' &&
+      searchDepartment4 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchDepartment1 OR Corporationstaff.job_position LIKE :searchDepartment2 OR Corporationstaff.job_position LIKE :searchDepartment3 OR Corporationstaff.job_position LIKE :searchDepartment4 )',
+        {
+          searchDepartment1: `%${searchDepartment1}%`,
+          searchDepartment2: `%${searchDepartment2}%`,
+          searchDepartment3: `%${searchDepartment3}%`,
+          searchDepartment4: `%${searchDepartment4}%`,
+        },
+      );
+    } else if (
+      searchDepartment3 !== undefined &&
+      searchDepartment3 !== '' &&
+      searchDepartment3 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchDepartment1 OR Corporationstaff.job_position LIKE :searchDepartment2 OR Corporationstaff.job_position LIKE :searchDepartment3)',
+        {
+          searchDepartment1: `%${searchDepartment1}%`,
+          searchDepartment2: `%${searchDepartment2}%`,
+          searchDepartment3: `%${searchDepartment3}%`,
+        },
+      );
+    } else if (
+      searchDepartment2 !== undefined &&
+      searchDepartment2 !== '' &&
+      searchDepartment2 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchDepartment1 OR Corporationstaff.job_position LIKE :searchDepartment2)',
+        {
+          searchDepartment1: `%${searchDepartment1}%`,
+          searchDepartment2: `%${searchDepartment2}%`,
+        },
+      );
+    } else if (
+      searchDepartment1 !== undefined &&
+      searchDepartment1 !== '' &&
+      searchDepartment1 !== null
+    ) {
+      query.andWhere('Corporationstaff.job_position LIKE :searchDepartment1', {
+        searchDepartment1: `%${searchDepartment1}%`,
+      });
+    }
+
+    if (
+      searchProfileSourceType !== undefined &&
+      searchProfileSourceType !== '' &&
+      searchProfileSourceType !== null
+    ) {
       query.andWhere(
         'Corporationstaff.profile_source_type = :searchProfileSourceType',
         {
@@ -105,7 +245,11 @@ export class CorporationstaffsService {
         },
       );
     }
-    if (searchStaffName !== '') {
+    if (
+      searchStaffName !== undefined &&
+      searchStaffName !== '' &&
+      searchStaffName !== null
+    ) {
       query.andWhere('Corporationstaff.staff_name = :searchStaffName', {
         searchStaffName: searchStaffName,
       });
@@ -115,7 +259,16 @@ export class CorporationstaffsService {
 
   findAllCorporationstaffsSearchChickCount(
     searchCorporationName: string,
-    searchJobPosition: string,
+    searchJobPosition1: string,
+    searchJobPosition2: string,
+    searchJobPosition3: string,
+    searchJobPosition4: string,
+    searchJobPosition5: string,
+    searchDepartment1: string,
+    searchDepartment2: string,
+    searchDepartment3: string,
+    searchDepartment4: string,
+    searchDepartment5: string,
     searchProfileSourceType: string,
     searchStaffName: string,
   ): Promise<number> {
@@ -125,7 +278,11 @@ export class CorporationstaffsService {
       'Corporationstaff.corporationEntity',
       'corporationEntity',
     );
-    if (searchCorporationName !== '') {
+    if (
+      searchCorporationName !== undefined &&
+      searchCorporationName !== '' &&
+      searchCorporationName !== null
+    ) {
       query.andWhere(
         'corporationEntity.corporation_name LIKE :searchCorporationName',
         {
@@ -133,12 +290,139 @@ export class CorporationstaffsService {
         },
       );
     }
-    if (searchJobPosition !== '') {
-      query.andWhere('Corporationstaff.job_position LIKE :searchJobPosition', {
-        searchJobPosition: `%${searchJobPosition}%`,
+    if (
+      searchJobPosition5 !== undefined &&
+      searchJobPosition5 !== '' &&
+      searchJobPosition5 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchJobPosition1 OR Corporationstaff.job_position LIKE :searchJobPosition2 OR Corporationstaff.job_position LIKE :searchJobPosition3 OR Corporationstaff.job_position LIKE :searchJobPosition4 OR Corporationstaff.job_position LIKE :searchJobPosition5)',
+        {
+          searchJobPosition1: `%${searchJobPosition1}%`,
+          searchJobPosition2: `%${searchJobPosition2}%`,
+          searchJobPosition3: `%${searchJobPosition3}%`,
+          searchJobPosition4: `%${searchJobPosition4}%`,
+          searchJobPosition5: `%${searchJobPosition5}%`,
+        },
+      );
+    } else if (
+      searchJobPosition4 !== undefined &&
+      searchJobPosition4 !== '' &&
+      searchJobPosition4 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchJobPosition1 OR Corporationstaff.job_position LIKE :searchJobPosition2 OR Corporationstaff.job_position LIKE :searchJobPosition3 OR Corporationstaff.job_position LIKE :searchJobPosition4 )',
+        {
+          searchJobPosition1: `%${searchJobPosition1}%`,
+          searchJobPosition2: `%${searchJobPosition2}%`,
+          searchJobPosition3: `%${searchJobPosition3}%`,
+          searchJobPosition4: `%${searchJobPosition4}%`,
+        },
+      );
+    } else if (
+      searchJobPosition3 !== undefined &&
+      searchJobPosition3 !== '' &&
+      searchJobPosition3 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchJobPosition1 OR Corporationstaff.job_position LIKE :searchJobPosition2 OR Corporationstaff.job_position LIKE :searchJobPosition3)',
+        {
+          searchJobPosition1: `%${searchJobPosition1}%`,
+          searchJobPosition2: `%${searchJobPosition2}%`,
+          searchJobPosition3: `%${searchJobPosition3}%`,
+        },
+      );
+    } else if (
+      searchJobPosition2 !== undefined &&
+      searchJobPosition2 !== '' &&
+      searchJobPosition2 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchJobPosition1 OR Corporationstaff.job_position LIKE :searchJobPosition2 )',
+        {
+          searchJobPosition1: `%${searchJobPosition1}%`,
+          searchJobPosition2: `%${searchJobPosition2}%`,
+        },
+      );
+    } else if (
+      searchJobPosition1 !== undefined &&
+      searchJobPosition1 !== '' &&
+      searchJobPosition1 !== null
+    ) {
+      query.andWhere('Corporationstaff.job_position LIKE :searchJobPosition1', {
+        searchJobPosition1: `%${searchJobPosition1}%`,
       });
     }
-    if (searchProfileSourceType !== '') {
+
+    if (
+      searchDepartment5 !== undefined &&
+      searchDepartment5 !== '' &&
+      searchDepartment5 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchDepartment1 OR Corporationstaff.job_position LIKE :searchDepartment2 OR Corporationstaff.job_position LIKE :searchDepartment3 OR Corporationstaff.job_position LIKE :searchDepartment4 OR Corporationstaff.job_position LIKE :searchDepartment5)',
+        {
+          searchDepartment1: `%${searchDepartment1}%`,
+          searchDepartment2: `%${searchDepartment2}%`,
+          searchDepartment3: `%${searchDepartment3}%`,
+          searchDepartment4: `%${searchDepartment4}%`,
+          searchDepartment5: `%${searchDepartment5}%`,
+        },
+      );
+    } else if (
+      searchDepartment4 !== undefined &&
+      searchDepartment4 !== '' &&
+      searchDepartment4 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchDepartment1 OR Corporationstaff.job_position LIKE :searchDepartment2 OR Corporationstaff.job_position LIKE :searchDepartment3 OR Corporationstaff.job_position LIKE :searchDepartment4 )',
+        {
+          searchDepartment1: `%${searchDepartment1}%`,
+          searchDepartment2: `%${searchDepartment2}%`,
+          searchDepartment3: `%${searchDepartment3}%`,
+          searchDepartment4: `%${searchDepartment4}%`,
+        },
+      );
+    } else if (
+      searchDepartment3 !== undefined &&
+      searchDepartment3 !== '' &&
+      searchDepartment3 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchDepartment1 OR Corporationstaff.job_position LIKE :searchDepartment2 OR Corporationstaff.job_position LIKE :searchDepartment3)',
+        {
+          searchDepartment1: `%${searchDepartment1}%`,
+          searchDepartment2: `%${searchDepartment2}%`,
+          searchDepartment3: `%${searchDepartment3}%`,
+        },
+      );
+    } else if (
+      searchDepartment2 !== undefined &&
+      searchDepartment2 !== '' &&
+      searchDepartment2 !== null
+    ) {
+      query.andWhere(
+        '(Corporationstaff.job_position LIKE :searchDepartment1 OR Corporationstaff.job_position LIKE :searchDepartment2)',
+        {
+          searchDepartment1: `%${searchDepartment1}%`,
+          searchDepartment2: `%${searchDepartment2}%`,
+        },
+      );
+    } else if (
+      searchDepartment1 !== undefined &&
+      searchDepartment1 !== '' &&
+      searchDepartment1 !== null
+    ) {
+      query.andWhere('Corporationstaff.job_position LIKE :searchDepartment1', {
+        searchDepartment1: `%${searchDepartment1}%`,
+      });
+    }
+
+    if (
+      searchProfileSourceType !== undefined &&
+      searchProfileSourceType !== '' &&
+      searchProfileSourceType !== null
+    ) {
       query.andWhere(
         'Corporationstaff.profile_source_type = :searchProfileSourceType',
         {
@@ -146,7 +430,11 @@ export class CorporationstaffsService {
         },
       );
     }
-    if (searchStaffName !== '') {
+    if (
+      searchStaffName !== undefined &&
+      searchStaffName !== '' &&
+      searchStaffName !== null
+    ) {
       query.andWhere('Corporationstaff.staff_name = :searchStaffName', {
         searchStaffName: searchStaffName,
       });

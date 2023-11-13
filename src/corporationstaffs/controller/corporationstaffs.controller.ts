@@ -30,14 +30,33 @@ export class CorporationstaffsController {
   getAllSearch(
     @Body() dto: CreateCorporationstaffDTO[],
     @Query('searchCorporationName') searchCorporationName: string,
-    @Query('searchJobPosition') searchJobPosition: string,
+    @Query('searchJobPosition1') searchJobPosition1: string,
+    @Query('searchJobPosition2') searchJobPosition2: string,
+    @Query('searchJobPosition3') searchJobPosition3: string,
+    @Query('searchJobPosition4') searchJobPosition4: string,
+    @Query('searchJobPosition5') searchJobPosition5: string,
+    @Query('searchDepartment1') searchDepartment1: string,
+    @Query('searchDepartment2') searchDepartment2: string,
+    @Query('searchDepartment3') searchDepartment3: string,
+    @Query('searchDepartment4') searchDepartment4: string,
+    @Query('searchDepartment5') searchDepartment5: string,
     @Query('searchProfileSourceType') searchProfileSourceType: string,
     @Query('searchStaffName') searchStaffName: string,
   ): Promise<CorporationstaffEntity[]> {
-    console.log('getAllSearch');
+    console.log('getAllSearchChick');
+
     return this.corporationstaffsService.findAllCorporationstaffsSearchChick(
       searchCorporationName,
-      searchJobPosition,
+      searchJobPosition1,
+      searchJobPosition2,
+      searchJobPosition3,
+      searchJobPosition4,
+      searchJobPosition5,
+      searchDepartment1,
+      searchDepartment2,
+      searchDepartment3,
+      searchDepartment4,
+      searchDepartment5,
       searchProfileSourceType,
       searchStaffName,
     );
@@ -47,14 +66,33 @@ export class CorporationstaffsController {
   getAllSearchCount(
     @Body() dto: CreateCorporationstaffDTO[],
     @Query('searchCorporationName') searchCorporationName: string,
-    @Query('searchJobPosition') searchJobPosition: string,
+    @Query('searchJobPosition1') searchJobPosition1: string,
+    @Query('searchJobPosition2') searchJobPosition2: string,
+    @Query('searchJobPosition3') searchJobPosition3: string,
+    @Query('searchJobPosition4') searchJobPosition4: string,
+    @Query('searchJobPosition5') searchJobPosition5: string,
+    @Query('searchDepartment1') searchDepartment1: string,
+    @Query('searchDepartment2') searchDepartment2: string,
+    @Query('searchDepartment3') searchDepartment3: string,
+    @Query('searchDepartment4') searchDepartment4: string,
+    @Query('searchDepartment5') searchDepartment5: string,
     @Query('searchProfileSourceType') searchProfileSourceType: string,
     @Query('searchStaffName') searchStaffName: string,
   ): Promise<number> {
-    console.log('getAllSearch');
+    console.log('getAllSearchCount');
+    console.log(searchDepartment2);
     return this.corporationstaffsService.findAllCorporationstaffsSearchChickCount(
       searchCorporationName,
-      searchJobPosition,
+      searchJobPosition1,
+      searchJobPosition2,
+      searchJobPosition3,
+      searchJobPosition4,
+      searchJobPosition5,
+      searchDepartment1,
+      searchDepartment2,
+      searchDepartment3,
+      searchDepartment4,
+      searchDepartment5,
       searchProfileSourceType,
       searchStaffName,
     );
