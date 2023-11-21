@@ -44,7 +44,6 @@ export class CorporationstaffsController {
     @Query('searchStaffName') searchStaffName: string,
   ): Promise<CorporationstaffEntity[]> {
     console.log('getAllSearchChick');
-
     return this.corporationstaffsService.findAllCorporationstaffsSearchChick(
       searchCorporationName,
       searchJobPosition1,
@@ -80,7 +79,6 @@ export class CorporationstaffsController {
     @Query('searchStaffName') searchStaffName: string,
   ): Promise<number> {
     console.log('getAllSearchCount');
-    console.log(searchDepartment2);
     return this.corporationstaffsService.findAllCorporationstaffsSearchChickCount(
       searchCorporationName,
       searchJobPosition1,

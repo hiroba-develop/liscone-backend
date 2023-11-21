@@ -250,8 +250,8 @@ export class CorporationstaffsService {
       searchStaffName !== '' &&
       searchStaffName !== null
     ) {
-      query.andWhere('Corporationstaff.staff_name = :searchStaffName', {
-        searchStaffName: searchStaffName,
+      query.andWhere('Corporationstaff.staff_name LIKE :searchStaffName', {
+        searchStaffName: `%${searchStaffName}%`,
       });
     }
     return query.getMany();
@@ -435,8 +435,8 @@ export class CorporationstaffsService {
       searchStaffName !== '' &&
       searchStaffName !== null
     ) {
-      query.andWhere('Corporationstaff.staff_name = :searchStaffName', {
-        searchStaffName: searchStaffName,
+      query.andWhere('Corporationstaff.staff_name LIKE :searchStaffName', {
+        searchStaffName: `%${searchStaffName}%`,
       });
     }
     return query.getCount();
