@@ -66,6 +66,67 @@ export class CorporationEntity {
   @Column({ type: 'timestamp', nullable: true })
   modified: Date;
 
+  @Column()
+  average_age: string;
+  @Column()
+  business_detail: string;
+  @Column()
+  human_capital_running_evaluation: string;
+  @Column()
+  human_capital_running_evidence: string;
+  @Column()
+  human_capital_running_url: string;
+  @Column()
+  human_resources_educational_evaluation: string;
+  @Column()
+  human_resources_educational_evidence: string;
+  @Column()
+  human_resources_educational_url: string;
+  @Column()
+  legacy_company_evaluation: string;
+  @Column()
+  legacy_company_evidence: string;
+  @Column()
+  legacy_company_url: string;
+  @Column()
+  new_business_evaluation: string;
+  @Column()
+  new_business_evidence: string;
+  @Column()
+  new_business_url: string;
+  @Column()
+  digital_marketing_evaluation: string;
+  @Column()
+  digital_marketing_evidence: string;
+  @Column()
+  digital_marketing_url: string;
+  @Column()
+  sns_evaluation: string;
+  @Column()
+  sns_evidence: string;
+  @Column()
+  sns_url: string;
+  @Column()
+  sns_line_account: string;
+  @Column()
+  sns_twitter: string;
+  @Column()
+  sns_instagram: string;
+  @Column()
+  sns_tiktok: string;
+  @Column()
+  sns_youtube: string;
+  @Column()
+  sns_facebook: string;
+  @Column()
+  source_code: string;
+  @Column()
+  site_pv: string;
+  @Column()
+  publishers: string;
+  @Column()
+  ad_networks: string;
+
   @OneToMany(
     () => CorporationstaffEntity,
     (corporationstaffEntity) => corporationstaffEntity.corporation_id,

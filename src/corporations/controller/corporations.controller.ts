@@ -40,6 +40,22 @@ export class CorporationsController {
     @Query('searchMaxEstablishmentYear') searchMaxEstablishmentYear: string,
     @Query('searchMinCapitalStock') searchMinCapitalStock: string,
     @Query('searchMaxCapitalStock') searchMaxCapitalStock: string,
+    @Query('searchMinSitePV') searchMinSitePV: string,
+    @Query('searchMaxSitePV') searchMaxSitePV: string,
+    @Query('searchMinAverageAge') searchMinAverageAge: string,
+    @Query('searchMaxAverageAge') searchMaxAverageAge: string,
+    @Query('searchSNS') searchSNS: string,
+    @Query('searchAdvertising') searchAdvertising: string,
+    @Query('searchFreeText1') searchFreeText1: string,
+    @Query('searchFreeText2') searchFreeText2: string,
+    @Query('searchFreeText3') searchFreeText3: string,
+    @Query('searchFreeText4') searchFreeText4: string,
+    @Query('searchFreeText5') searchFreeText5: string,
+    @Query('searchExclusionFreeText1') searchExclusionFreeText1: string,
+    @Query('searchExclusionFreeText2') searchExclusionFreeText2: string,
+    @Query('searchExclusionFreeText3') searchExclusionFreeText3: string,
+    @Query('searchExclusionFreeText4') searchExclusionFreeText4: string,
+    @Query('searchExclusionFreeText5') searchExclusionFreeText5: string,
   ): Promise<CorporationEntity[]> {
     console.log('getCorporationSearch');
     return this.corporationsService.findByCorporationAll(
@@ -58,6 +74,22 @@ export class CorporationsController {
       searchMaxEstablishmentYear,
       searchMinCapitalStock,
       searchMaxCapitalStock,
+      searchMinSitePV,
+      searchMaxSitePV,
+      searchMinAverageAge,
+      searchMaxAverageAge,
+      searchSNS,
+      searchAdvertising,
+      searchFreeText1,
+      searchFreeText2,
+      searchFreeText3,
+      searchFreeText4,
+      searchFreeText5,
+      searchExclusionFreeText1,
+      searchExclusionFreeText2,
+      searchExclusionFreeText3,
+      searchExclusionFreeText4,
+      searchExclusionFreeText5,
     );
   }
 
@@ -79,8 +111,26 @@ export class CorporationsController {
     @Query('searchMaxEstablishmentYear') searchMaxEstablishmentYear: string,
     @Query('searchMinCapitalStock') searchMinCapitalStock: string,
     @Query('searchMaxCapitalStock') searchMaxCapitalStock: string,
+    @Query('searchMinSitePV') searchMinSitePV: string,
+    @Query('searchMaxSitePV') searchMaxSitePV: string,
+    @Query('searchMinAverageAge') searchMinAverageAge: string,
+    @Query('searchMaxAverageAge') searchMaxAverageAge: string,
+    @Query('searchSNS') searchSNS: string,
+    @Query('searchAdvertising') searchAdvertising: string,
+    @Query('searchFreeText1') searchFreeText1: string,
+    @Query('searchFreeText2') searchFreeText2: string,
+    @Query('searchFreeText3') searchFreeText3: string,
+    @Query('searchFreeText4') searchFreeText4: string,
+    @Query('searchFreeText5') searchFreeText5: string,
+    @Query('searchExclusionFreeText1') searchExclusionFreeText1: string,
+    @Query('searchExclusionFreeText2') searchExclusionFreeText2: string,
+    @Query('searchExclusionFreeText3') searchExclusionFreeText3: string,
+    @Query('searchExclusionFreeText4') searchExclusionFreeText4: string,
+    @Query('searchExclusionFreeText5') searchExclusionFreeText5: string,
   ): Promise<number> {
     console.log('getCorporationSearchCount');
+    console.log(searchMinSitePV);
+    console.log(searchMaxSitePV);
     return this.corporationsService.findByCorporationAllCount(
       dto,
       searchCorporateNumber,
@@ -97,6 +147,33 @@ export class CorporationsController {
       searchMaxEstablishmentYear,
       searchMinCapitalStock,
       searchMaxCapitalStock,
+      searchMinSitePV,
+      searchMaxSitePV,
+      searchMinAverageAge,
+      searchMaxAverageAge,
+      searchSNS,
+      searchAdvertising,
+      searchFreeText1,
+      searchFreeText2,
+      searchFreeText3,
+      searchFreeText4,
+      searchFreeText5,
+      searchExclusionFreeText1,
+      searchExclusionFreeText2,
+      searchExclusionFreeText3,
+      searchExclusionFreeText4,
+      searchExclusionFreeText5,
+    );
+  }
+  @Get('/recruitCorporationIds')
+  getRecruitCorporationIds(
+    @Body() dto: CreateCorporationDTO,
+    @Query('CorporationIds') CorporationIds: [],
+  ): Promise<CorporationEntity[]> {
+    console.log('getRecruitCorporationIds');
+    return this.corporationsService.findByRecruitCorporationIds(
+      dto,
+      CorporationIds,
     );
   }
 
@@ -142,6 +219,22 @@ export class CorporationsController {
     @Query('searchMaxEstablishmentYear') searchMaxEstablishmentYear: string,
     @Query('searchMinCapitalStock') searchMinCapitalStock: string,
     @Query('searchMaxCapitalStock') searchMaxCapitalStock: string,
+    @Query('searchMinSitePV') searchMinSitePV: string,
+    @Query('searchMaxSitePV') searchMaxSitePV: string,
+    @Query('searchMinAverageAge') searchMinAverageAge: string,
+    @Query('searchMaxAverageAge') searchMaxAverageAge: string,
+    @Query('searchSNS') searchSNS: string,
+    @Query('searchAdvertising') searchAdvertising: string,
+    @Query('searchFreeText1') searchFreeText1: string,
+    @Query('searchFreeText2') searchFreeText2: string,
+    @Query('searchFreeText3') searchFreeText3: string,
+    @Query('searchFreeText4') searchFreeText4: string,
+    @Query('searchFreeText5') searchFreeText5: string,
+    @Query('searchExclusionFreeText1') searchExclusionFreeText1: string,
+    @Query('searchExclusionFreeText2') searchExclusionFreeText2: string,
+    @Query('searchExclusionFreeText3') searchExclusionFreeText3: string,
+    @Query('searchExclusionFreeText4') searchExclusionFreeText4: string,
+    @Query('searchExclusionFreeText5') searchExclusionFreeText5: string,
   ) {
     console.log('updateCorporation');
     return this.corporationsService.update(
@@ -160,6 +253,22 @@ export class CorporationsController {
       searchMaxEstablishmentYear,
       searchMinCapitalStock,
       searchMaxCapitalStock,
+      searchMinSitePV,
+      searchMaxSitePV,
+      searchMinAverageAge,
+      searchMaxAverageAge,
+      searchSNS,
+      searchAdvertising,
+      searchFreeText1,
+      searchFreeText2,
+      searchFreeText3,
+      searchFreeText4,
+      searchFreeText5,
+      searchExclusionFreeText1,
+      searchExclusionFreeText2,
+      searchExclusionFreeText3,
+      searchExclusionFreeText4,
+      searchExclusionFreeText5,
     );
   }
 

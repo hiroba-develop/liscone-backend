@@ -39,6 +39,22 @@ export class CorporationsService {
     searchMaxEstablishmentYear: string,
     searchMinCapitalStock: string,
     searchMaxCapitalStock: string,
+    searchMinSitePV: string,
+    searchMaxSitePV: string,
+    searchMinAverageAge: string,
+    searchMaxAverageAge: string,
+    searchSNS: string,
+    searchAdvertising: string,
+    searchFreeText1: string,
+    searchFreeText2: string,
+    searchFreeText3: string,
+    searchFreeText4: string,
+    searchFreeText5: string,
+    searchExclusionFreeText1: string,
+    searchExclusionFreeText2: string,
+    searchExclusionFreeText3: string,
+    searchExclusionFreeText4: string,
+    searchExclusionFreeText5: string,
   ): Promise<CorporationEntity[]> {
     let query =
       this.corporationsRepository.createQueryBuilder('tb_corporation');
@@ -208,6 +224,194 @@ export class CorporationsService {
         },
       );
     }
+    // サイトPV
+    if (searchMinSitePV === undefined && searchMaxSitePV !== undefined) {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinSitePV AND :searchMaxSitePV ',
+        {
+          searchMinSitePV: 0,
+          searchMaxSitePV: searchMaxSitePV,
+        },
+      );
+    }
+    if (searchMinSitePV !== undefined && searchMaxSitePV === undefined) {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinSitePV AND :searchMaxSitePV ',
+        {
+          searchMinSitePV: searchMinSitePV,
+          searchMaxSitePV: 100000000000000,
+        },
+      );
+    }
+    if (searchMinSitePV !== undefined && searchMaxSitePV !== undefined) {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinSitePV AND :searchMaxSitePV ',
+        {
+          searchMinSitePV: searchMinSitePV,
+          searchMaxSitePV: searchMaxSitePV,
+        },
+      );
+    }
+    // 平均年齢
+    if (searchMinAverageAge === '' && searchMaxAverageAge !== '') {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        {
+          searchMinAverageAge: 0,
+          searchMaxAverageAge: searchMaxAverageAge,
+        },
+      );
+    }
+    if (searchMinAverageAge !== '' && searchMaxAverageAge === '') {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        {
+          searchMinAverageAge: searchMinAverageAge,
+          searchMaxAverageAge: 1000,
+        },
+      );
+    }
+    if (searchMinAverageAge !== '' && searchMaxAverageAge !== '') {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        {
+          searchMinAverageAge: searchMinAverageAge,
+          searchMaxAverageAge: searchMaxAverageAge,
+        },
+      );
+    }
+    // 広告出稿
+    if (searchAdvertising !== '') {
+      query.andWhere('publishers IS NOT NULL OR ad_networks IS NOT NULL');
+    }
+    // フリーテキスト
+    if (
+      searchFreeText5 !== undefined &&
+      searchFreeText5 !== '' &&
+      searchFreeText5 !== null
+    ) {
+      query.andWhere(
+        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3 AND source_code LIKE :searchFreeText4 AND source_code LIKE :searchFreeText5)',
+        {
+          searchFreeText1: `%${searchFreeText1}%`,
+          searchFreeText2: `%${searchFreeText2}%`,
+          searchFreeText3: `%${searchFreeText3}%`,
+          searchFreeText4: `%${searchFreeText4}%`,
+          searchFreeText5: `%${searchFreeText5}%`,
+        },
+      );
+    } else if (
+      searchFreeText4 !== undefined &&
+      searchFreeText4 !== '' &&
+      searchFreeText4 !== null
+    ) {
+      query.andWhere(
+        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3 AND source_code LIKE :searchFreeText4 )',
+        {
+          searchFreeText1: `%${searchFreeText1}%`,
+          searchFreeText2: `%${searchFreeText2}%`,
+          searchFreeText3: `%${searchFreeText3}%`,
+          searchFreeText4: `%${searchFreeText4}%`,
+        },
+      );
+    } else if (
+      searchFreeText3 !== undefined &&
+      searchFreeText3 !== '' &&
+      searchFreeText3 !== null
+    ) {
+      query.andWhere(
+        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3)',
+        {
+          searchFreeText1: `%${searchFreeText1}%`,
+          searchFreeText2: `%${searchFreeText2}%`,
+          searchFreeText3: `%${searchFreeText3}%`,
+        },
+      );
+    } else if (
+      searchFreeText2 !== undefined &&
+      searchFreeText2 !== '' &&
+      searchFreeText2 !== null
+    ) {
+      query.andWhere(
+        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 )',
+        {
+          searchFreeText1: `%${searchFreeText1}%`,
+          searchFreeText2: `%${searchFreeText2}%`,
+        },
+      );
+    } else if (
+      searchFreeText1 !== undefined &&
+      searchFreeText1 !== '' &&
+      searchFreeText1 !== null
+    ) {
+      query.andWhere('source_code LIKE :searchFreeText1', {
+        searchFreeText1: `%${searchFreeText1}%`,
+      });
+    }
+    // 除外フリーテキスト
+    if (
+      searchExclusionFreeText5 !== undefined &&
+      searchExclusionFreeText5 !== '' &&
+      searchExclusionFreeText5 !== null
+    ) {
+      query.andWhere(
+        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3 AND source_code NOT LIKE :searchExclusionFreeText4 AND source_code NOT LIKE :searchExclusionFreeText5)',
+        {
+          searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
+          searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
+          searchExclusionFreeText3: `%${searchExclusionFreeText3}%`,
+          searchExclusionFreeText4: `%${searchExclusionFreeText4}%`,
+          searchExclusionFreeText5: `%${searchExclusionFreeText5}%`,
+        },
+      );
+    } else if (
+      searchExclusionFreeText4 !== undefined &&
+      searchExclusionFreeText4 !== '' &&
+      searchExclusionFreeText4 !== null
+    ) {
+      query.andWhere(
+        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3 AND source_code NOT LIKE :searchExclusionFreeText4 )',
+        {
+          searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
+          searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
+          searchExclusionFreeText3: `%${searchExclusionFreeText3}%`,
+          searchExclusionFreeText4: `%${searchExclusionFreeText4}%`,
+        },
+      );
+    } else if (
+      searchExclusionFreeText3 !== undefined &&
+      searchExclusionFreeText3 !== '' &&
+      searchExclusionFreeText3 !== null
+    ) {
+      query.andWhere(
+        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3)',
+        {
+          searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
+          searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
+          searchExclusionFreeText3: `%${searchExclusionFreeText3}%`,
+        },
+      );
+    } else if (
+      searchExclusionFreeText2 !== undefined &&
+      searchExclusionFreeText2 !== '' &&
+      searchExclusionFreeText2 !== null
+    ) {
+      query.andWhere(
+        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 )',
+        {
+          searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
+          searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
+        },
+      );
+    } else if (
+      searchExclusionFreeText1 !== undefined &&
+      searchExclusionFreeText1 !== '' &&
+      searchExclusionFreeText1 !== null
+    ) {
+      query.andWhere('source_code NOT LIKE :searchExclusionFreeText1', {
+        searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
+      });
+    }
     const response = query.getMany();
     console.log(response);
     return response;
@@ -229,6 +433,22 @@ export class CorporationsService {
     searchMaxEstablishmentYear: string,
     searchMinCapitalStock: string,
     searchMaxCapitalStock: string,
+    searchMinSitePV: string,
+    searchMaxSitePV: string,
+    searchMinAverageAge: string,
+    searchMaxAverageAge: string,
+    searchSNS: string,
+    searchAdvertising: string,
+    searchFreeText1: string,
+    searchFreeText2: string,
+    searchFreeText3: string,
+    searchFreeText4: string,
+    searchFreeText5: string,
+    searchExclusionFreeText1: string,
+    searchExclusionFreeText2: string,
+    searchExclusionFreeText3: string,
+    searchExclusionFreeText4: string,
+    searchExclusionFreeText5: string,
   ): Promise<number> {
     let query =
       this.corporationsRepository.createQueryBuilder('tb_corporation');
@@ -398,7 +618,212 @@ export class CorporationsService {
         },
       );
     }
+    // サイトPV
+    if (searchMinSitePV === undefined && searchMaxSitePV !== undefined) {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinSitePV AND :searchMaxSitePV ',
+        {
+          searchMinSitePV: 0,
+          searchMaxSitePV: searchMaxSitePV,
+        },
+      );
+    }
+    if (searchMinSitePV !== undefined && searchMaxSitePV === undefined) {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinSitePV AND :searchMaxSitePV ',
+        {
+          searchMinSitePV: searchMinSitePV,
+          searchMaxSitePV: 100000000000000,
+        },
+      );
+    }
+    if (searchMinSitePV !== undefined && searchMaxSitePV !== undefined) {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinSitePV AND :searchMaxSitePV ',
+        {
+          searchMinSitePV: searchMinSitePV,
+          searchMaxSitePV: searchMaxSitePV,
+        },
+      );
+    }
+    // 平均年齢
+    if (searchMinAverageAge === '' && searchMaxAverageAge !== '') {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        {
+          searchMinAverageAge: 0,
+          searchMaxAverageAge: searchMaxAverageAge,
+        },
+      );
+    }
+    if (searchMinAverageAge !== '' && searchMaxAverageAge === '') {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        {
+          searchMinAverageAge: searchMinAverageAge,
+          searchMaxAverageAge: 1000,
+        },
+      );
+    }
+    if (searchMinAverageAge !== '' && searchMaxAverageAge !== '') {
+      query = query.andWhere(
+        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        {
+          searchMinAverageAge: searchMinAverageAge,
+          searchMaxAverageAge: searchMaxAverageAge,
+        },
+      );
+    }
+    // 広告出稿
+    if (searchAdvertising !== '') {
+      query.andWhere('publishers IS NOT NULL OR ad_networks IS NOT NULL');
+    }
+    // フリーテキスト
+    if (
+      searchFreeText5 !== undefined &&
+      searchFreeText5 !== '' &&
+      searchFreeText5 !== null
+    ) {
+      query.andWhere(
+        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3 AND source_code LIKE :searchFreeText4 AND source_code LIKE :searchFreeText5)',
+        {
+          searchFreeText1: `%${searchFreeText1}%`,
+          searchFreeText2: `%${searchFreeText2}%`,
+          searchFreeText3: `%${searchFreeText3}%`,
+          searchFreeText4: `%${searchFreeText4}%`,
+          searchFreeText5: `%${searchFreeText5}%`,
+        },
+      );
+    } else if (
+      searchFreeText4 !== undefined &&
+      searchFreeText4 !== '' &&
+      searchFreeText4 !== null
+    ) {
+      query.andWhere(
+        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3 AND source_code LIKE :searchFreeText4 )',
+        {
+          searchFreeText1: `%${searchFreeText1}%`,
+          searchFreeText2: `%${searchFreeText2}%`,
+          searchFreeText3: `%${searchFreeText3}%`,
+          searchFreeText4: `%${searchFreeText4}%`,
+        },
+      );
+    } else if (
+      searchFreeText3 !== undefined &&
+      searchFreeText3 !== '' &&
+      searchFreeText3 !== null
+    ) {
+      query.andWhere(
+        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3)',
+        {
+          searchFreeText1: `%${searchFreeText1}%`,
+          searchFreeText2: `%${searchFreeText2}%`,
+          searchFreeText3: `%${searchFreeText3}%`,
+        },
+      );
+    } else if (
+      searchFreeText2 !== undefined &&
+      searchFreeText2 !== '' &&
+      searchFreeText2 !== null
+    ) {
+      query.andWhere(
+        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 )',
+        {
+          searchFreeText1: `%${searchFreeText1}%`,
+          searchFreeText2: `%${searchFreeText2}%`,
+        },
+      );
+    } else if (
+      searchFreeText1 !== undefined &&
+      searchFreeText1 !== '' &&
+      searchFreeText1 !== null
+    ) {
+      query.andWhere('source_code LIKE :searchFreeText1', {
+        searchFreeText1: `%${searchFreeText1}%`,
+      });
+    }
+    // 除外フリーテキスト
+    if (
+      searchExclusionFreeText5 !== undefined &&
+      searchExclusionFreeText5 !== '' &&
+      searchExclusionFreeText5 !== null
+    ) {
+      query.andWhere(
+        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3 AND source_code NOT LIKE :searchExclusionFreeText4 AND source_code NOT LIKE :searchExclusionFreeText5)',
+        {
+          searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
+          searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
+          searchExclusionFreeText3: `%${searchExclusionFreeText3}%`,
+          searchExclusionFreeText4: `%${searchExclusionFreeText4}%`,
+          searchExclusionFreeText5: `%${searchExclusionFreeText5}%`,
+        },
+      );
+    } else if (
+      searchExclusionFreeText4 !== undefined &&
+      searchExclusionFreeText4 !== '' &&
+      searchExclusionFreeText4 !== null
+    ) {
+      query.andWhere(
+        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3 AND source_code NOT LIKE :searchExclusionFreeText4 )',
+        {
+          searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
+          searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
+          searchExclusionFreeText3: `%${searchExclusionFreeText3}%`,
+          searchExclusionFreeText4: `%${searchExclusionFreeText4}%`,
+        },
+      );
+    } else if (
+      searchExclusionFreeText3 !== undefined &&
+      searchExclusionFreeText3 !== '' &&
+      searchExclusionFreeText3 !== null
+    ) {
+      query.andWhere(
+        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3)',
+        {
+          searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
+          searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
+          searchExclusionFreeText3: `%${searchExclusionFreeText3}%`,
+        },
+      );
+    } else if (
+      searchExclusionFreeText2 !== undefined &&
+      searchExclusionFreeText2 !== '' &&
+      searchExclusionFreeText2 !== null
+    ) {
+      query.andWhere(
+        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 )',
+        {
+          searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
+          searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
+        },
+      );
+    } else if (
+      searchExclusionFreeText1 !== undefined &&
+      searchExclusionFreeText1 !== '' &&
+      searchExclusionFreeText1 !== null
+    ) {
+      query.andWhere('source_code NOT LIKE :searchExclusionFreeText1', {
+        searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
+      });
+    }
     const response = query.getCount();
+    console.log(response);
+    return response;
+  }
+
+  findByRecruitCorporationIds(
+    corporation: CreateCorporationDTO,
+    CorporationIds: [],
+  ): Promise<CorporationEntity[]> {
+    let query =
+      this.corporationsRepository.createQueryBuilder('tb_corporation');
+    // 法人番号
+    if (CorporationIds.length) {
+      query.andWhere('tb_corporation.corporation_id IN (:...ids)', {
+        ids: CorporationIds,
+      });
+    }
+    const response = query.getMany();
     console.log(response);
     return response;
   }
@@ -431,6 +856,22 @@ export class CorporationsService {
     searchMaxEstablishmentYear: string,
     searchMinCapitalStock: string,
     searchMaxCapitalStock: string,
+    searchMinSitePV: string,
+    searchMaxSitePV: string,
+    searchMinAverageAge: string,
+    searchMaxAverageAge: string,
+    searchSNS: string,
+    searchAdvertising: string,
+    searchFreeText1: string,
+    searchFreeText2: string,
+    searchFreeText3: string,
+    searchFreeText4: string,
+    searchFreeText5: string,
+    searchExclusionFreeText1: string,
+    searchExclusionFreeText2: string,
+    searchExclusionFreeText3: string,
+    searchExclusionFreeText4: string,
+    searchExclusionFreeText5: string,
   ) {
     const resultcorporation = await this.findByCorporationAll(
       corporation,
@@ -448,6 +889,22 @@ export class CorporationsService {
       searchMaxEstablishmentYear,
       searchMinCapitalStock,
       searchMaxCapitalStock,
+      searchMinSitePV,
+      searchMaxSitePV,
+      searchMinAverageAge,
+      searchMaxAverageAge,
+      searchSNS,
+      searchAdvertising,
+      searchFreeText1,
+      searchFreeText2,
+      searchFreeText3,
+      searchFreeText4,
+      searchFreeText5,
+      searchExclusionFreeText1,
+      searchExclusionFreeText2,
+      searchExclusionFreeText3,
+      searchExclusionFreeText4,
+      searchExclusionFreeText5,
     );
     if (!resultcorporation) {
       throw new NotFoundException('corporation id is not exist');
@@ -486,6 +943,22 @@ export class CorporationsService {
         searchMaxEstablishmentYear,
         searchMinCapitalStock,
         searchMaxCapitalStock,
+        searchMinSitePV,
+        searchMaxSitePV,
+        searchMinAverageAge,
+        searchMaxAverageAge,
+        searchSNS,
+        searchAdvertising,
+        searchFreeText1,
+        searchFreeText2,
+        searchFreeText3,
+        searchFreeText4,
+        searchFreeText5,
+        searchExclusionFreeText1,
+        searchExclusionFreeText2,
+        searchExclusionFreeText3,
+        searchExclusionFreeText4,
+        searchExclusionFreeText5,
       );
     } catch (e) {
       console.log('there is no corporation having id : ' + corporation);

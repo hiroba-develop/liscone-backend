@@ -12,7 +12,7 @@ import { SaleslistsModule } from './saleslists/saleslists.module';
 import { SalestasksModule } from './salestasks/salestasks.module';
 import { ConfigModule } from '@nestjs/config';
 import { ActionlogsModule } from './actionlogs/actionlogs.module';
-// import { UsersModule } from './users/users.module';
+import { RecruitModule } from './recruit/recruit.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,6 +40,7 @@ import { ActionlogsModule } from './actionlogs/actionlogs.module';
     MemberSalestasksModule,
     CorporationstaffsModule,
     ActionlogsModule,
+    RecruitModule,
   ],
   controllers: [AppController],
   providers: [AppService],
