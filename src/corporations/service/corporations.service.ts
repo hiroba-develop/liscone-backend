@@ -282,7 +282,7 @@ export class CorporationsService {
     }
     // 広告出稿
     if (searchAdvertising !== '') {
-      query.andWhere('publishers IS NOT NULL OR ad_networks IS NOT NULL');
+      query.andWhere('(publishers IS NOT NULL OR ad_networks IS NOT NULL)');
     }
     // フリーテキスト
     if (
@@ -291,7 +291,7 @@ export class CorporationsService {
       searchFreeText5 !== null
     ) {
       query.andWhere(
-        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3 AND source_code LIKE :searchFreeText4 AND source_code LIKE :searchFreeText5)',
+        '(business_detail LIKE :searchFreeText1 AND business_detail LIKE :searchFreeText2 AND business_detail LIKE :searchFreeText3 AND business_detail LIKE :searchFreeText4 AND business_detail LIKE :searchFreeText5)',
         {
           searchFreeText1: `%${searchFreeText1}%`,
           searchFreeText2: `%${searchFreeText2}%`,
@@ -306,7 +306,7 @@ export class CorporationsService {
       searchFreeText4 !== null
     ) {
       query.andWhere(
-        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3 AND source_code LIKE :searchFreeText4 )',
+        '(business_detail LIKE :searchFreeText1 AND business_detail LIKE :searchFreeText2 AND business_detail LIKE :searchFreeText3 AND business_detail LIKE :searchFreeText4 )',
         {
           searchFreeText1: `%${searchFreeText1}%`,
           searchFreeText2: `%${searchFreeText2}%`,
@@ -320,7 +320,7 @@ export class CorporationsService {
       searchFreeText3 !== null
     ) {
       query.andWhere(
-        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3)',
+        '(business_detail LIKE :searchFreeText1 AND business_detail LIKE :searchFreeText2 AND business_detail LIKE :searchFreeText3)',
         {
           searchFreeText1: `%${searchFreeText1}%`,
           searchFreeText2: `%${searchFreeText2}%`,
@@ -333,7 +333,7 @@ export class CorporationsService {
       searchFreeText2 !== null
     ) {
       query.andWhere(
-        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 )',
+        '(business_detail LIKE :searchFreeText1 AND business_detail LIKE :searchFreeText2 )',
         {
           searchFreeText1: `%${searchFreeText1}%`,
           searchFreeText2: `%${searchFreeText2}%`,
@@ -344,7 +344,7 @@ export class CorporationsService {
       searchFreeText1 !== '' &&
       searchFreeText1 !== null
     ) {
-      query.andWhere('source_code LIKE :searchFreeText1', {
+      query.andWhere('business_detail LIKE :searchFreeText1', {
         searchFreeText1: `%${searchFreeText1}%`,
       });
     }
@@ -355,7 +355,7 @@ export class CorporationsService {
       searchExclusionFreeText5 !== null
     ) {
       query.andWhere(
-        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3 AND source_code NOT LIKE :searchExclusionFreeText4 AND source_code NOT LIKE :searchExclusionFreeText5)',
+        '(business_detail NOT LIKE :searchExclusionFreeText1 AND business_detail NOT LIKE :searchExclusionFreeText2 AND business_detail NOT LIKE :searchExclusionFreeText3 AND business_detail NOT LIKE :searchExclusionFreeText4 AND business_detail NOT LIKE :searchExclusionFreeText5)',
         {
           searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
           searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
@@ -370,7 +370,7 @@ export class CorporationsService {
       searchExclusionFreeText4 !== null
     ) {
       query.andWhere(
-        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3 AND source_code NOT LIKE :searchExclusionFreeText4 )',
+        '(business_detail NOT LIKE :searchExclusionFreeText1 AND business_detail NOT LIKE :searchExclusionFreeText2 AND business_detail NOT LIKE :searchExclusionFreeText3 AND business_detail NOT LIKE :searchExclusionFreeText4 )',
         {
           searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
           searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
@@ -384,7 +384,7 @@ export class CorporationsService {
       searchExclusionFreeText3 !== null
     ) {
       query.andWhere(
-        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3)',
+        '(business_detail NOT LIKE :searchExclusionFreeText1 AND business_detail NOT LIKE :searchExclusionFreeText2 AND business_detail NOT LIKE :searchExclusionFreeText3)',
         {
           searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
           searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
@@ -397,7 +397,7 @@ export class CorporationsService {
       searchExclusionFreeText2 !== null
     ) {
       query.andWhere(
-        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 )',
+        '(business_detail NOT LIKE :searchExclusionFreeText1 AND business_detail NOT LIKE :searchExclusionFreeText2 )',
         {
           searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
           searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
@@ -408,7 +408,7 @@ export class CorporationsService {
       searchExclusionFreeText1 !== '' &&
       searchExclusionFreeText1 !== null
     ) {
-      query.andWhere('source_code NOT LIKE :searchExclusionFreeText1', {
+      query.andWhere('business_detail NOT LIKE :searchExclusionFreeText1', {
         searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
       });
     }
@@ -676,7 +676,7 @@ export class CorporationsService {
     }
     // 広告出稿
     if (searchAdvertising !== '') {
-      query.andWhere('publishers IS NOT NULL OR ad_networks IS NOT NULL');
+      query.andWhere('(publishers IS NOT NULL OR ad_networks IS NOT NULL)');
     }
     // フリーテキスト
     if (
@@ -685,7 +685,7 @@ export class CorporationsService {
       searchFreeText5 !== null
     ) {
       query.andWhere(
-        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3 AND source_code LIKE :searchFreeText4 AND source_code LIKE :searchFreeText5)',
+        '(business_detail LIKE :searchFreeText1 AND business_detail LIKE :searchFreeText2 AND business_detail LIKE :searchFreeText3 AND business_detail LIKE :searchFreeText4 AND business_detail LIKE :searchFreeText5)',
         {
           searchFreeText1: `%${searchFreeText1}%`,
           searchFreeText2: `%${searchFreeText2}%`,
@@ -700,7 +700,7 @@ export class CorporationsService {
       searchFreeText4 !== null
     ) {
       query.andWhere(
-        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3 AND source_code LIKE :searchFreeText4 )',
+        '(business_detail LIKE :searchFreeText1 AND business_detail LIKE :searchFreeText2 AND business_detail LIKE :searchFreeText3 AND business_detail LIKE :searchFreeText4 )',
         {
           searchFreeText1: `%${searchFreeText1}%`,
           searchFreeText2: `%${searchFreeText2}%`,
@@ -714,7 +714,7 @@ export class CorporationsService {
       searchFreeText3 !== null
     ) {
       query.andWhere(
-        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 AND source_code LIKE :searchFreeText3)',
+        '(business_detail LIKE :searchFreeText1 AND business_detail LIKE :searchFreeText2 AND business_detail LIKE :searchFreeText3)',
         {
           searchFreeText1: `%${searchFreeText1}%`,
           searchFreeText2: `%${searchFreeText2}%`,
@@ -727,7 +727,7 @@ export class CorporationsService {
       searchFreeText2 !== null
     ) {
       query.andWhere(
-        '(source_code LIKE :searchFreeText1 AND source_code LIKE :searchFreeText2 )',
+        '(business_detail LIKE :searchFreeText1 AND business_detail LIKE :searchFreeText2 )',
         {
           searchFreeText1: `%${searchFreeText1}%`,
           searchFreeText2: `%${searchFreeText2}%`,
@@ -738,7 +738,7 @@ export class CorporationsService {
       searchFreeText1 !== '' &&
       searchFreeText1 !== null
     ) {
-      query.andWhere('source_code LIKE :searchFreeText1', {
+      query.andWhere('business_detail LIKE :searchFreeText1', {
         searchFreeText1: `%${searchFreeText1}%`,
       });
     }
@@ -749,7 +749,7 @@ export class CorporationsService {
       searchExclusionFreeText5 !== null
     ) {
       query.andWhere(
-        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3 AND source_code NOT LIKE :searchExclusionFreeText4 AND source_code NOT LIKE :searchExclusionFreeText5)',
+        '(business_detail NOT LIKE :searchExclusionFreeText1 AND business_detail NOT LIKE :searchExclusionFreeText2 AND business_detail NOT LIKE :searchExclusionFreeText3 AND business_detail NOT LIKE :searchExclusionFreeText4 AND business_detail NOT LIKE :searchExclusionFreeText5)',
         {
           searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
           searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
@@ -764,7 +764,7 @@ export class CorporationsService {
       searchExclusionFreeText4 !== null
     ) {
       query.andWhere(
-        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3 AND source_code NOT LIKE :searchExclusionFreeText4 )',
+        '(business_detail NOT LIKE :searchExclusionFreeText1 AND business_detail NOT LIKE :searchExclusionFreeText2 AND business_detail NOT LIKE :searchExclusionFreeText3 AND business_detail NOT LIKE :searchExclusionFreeText4 )',
         {
           searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
           searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
@@ -778,7 +778,7 @@ export class CorporationsService {
       searchExclusionFreeText3 !== null
     ) {
       query.andWhere(
-        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 AND source_code NOT LIKE :searchExclusionFreeText3)',
+        '(business_detail NOT LIKE :searchExclusionFreeText1 AND business_detail NOT LIKE :searchExclusionFreeText2 AND business_detail NOT LIKE :searchExclusionFreeText3)',
         {
           searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
           searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
@@ -791,7 +791,7 @@ export class CorporationsService {
       searchExclusionFreeText2 !== null
     ) {
       query.andWhere(
-        '(source_code NOT LIKE :searchExclusionFreeText1 AND source_code NOT LIKE :searchExclusionFreeText2 )',
+        '(business_detail NOT LIKE :searchExclusionFreeText1 AND business_detail NOT LIKE :searchExclusionFreeText2 )',
         {
           searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
           searchExclusionFreeText2: `%${searchExclusionFreeText2}%`,
@@ -802,7 +802,7 @@ export class CorporationsService {
       searchExclusionFreeText1 !== '' &&
       searchExclusionFreeText1 !== null
     ) {
-      query.andWhere('source_code NOT LIKE :searchExclusionFreeText1', {
+      query.andWhere('business_detail NOT LIKE :searchExclusionFreeText1', {
         searchExclusionFreeText1: `%${searchExclusionFreeText1}%`,
       });
     }
