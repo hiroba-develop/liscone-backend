@@ -73,10 +73,10 @@ export class CorporationsService {
       });
     }
     // 業種
-    if (searchIndustry !== '') {
-      query.andWhere('business_category LIKE :searchIndustry', {
+    if (searchIndustry.length) {
+      query.andWhere('business_category IN (:...searchIndustry)', {
         business_category: corporation.business_category,
-        searchIndustry: `%${searchIndustry}%`,
+        searchIndustry: searchIndustry,
       });
     }
     // 都道府県
@@ -467,10 +467,10 @@ export class CorporationsService {
       });
     }
     // 業種
-    if (searchIndustry !== '') {
-      query.andWhere('business_category LIKE :searchIndustry', {
+    if (searchIndustry.length) {
+      query.andWhere('business_category IN (:...searchIndustry)', {
         business_category: corporation.business_category,
-        searchIndustry: `%${searchIndustry}%`,
+        searchIndustry: searchIndustry,
       });
     }
     // 都道府県
