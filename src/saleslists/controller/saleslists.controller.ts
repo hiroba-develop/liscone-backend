@@ -158,6 +158,7 @@ export class SaleslistsController {
       }
     } else if (saleslist.sales_list_type === '02') {
       for (const data of saleslist.datas) {
+        console.log(data);
         this.saleslistsService.createsalesstaffs(
           data['staff_id'],
           data['corporation_id'],

@@ -255,7 +255,7 @@ export class CorporationsService {
     // 平均年齢
     if (searchMinAverageAge === '' && searchMaxAverageAge !== '') {
       query = query.andWhere(
-        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        'average_age BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
         {
           searchMinAverageAge: 0,
           searchMaxAverageAge: searchMaxAverageAge,
@@ -264,7 +264,7 @@ export class CorporationsService {
     }
     if (searchMinAverageAge !== '' && searchMaxAverageAge === '') {
       query = query.andWhere(
-        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        'average_age BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
         {
           searchMinAverageAge: searchMinAverageAge,
           searchMaxAverageAge: 1000,
@@ -273,7 +273,7 @@ export class CorporationsService {
     }
     if (searchMinAverageAge !== '' && searchMaxAverageAge !== '') {
       query = query.andWhere(
-        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        'average_age BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
         {
           searchMinAverageAge: searchMinAverageAge,
           searchMaxAverageAge: searchMaxAverageAge,
@@ -649,7 +649,7 @@ export class CorporationsService {
     // 平均年齢
     if (searchMinAverageAge === '' && searchMaxAverageAge !== '') {
       query = query.andWhere(
-        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        'average_age BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
         {
           searchMinAverageAge: 0,
           searchMaxAverageAge: searchMaxAverageAge,
@@ -658,7 +658,7 @@ export class CorporationsService {
     }
     if (searchMinAverageAge !== '' && searchMaxAverageAge === '') {
       query = query.andWhere(
-        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        'average_age BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
         {
           searchMinAverageAge: searchMinAverageAge,
           searchMaxAverageAge: 1000,
@@ -667,7 +667,7 @@ export class CorporationsService {
     }
     if (searchMinAverageAge !== '' && searchMaxAverageAge !== '') {
       query = query.andWhere(
-        'site_pv BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
+        'average_age BETWEEN :searchMinAverageAge AND :searchMaxAverageAge ',
         {
           searchMinAverageAge: searchMinAverageAge,
           searchMaxAverageAge: searchMaxAverageAge,
@@ -807,23 +807,6 @@ export class CorporationsService {
       });
     }
     const response = query.getCount();
-    console.log(response);
-    return response;
-  }
-
-  findByRecruitCorporationIds(
-    corporation: CreateCorporationDTO,
-    CorporationIds: [],
-  ): Promise<CorporationEntity[]> {
-    let query =
-      this.corporationsRepository.createQueryBuilder('tb_corporation');
-    // 法人番号
-    if (CorporationIds.length) {
-      query.andWhere('tb_corporation.corporation_id IN (:...ids)', {
-        ids: CorporationIds,
-      });
-    }
-    const response = query.getMany();
     console.log(response);
     return response;
   }

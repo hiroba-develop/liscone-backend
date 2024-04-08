@@ -24,6 +24,22 @@ export class RecruitController {
     return this.salescorporationstaffsService.findAll();
   }
 
+  @Get('/searchRecruitResultCount')
+  getRecruitResultCount(
+    @Body() dto: CreateRecruitDTO,
+    @Query('searchRecruitBigResult') searchRecruitBigResult: string,
+    @Query('searchRecruitMiddleResult') searchRecruitMiddleResult: string,
+    @Query('searchRecruitSmallResult') searchRecruitSmallResult: string,
+  ): Promise<RecruitEntity[]> {
+    console.log('getRecruitResultCount');
+    return this.salescorporationstaffsService.findByRecruitResultCount(
+      dto,
+      searchRecruitBigResult,
+      searchRecruitMiddleResult,
+      searchRecruitSmallResult,
+    );
+  }
+
   @Get('/searchRecruitResult')
   getRecruitResult(
     @Body() dto: CreateRecruitDTO,

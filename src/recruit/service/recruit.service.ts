@@ -21,29 +21,65 @@ export class RecruitService {
     return this.recruitsRepository.find();
   }
 
-  findByRecruitResult(
+  findByRecruitResultCount(
     dto: CreateRecruitDTO,
     searchRecruitBigResult: string,
     searchRecruitMiddleResult: string,
     searchRecruitSmallResult: string,
   ): Promise<RecruitEntity[]> {
     let query = this.recruitsRepository.createQueryBuilder('tb_recruit');
+    query.select("corporation_id");
     // 大項目
-    if (searchRecruitBigResult !== '') {
+    if (searchRecruitBigResult !== '' && searchRecruitBigResult !== undefined) {
       query.andWhere('recruit_large_category = :searchRecruitBigResult', {
         recruit_large_category: dto.recruit_large_category,
         searchRecruitBigResult: searchRecruitBigResult,
       });
     }
     // 中項目
-    if (searchRecruitMiddleResult !== '') {
+    if (searchRecruitMiddleResult !== '' && searchRecruitMiddleResult !== undefined) {
       query.andWhere('recruit_middle_category = :searchRecruitMiddleResult', {
         recruit_middle_category: dto.recruit_middle_category,
         searchRecruitMiddleResult: searchRecruitMiddleResult,
       });
     }
     // 小項目
-    if (searchRecruitSmallResult !== '') {
+    if (searchRecruitSmallResult !== '' && searchRecruitSmallResult !== undefined) {
+      query.andWhere('recruit_small_category = :searchRecruitSmallResult', {
+        recruit_small_category: dto.recruit_small_category,
+        searchRecruitSmallResult: searchRecruitSmallResult,
+      });
+    }
+    const response = query.getRawMany();
+    console.log(response);
+    return response;
+  }
+
+  findByRecruitResult(
+    dto: CreateRecruitDTO,
+    searchRecruitBigResult: string,
+    searchRecruitMiddleResult: string,
+    searchRecruitSmallResult: string,
+  ): Promise<RecruitEntity[]> {
+    console.log(searchRecruitMiddleResult)
+    let query = this.recruitsRepository.createQueryBuilder('tb_recruit');
+    query.innerJoinAndSelect('tb_recruit.corporationEntity', 'corporationEntity');
+    // 大項目
+    if (searchRecruitBigResult !== '' && searchRecruitBigResult !== undefined) {
+      query.andWhere('recruit_large_category = :searchRecruitBigResult', {
+        recruit_large_category: dto.recruit_large_category,
+        searchRecruitBigResult: searchRecruitBigResult,
+      });
+    }
+    // 中項目
+    if (searchRecruitMiddleResult !== '' && searchRecruitMiddleResult !== undefined) {
+      query.andWhere('recruit_middle_category = :searchRecruitMiddleResult', {
+        recruit_middle_category: dto.recruit_middle_category,
+        searchRecruitMiddleResult: searchRecruitMiddleResult,
+      });
+    }
+    // 小項目
+    if (searchRecruitSmallResult !== '' && searchRecruitSmallResult !== undefined) {
       query.andWhere('recruit_small_category = :searchRecruitSmallResult', {
         recruit_small_category: dto.recruit_small_category,
         searchRecruitSmallResult: searchRecruitSmallResult,

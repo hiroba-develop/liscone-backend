@@ -165,17 +165,6 @@ export class CorporationsController {
       searchExclusionFreeText5,
     );
   }
-  @Get('/recruitCorporationIds')
-  getRecruitCorporationIds(
-    @Body() dto: CreateCorporationDTO,
-    @Query('CorporationIds') CorporationIds: [],
-  ): Promise<CorporationEntity[]> {
-    console.log('getRecruitCorporationIds');
-    return this.corporationsService.findByRecruitCorporationIds(
-      dto,
-      CorporationIds,
-    );
-  }
 
   @Get('/byId')
   getCorporationById(

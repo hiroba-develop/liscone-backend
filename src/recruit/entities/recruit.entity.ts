@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn,ManyToOne,JoinColumn } from 'typeorm';
+import { CorporationEntity } from '../../corporations/entities/corporations.entity';
 
 @Entity('tb_recruit')
 export class RecruitEntity {
@@ -28,4 +29,11 @@ export class RecruitEntity {
 
   @Column({ type: 'timestamp', nullable: true })
   modified: Date;
+
+  @ManyToOne(() => CorporationEntity, (corporationEntity) => corporationEntity.corporation_id)
+  @JoinColumn({
+    name: 'corporation_id',
+    referencedColumnName: 'corporation_id',
+  })
+  corporationEntity: CorporationEntity;
 }
