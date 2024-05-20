@@ -32,6 +32,9 @@ export class CorporationstaffEntity {
   @Column({ length: 256 })
   other_information: string;
 
+  @Column({ length: 1 })
+  employee_status: string;
+
   @Column({ length: 256 })
   created_by: string;
 

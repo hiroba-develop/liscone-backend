@@ -147,8 +147,6 @@ export class SaleslistsController {
   async createSaleslist(@Body() saleslist: CreateSaleslistDTO) {
     console.log('createSaleslist');
     const createdSalesList = await this.saleslistsService.create(saleslist);
-
-    console.log(saleslist);
     if (saleslist.sales_list_type === '01') {
       for (const corporationId of saleslist.datas) {
         this.saleslistsService.createsalescorporations(
@@ -158,7 +156,6 @@ export class SaleslistsController {
       }
     } else if (saleslist.sales_list_type === '02') {
       for (const data of saleslist.datas) {
-        console.log(data);
         this.saleslistsService.createsalesstaffs(
           data['staff_id'],
           data['corporation_id'],

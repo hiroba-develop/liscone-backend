@@ -18,7 +18,7 @@ export class SalesStaffsListEntity {
   @PrimaryColumn({ length: 12 })
   corporation_id: string;
 
-  @Column({ length: 12 })
+  @PrimaryColumn({ length: 12 })
   staff_id: string;
 
   @Column({ length: 8 })
