@@ -13,6 +13,8 @@ import { SalestasksModule } from './salestasks/salestasks.module';
 import { ConfigModule } from '@nestjs/config';
 import { ActionlogsModule } from './actionlogs/actionlogs.module';
 import { RecruitModule } from './recruit/recruit.module';
+import { AutoFormSendModule } from './autoFormSend/autoFormSend.module';
+import { CompanyModule } from './company/company.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,9 +28,9 @@ import { RecruitModule } from './recruit/recruit.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      logging: ['query', 'error'],
       entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: false, // 개발 환경에서만 사용하세요. 프로덕션 환경에서는 false로 설정하는 것이 좋습니다.
+      synchronize: false, // 本番環境ではfalse
+      logging: ['query', 'error'],
     }),
     // UsersModule,
     MembersModule,
@@ -41,6 +43,8 @@ import { RecruitModule } from './recruit/recruit.module';
     CorporationstaffsModule,
     ActionlogsModule,
     RecruitModule,
+    AutoFormSendModule,
+    CompanyModule
   ],
   controllers: [AppController],
   providers: [AppService],
