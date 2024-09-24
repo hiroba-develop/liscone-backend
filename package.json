@@ -29,7 +29,6 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.3.0",
     "@nestjs/typeorm": "^9.0.1",
-    "chromedriver": "^128.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cross-env": "^7.0.3",
@@ -38,10 +37,8 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
-    "python-shell": "^5.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "selenium-webdriver": "^4.24.0",
     "typeorm": "^0.3.16",
     "webpack": "^5.86.0"
   },

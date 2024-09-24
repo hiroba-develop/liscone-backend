@@ -16,12 +16,12 @@ import { RecruitEntity } from '../entities/recruit.entity';
 import { RecruitService } from '../service/recruit.service';
 @Controller('recruit')
 export class RecruitController {
-  constructor(private readonly recruitService: RecruitService) {}
+  constructor(private readonly salescorporationstaffsService: RecruitService) {}
 
   @Get()
   getAll(): Promise<RecruitEntity[]> {
     console.log('getAll');
-    return this.recruitService.findAll();
+    return this.salescorporationstaffsService.findAll();
   }
 
   @Get('/searchRecruitResultCount')
@@ -32,7 +32,7 @@ export class RecruitController {
     @Query('searchRecruitSmallResult') searchRecruitSmallResult: string,
   ): Promise<RecruitEntity[]> {
     console.log('getRecruitResultCount');
-    return this.recruitService.findByRecruitResultCount(
+    return this.salescorporationstaffsService.findByRecruitResultCount(
       dto,
       searchRecruitBigResult,
       searchRecruitMiddleResult,
@@ -48,7 +48,7 @@ export class RecruitController {
     @Query('searchRecruitSmallResult') searchRecruitSmallResult: string,
   ): Promise<RecruitEntity[]> {
     console.log('getRecruitResult');
-    return this.recruitService.findByRecruitResult(
+    return this.salescorporationstaffsService.findByRecruitResult(
       dto,
       searchRecruitBigResult,
       searchRecruitMiddleResult,
@@ -62,7 +62,7 @@ export class RecruitController {
     @Query('corporationId') corporationId: string,
   ): Promise<RecruitEntity[]> {
     console.log('getcorporationId');
-    return this.recruitService.findByCorporationNumber(
+    return this.salescorporationstaffsService.findByCorporationNumber(
       dto,
       corporationId,
     );
@@ -71,17 +71,17 @@ export class RecruitController {
   @Post()
   createSalesCorporationstaff(@Body() salescorporationstaff: CreateRecruitDTO) {
     console.log('createSalesCorporationstaff');
-    return this.recruitService.create(salescorporationstaff);
+    return this.salescorporationstaffsService.create(salescorporationstaff);
   }
 
   @Patch()
   updateSalesCorporationstaff(@Body() salescorporationstaff: UpdateRecruitDTO) {
     console.log('updateSalesCorporationstaff');
-    return this.recruitService.update(salescorporationstaff);
+    return this.salescorporationstaffsService.update(salescorporationstaff);
   }
 
   @Delete(':id')
   removeOne(@Param() id: string): Promise<void> {
-    return this.recruitService.remove(id);
+    return this.salescorporationstaffsService.remove(id);
   }
 }
