@@ -107,6 +107,8 @@ export class AutoFormSendService {
     chromeOptions.addArguments('--disable-gpu'); // GPUレンダリングを無効化
     chromeOptions.addArguments('--no-sandbox'); // サンドボックスモードを無効化
     chromeOptions.addArguments('--disable-dev-shm-usage'); // 開発者向け共有メモリの使用を無効化
+    chromeOptions.addArguments('--headless');
+    chromeOptions.addArguments('--window-size=1920,1080');
 
     // WebDriverのビルダーを使用してChromeドライバーをセットアップ
     const driver: WebDriver = await new Builder()
@@ -1195,7 +1197,7 @@ export class AutoFormSendService {
           // 分類されたデータを表示
           console.log('\nカテゴリー:');
           console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
-          await this.updateSendStatus(url, InsertformResult,'0');
+          await this.updateSendStatus(url, InsertformResult, '0');
         }
       } catch (error) {
         console.error('不明なエラーが発生しました:', error);
