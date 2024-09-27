@@ -62,9 +62,9 @@ export class AutoFormSendService {
       { corporation_url, form_list_no },
       { send_status: sendStatus },
     );
-
-    console.log('Rows affected:', updateResult.affected);
   }
+
+
   async insertForm(data): Promise<string> {
     return await this.dataSource.transaction(async (manager) => {
       // 1. tb_auto_form_send テーブルに新しいレコードを挿入
@@ -80,7 +80,7 @@ export class AutoFormSendService {
       // 2. tb_auto_form_send_log テーブルに関連するログを挿入
       for (let i = 1; i < data.csvData.length; i++) {
         const autoFormSendLog = new AutoFormSendLogEntity();
-        console.log(data.csvData);
+        // console.log(data.csvData);
         const corporationId = data.csvData[i][0].trim(); // 法人番号を取り出して、trimで余分な空白を削除
         const corporationName = data.csvData[i][1].trim(); // 法人名を取り出して、trimで余分な空白を削除
         const corporationUrl = data.csvData[i][2].trim(); // 法人URLを取り出して、trimで余分な空白を削除
@@ -697,7 +697,7 @@ export class AutoFormSendService {
               }
             } catch (e) {
               if (e instanceof error.StaleElementReferenceError) {
-                console.log('Stale element detected, retrying...'); // ステールエレメント例外が発生した場合にリトライのメッセージを表示
+                // console.log('Stale element detected, retrying...'); // ステールエレメント例外が発生した場合にリトライのメッセージを表示
               } else {
                 throw e;
               }
@@ -1202,7 +1202,7 @@ export class AutoFormSendService {
           );
 
           // お問い合わせフォームの送信ボタンを検出してクリックします。クリック成功でTrue
-          const clickSendButton: boolean = await this.isClickSendButton(driver);
+          const clickSendButton: boolean = await this.isClickSendButton(driver,url);
           // if (clickSendButton) {
           //   // 入力項目エラー画面が表示されているかを検出
           //   const inputErrorDisplayed: boolean = await driver
@@ -1248,13 +1248,13 @@ export class AutoFormSendService {
           //   await this.updateSendStatus(CSVurl, InsertformResult, '2');
           // }
 
-          // 抽出したデータを表示
-          console.log('抽出したデータ:');
-          console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
+          // // 抽出したデータを表示
+          // console.log('抽出したデータ:');
+          // console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
 
-          // 分類されたデータを表示
-          console.log('\nカテゴリー:');
-          console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
+          // // 分類されたデータを表示
+          // console.log('\nカテゴリー:');
+          // console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
 
           console.log('お問い合わせフォームの送信が完了しました。');
           await this.updateSendStatus(CSVurl, InsertformResult, '0');
@@ -10320,7 +10320,7 @@ export class AutoFormSendService {
    * お問い合わせフォームの送信ボタンを検出してクリックします。
    * @param driver Selenium WebDriverのインスタンス
    */
-  async isClickSendButton(driver: WebDriver): Promise<boolean> {
+  async isClickSendButton(driver: WebDriver,url:string): Promise<boolean> {
     try {
       // 送信ボタンを探すためのセレクターを複数試みます
       const sendButtonSelectors = [
@@ -10354,14 +10354,14 @@ export class AutoFormSendService {
 
       if (sendButton) {
         // await sendButton.click();
-        console.log('送信ボタンをクリックしました。');
+        console.log(url,'送信ボタンをクリックしました。');
         return true;
       } else {
-        console.log('送信ボタンが見つかりませんでした。');
+        console.log(url,'送信ボタンが見つかりませんでした。');
         return false;
       }
     } catch (error) {
-      console.error('送信ボタンのクリック中にエラーが発生しました:', error);
+      console.error(url,'送信ボタンのクリック中にエラーが発生しました:', error);
       return false;
     }
   }
