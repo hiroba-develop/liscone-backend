@@ -782,7 +782,6 @@ export class AutoFormSendService {
             data.inquiryData,
           );
 
-
           await this.handleIframeInputAndTextareaElements(
             driver,
             iframes,
@@ -792,8 +791,6 @@ export class AutoFormSendService {
             data.inquiryData.phoneNumber,
             data.inquiryData.inquiryBody,
           );
-
-          await this.handleNameInputElements(driver, data.inquiryData);
 
           // 実際にフォームに値を設定する処理
           await this.inputEmailAddresses(
@@ -836,54 +833,6 @@ export class AutoFormSendService {
             driver,
             categorizedData,
             data.inquiryData.corporateName,
-          );
-          await this.inputKanjiSei(
-            driver,
-            categorizedData,
-            data.inquiryData.lastName,
-          );
-          await this.inputKanjiMei(
-            driver,
-            categorizedData,
-            data.inquiryData.firstName,
-          );
-          await this.inputKanjiFullname(
-            driver,
-            categorizedData,
-            data.inquiryData.lastName,
-            data.inquiryData.firstName,
-          );
-          await this.inputKatakanaSei(
-            driver,
-            categorizedData,
-            data.inquiryData.lastNameKatakana,
-          );
-          await this.inputKatakanaMei(
-            driver,
-            categorizedData,
-            data.inquiryData.firstNameKatakana,
-          );
-          await this.inputKatakanaFullname(
-            driver,
-            categorizedData,
-            data.inquiryData.lastNameKatakana,
-            data.inquiryData.firstNameKatakana,
-          );
-          await this.inputHiraganaSei(
-            driver,
-            categorizedData,
-            data.inquiryData.lastNameHiragana,
-          );
-          await this.inputHiraganaMei(
-            driver,
-            categorizedData,
-            data.inquiryData.firstNameHiragana,
-          );
-          await this.inputHiraganaFullname(
-            driver,
-            categorizedData,
-            data.inquiryData.lastNameHiragana,
-            data.inquiryData.firstNameHiragana,
           );
           await this.inputDepartments(
             driver,
@@ -995,63 +944,6 @@ export class AutoFormSendService {
             categorizedData,
             iframes,
             data.inquiryData.corporateName,
-          );
-          await this.inputKanjiSeiInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.lastName,
-          );
-          await this.inputKanjiMeiInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.firstName,
-          );
-          await this.inputKanjiFullnameInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.lastName,
-            data.inquiryData.firstName,
-          );
-          await this.inputKatakanaSeiInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.lastNameKatakana,
-          );
-          await this.inputKatakanaMeiInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.firstNameKatakana,
-          );
-          await this.inputKatakanaFullnameInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.lastNameKatakana,
-            data.inquiryData.firstNameKatakana,
-          );
-          await this.inputHiraganaSeiInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.lastNameHiragana,
-          );
-          await this.inputHiraganaMeiInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.firstNameHiragana,
-          );
-          await this.inputHiraganaFullnameInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.lastNameHiragana,
-            data.inquiryData.firstNameHiragana,
           );
           await this.inputIntroductionTimeInIframe(
             driver,
@@ -1176,6 +1068,114 @@ export class AutoFormSendService {
             data.inquiryData.prefecture,
           );
 
+          // 名前入力
+          await this.handleNameInputElements(driver, data.inquiryData);
+          await this.inputKanjiSei(
+            driver,
+            categorizedData,
+            data.inquiryData.lastName,
+          );
+          await this.inputKanjiMei(
+            driver,
+            categorizedData,
+            data.inquiryData.firstName,
+          );
+          await this.inputKanjiFullname(
+            driver,
+            categorizedData,
+            data.inquiryData.lastName,
+            data.inquiryData.firstName,
+          );
+          await this.inputKatakanaSei(
+            driver,
+            categorizedData,
+            data.inquiryData.lastNameKatakana,
+          );
+          await this.inputKatakanaMei(
+            driver,
+            categorizedData,
+            data.inquiryData.firstNameKatakana,
+          );
+          await this.inputKatakanaFullname(
+            driver,
+            categorizedData,
+            data.inquiryData.lastNameKatakana,
+            data.inquiryData.firstNameKatakana,
+          );
+          await this.inputHiraganaSei(
+            driver,
+            categorizedData,
+            data.inquiryData.lastNameHiragana,
+          );
+          await this.inputHiraganaMei(
+            driver,
+            categorizedData,
+            data.inquiryData.firstNameHiragana,
+          );
+          await this.inputHiraganaFullname(
+            driver,
+            categorizedData,
+            data.inquiryData.lastNameHiragana,
+            data.inquiryData.firstNameHiragana,
+          );
+          await this.inputKanjiSeiInIframe(
+            driver,
+            categorizedData,
+            iframes,
+            data.inquiryData.lastName,
+          );
+          await this.inputKanjiMeiInIframe(
+            driver,
+            categorizedData,
+            iframes,
+            data.inquiryData.firstName,
+          );
+          await this.inputKanjiFullnameInIframe(
+            driver,
+            categorizedData,
+            iframes,
+            data.inquiryData.lastName,
+            data.inquiryData.firstName,
+          );
+          await this.inputKatakanaSeiInIframe(
+            driver,
+            categorizedData,
+            iframes,
+            data.inquiryData.lastNameKatakana,
+          );
+          await this.inputKatakanaMeiInIframe(
+            driver,
+            categorizedData,
+            iframes,
+            data.inquiryData.firstNameKatakana,
+          );
+          await this.inputKatakanaFullnameInIframe(
+            driver,
+            categorizedData,
+            iframes,
+            data.inquiryData.lastNameKatakana,
+            data.inquiryData.firstNameKatakana,
+          );
+          await this.inputHiraganaSeiInIframe(
+            driver,
+            categorizedData,
+            iframes,
+            data.inquiryData.lastNameHiragana,
+          );
+          await this.inputHiraganaMeiInIframe(
+            driver,
+            categorizedData,
+            iframes,
+            data.inquiryData.firstNameHiragana,
+          );
+          await this.inputHiraganaFullnameInIframe(
+            driver,
+            categorizedData,
+            iframes,
+            data.inquiryData.lastNameHiragana,
+            data.inquiryData.firstNameHiragana,
+          );
+
           // 入力が読み込まれるまで2秒待機（ミリ秒単位）
           await driver.sleep(2000);
 
@@ -1248,16 +1248,17 @@ export class AutoFormSendService {
           //   await this.updateSendStatus(CSVurl, InsertformResult, '2');
           // }
 
+          // 抽出したデータを表示
+          console.log('抽出したデータ:');
+          console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
+
+          // 分類されたデータを表示
+          console.log('\nカテゴリー:');
+          console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
+
+
           console.log('お問い合わせフォームの送信が完了しました。');
           await this.updateSendStatus(CSVurl, InsertformResult, '0');
-
-          // // 抽出したデータを表示
-          // console.log('抽出したデータ:');
-          // console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
-
-          // // 分類されたデータを表示
-          // console.log('\nカテゴリー:');
-          // console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
 
           // 5秒間待機
           await driver.sleep(5000);
@@ -3742,18 +3743,21 @@ export class AutoFormSendService {
       }
 
       // ここでnameカテゴリに入れるかを判定
+      const combinedKeywords = [
+        ...departments_keywords,
+        ...positions_keywords,
+        ...company_keywords,
+        ...employee_sizes_keywords,
+        ...inquiry_genre_keywords,
+        ...how_found_keywords,
+        ...address_keywords,
+        ...address_street_keywords,
+      ];
+
       if (
-        departments_keywords
-          .concat(
-            positions_keywords,
-            company_keywords,
-            employee_sizes_keywords,
-            inquiry_genre_keywords,
-            how_found_keywords,
-            address_keywords,
-            address_street_keywords,
-          )
-          .some((keyword) => combined_search_text4.includes(keyword))
+        combinedKeywords.some((keyword) =>
+          combined_search_text4.includes(keyword),
+        )
       ) {
         continue; // これらのキーワードが含まれている場合はnameに追加しない
       }
@@ -5067,16 +5071,16 @@ export class AutoFormSendService {
     driver: WebDriver,
     inquiryData: { [key: string]: string },
   ): Promise<void> {
-    // 「dl」タグのテキストが「お名前」または「氏名」を含む要素を探す
-    let dlKanjiElements = await driver.findElements(
-      By.xpath("//dl[contains(., 'お名前')]"),
+    // 「dt」タグのテキストが「お名前」または「氏名」を含む要素を探す
+    let dtKanjiElements = await driver.findElements(
+      By.xpath("//dt[contains(., 'お名前')]"),
     );
-    if (dlKanjiElements.length !== 0) {
+    if (dtKanjiElements.length !== 0) {
       // 漢字フルネーム入力処理
-      for (let dlKanjiElement of dlKanjiElements) {
+      for (let dtKanjiElement of dtKanjiElements) {
         try {
-          // XPadlで「dl」の次の兄弟「dd」を探し、その中のすべてのinputを取得
-          let inputElements = await dlKanjiElement.findElements(
+          // Xpathで「dt」の次の兄弟「dd」を探し、その中のすべてのinputを取得
+          let inputElements = await dtKanjiElement.findElements(
             By.xpath("following-sibling::dd//input[@type='text']"),
           );
           if (inputElements.length === 0) {
@@ -5102,22 +5106,22 @@ export class AutoFormSendService {
       }
     } else {
       console.log(
-        '「お名前」というテキストを含むdlタグが見つかりませんでした。',
+        '「お名前」というテキストを含むdtタグが見つかりませんでした。',
       );
     }
 
-    // 「dl」タグのテキストが「ふりがな」を含む要素を探す
-    let dlHiraganaElements = await driver.findElements(
+    // 「dt」タグのテキストが「ふりがな」を含む要素を探す
+    let dtHiraganaElements = await driver.findElements(
       By.xpath(
-        "//dl[contains(., 'ふり')or contains(., 'がな')or contains(., 'かな')]",
+        "//dt[contains(., 'ふり')or contains(., 'がな')or contains(., 'かな')]",
       ),
     );
-    if (dlHiraganaElements.length !== 0) {
+    if (dtHiraganaElements.length !== 0) {
       // ふりがなフルネーム入力処理
-      for (let dlHiraganaElement of dlHiraganaElements) {
+      for (let dtHiraganaElement of dtHiraganaElements) {
         try {
-          // XPadlで「dl」の次の兄弟「dd」を探し、その中のすべてのinputを取得
-          let inputElements = await dlHiraganaElement.findElements(
+          // XPathで「dt」の次の兄弟「dd」を探し、その中のすべてのinputを取得
+          let inputElements = await dtHiraganaElement.findElements(
             By.xpath("following-sibling::dd//input[@type='text']"),
           );
           if (inputElements.length === 0) {
@@ -5143,22 +5147,22 @@ export class AutoFormSendService {
       }
     } else {
       console.log(
-        '「ふりがな」というテキストを含むdlタグが見つかりませんでした。',
+        '「ふりがな」というテキストを含むdtタグが見つかりませんでした。',
       );
     }
 
-    // 「dl」タグのテキストが「フリガナ」を含む要素を探す
-    let dlKatakanaElements = await driver.findElements(
+    // 「dt」タグのテキストが「フリガナ」を含む要素を探す
+    let dtKatakanaElements = await driver.findElements(
       By.xpath(
-        "//dl[contains(., 'フリ')or contains(., 'ガナ')or contains(., 'カナ')]",
+        "//dt[contains(., 'フリ')or contains(., 'ガナ')or contains(., 'カナ')]",
       ),
     );
-    if (dlKatakanaElements.length !== 0) {
+    if (dtKatakanaElements.length !== 0) {
       // フリガナフルネーム入力処理
-      for (let dlKatakanaElement of dlKatakanaElements) {
+      for (let dtKatakanaElement of dtKatakanaElements) {
         try {
-          // XPathで「dl」の次の兄弟「dd」を探し、その中のすべてのinputを取得
-          let inputElements = await dlKatakanaElement.findElements(
+          // XPathで「dt」の次の兄弟「dd」を探し、その中のすべてのinputを取得
+          let inputElements = await dtKatakanaElement.findElements(
             By.xpath("following-sibling::dd//input[@type='text']"),
           );
           if (inputElements.length === 0) {
@@ -5184,7 +5188,7 @@ export class AutoFormSendService {
       }
     } else {
       console.log(
-        '「フリガナ」というテキストを含むdlタグが見つかりませんでした。',
+        '「フリガナ」というテキストを含むdtタグが見つかりませんでした。',
       );
     }
   }
@@ -10049,8 +10053,8 @@ export class AutoFormSendService {
         By.css('input[type="submit"]'),
         // テキストが「送信」のボタン
         By.xpath("//button[contains(text(), '送信')]"),
-        By.xpath("//button[contains(text(), '確認する')]"),
         By.xpath("//input[@value='送信']"),
+        By.xpath("//button[contains(text(), '確認')]"),
         // 子要素にテキスト「送信」が含まれる場合
         By.xpath("//button[.//*[contains(text(), '送信')]]"),
         // その他一般的な送信ボタンのセレクター
