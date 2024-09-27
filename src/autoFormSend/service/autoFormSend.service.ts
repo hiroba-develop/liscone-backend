@@ -773,7 +773,27 @@ export class AutoFormSendService {
           await this.handleaddressInputTableElements(driver, data.inquiryData);
 
           // dlタグに対応するもの
-          await this.handleaddressInputDefinitionListElements(driver, data.inquiryData);
+          await this.handleNameInputDefinitionListElements(
+            driver,
+            data.inquiryData,
+          );
+          await this.handleAddressInputDefinitionListElements(
+            driver,
+            data.inquiryData,
+          );
+
+
+          await this.handleIframeInputAndTextareaElements(
+            driver,
+            iframes,
+            printedElements,
+            extractedData,
+            data.inquiryData.emailAddress,
+            data.inquiryData.phoneNumber,
+            data.inquiryData.inquiryBody,
+          );
+
+          await this.handleNameInputElements(driver, data.inquiryData);
 
           // 実際にフォームに値を設定する処理
           await this.inputEmailAddresses(
@@ -1158,18 +1178,6 @@ export class AutoFormSendService {
 
           // 入力が読み込まれるまで2秒待機（ミリ秒単位）
           await driver.sleep(2000);
-
-          await this.handleIframeInputAndTextareaElements(
-            driver,
-            iframes,
-            printedElements,
-            extractedData,
-            data.inquiryData.emailAddress,
-            data.inquiryData.phoneNumber,
-            data.inquiryData.inquiryBody,
-          );
-
-          await this.handleNameInputElements(driver, data.inquiryData);
 
           await this.handleInputElementsWithIframes(
             driver,
@@ -4770,9 +4778,7 @@ export class AutoFormSendService {
             By.xpath("following-sibling::td//input[@type='text']"),
           );
           if (inputElements.length === 0) {
-            console.warn(
-              '対応するinput要素(お名前)が見つかりませんでした。',
-            );
+            console.warn('対応するinput要素(お名前)が見つかりませんでした。');
             continue;
           }
           // 各input要素に漢字フルネームを入力
@@ -4800,7 +4806,9 @@ export class AutoFormSendService {
 
     // 「th」タグのテキストが「ふりがな」を含む要素を探す
     let thHiraganaElements = await driver.findElements(
-      By.xpath("//th[contains(., 'ふり')or contains(., 'がな')or contains(., 'かな')]"),
+      By.xpath(
+        "//th[contains(., 'ふり')or contains(., 'がな')or contains(., 'かな')]",
+      ),
     );
     if (thHiraganaElements.length !== 0) {
       // ふりがなフルネーム入力処理
@@ -4839,7 +4847,9 @@ export class AutoFormSendService {
 
     // 「th」タグのテキストが「フリガナ」を含む要素を探す
     let thKatakanaElements = await driver.findElements(
-      By.xpath("//th[contains(., 'フリ')or contains(., 'ガナ')or contains(., 'カナ')]"),
+      By.xpath(
+        "//th[contains(., 'フリ')or contains(., 'ガナ')or contains(., 'カナ')]",
+      ),
     );
     if (thKatakanaElements.length !== 0) {
       // フリガナフルネーム入力処理
@@ -4887,12 +4897,45 @@ export class AutoFormSendService {
     driver: WebDriver,
     inquiryData: { [key: string]: string },
   ): Promise<void> {
+    // 「th」タグのテキストが「住所」を含む要素を探す
+    let thAddressElements = await driver.findElements(
+      By.xpath("//th[contains(., '住所')]"),
+    );
+    if (thAddressElements.length !== 0) {
+      // 住所入力処理
+      for (let thAddressElement of thAddressElements) {
+        try {
+          // XPathで「th」の次の兄弟「td」を探し、その中のすべてのinputを取得
+          let inputElements = await thAddressElement.findElements(
+            By.xpath("following-sibling::td//input[@type='text']"),
+          );
+          if (inputElements.length === 0) {
+            console.warn('対応するinput要素(住所)が見つかりませんでした。');
+            continue;
+          }
+          // 各input要素に住所を入力
+          for (let inputElement of inputElements) {
+            await inputElement.sendKeys(
+              inquiryData.prefecture +
+                inquiryData.city +
+                inquiryData.streetAddress +
+                inquiryData.buildingName,
+            );
+            console.log(inquiryData.prefecture, 'を入力しました。');
+          }
+        } catch (innerErr) {
+          console.error('住所の処理中にエラーが発生しました:', innerErr);
+        }
+      }
+    } else {
+      console.log('「住所」というテキストを含むthタグが見つかりませんでした。');
+    }
     // 「th」タグのテキストが「都道府県」を含む要素を探す
     let thPrefectureElements = await driver.findElements(
       By.xpath("//th[contains(., '都道府県')]"),
     );
     if (thPrefectureElements.length !== 0) {
-      // フリガナフルネーム入力処理
+      // 都道府県入力処理
       for (let thPrefectureElement of thPrefectureElements) {
         try {
           // XPathで「th」の次の兄弟「td」を探し、その中のすべてのinputを取得
@@ -4922,7 +4965,7 @@ export class AutoFormSendService {
       By.xpath("//th[contains(., '市町村')]"),
     );
     if (thCityElements.length !== 0) {
-      // フリガナフルネーム入力処理
+      // 市町村入力処理
       for (let thCityElement of thCityElements) {
         try {
           // XPathで「th」の次の兄弟「td」を探し、その中のすべてのinputを取得
@@ -4982,7 +5025,7 @@ export class AutoFormSendService {
       By.xpath("//th[contains(., '建物') or contains(., 'マンション')]"),
     );
     if (thBuildingNameElements.length !== 0) {
-      // 番地入力処理
+      // 建物入力処理
       for (let thBuildingNameElement of thBuildingNameElements) {
         try {
           // XPathで「th」の次の兄弟「td」を探し、その中のすべてのinputを取得
@@ -5015,15 +5058,181 @@ export class AutoFormSendService {
   }
 
   /**
+   * dlタグ内に名前を入れる処理
+   *
+   * @param driver - Selenium WebDriverのインスタンス
+   * @param inquiryData - お問い合わせ情報
+   */
+  async handleNameInputDefinitionListElements(
+    driver: WebDriver,
+    inquiryData: { [key: string]: string },
+  ): Promise<void> {
+    // 「dl」タグのテキストが「お名前」または「氏名」を含む要素を探す
+    let dlKanjiElements = await driver.findElements(
+      By.xpath("//dl[contains(., 'お名前')]"),
+    );
+    if (dlKanjiElements.length !== 0) {
+      // 漢字フルネーム入力処理
+      for (let dlKanjiElement of dlKanjiElements) {
+        try {
+          // XPadlで「dl」の次の兄弟「dd」を探し、その中のすべてのinputを取得
+          let inputElements = await dlKanjiElement.findElements(
+            By.xpath("following-sibling::dd//input[@type='text']"),
+          );
+          if (inputElements.length === 0) {
+            console.warn('対応するinput要素(お名前)が見つかりませんでした。');
+            continue;
+          }
+          // 各input要素に漢字フルネームを入力
+          for (let inputElement of inputElements) {
+            await inputElement.sendKeys(
+              inquiryData.lastName + inquiryData.firstName,
+            );
+            console.log(
+              inquiryData.lastName + inquiryData.firstName,
+              'を入力しました。',
+            );
+          }
+        } catch (innerErr) {
+          console.error(
+            '漢字フルネームの処理中にエラーが発生しました:',
+            innerErr,
+          );
+        }
+      }
+    } else {
+      console.log(
+        '「お名前」というテキストを含むdlタグが見つかりませんでした。',
+      );
+    }
+
+    // 「dl」タグのテキストが「ふりがな」を含む要素を探す
+    let dlHiraganaElements = await driver.findElements(
+      By.xpath(
+        "//dl[contains(., 'ふり')or contains(., 'がな')or contains(., 'かな')]",
+      ),
+    );
+    if (dlHiraganaElements.length !== 0) {
+      // ふりがなフルネーム入力処理
+      for (let dlHiraganaElement of dlHiraganaElements) {
+        try {
+          // XPadlで「dl」の次の兄弟「dd」を探し、その中のすべてのinputを取得
+          let inputElements = await dlHiraganaElement.findElements(
+            By.xpath("following-sibling::dd//input[@type='text']"),
+          );
+          if (inputElements.length === 0) {
+            console.warn('対応するinput要素(ふりがな)が見つかりませんでした。');
+            continue;
+          }
+          // 各input要素にふりがなフルネームを入力
+          for (let inputElement of inputElements) {
+            await inputElement.sendKeys(
+              inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
+            );
+            console.log(
+              inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
+              'を入力しました。',
+            );
+          }
+        } catch (innerErr) {
+          console.error(
+            'フリガナフルネームの処理中にエラーが発生しました:',
+            innerErr,
+          );
+        }
+      }
+    } else {
+      console.log(
+        '「ふりがな」というテキストを含むdlタグが見つかりませんでした。',
+      );
+    }
+
+    // 「dl」タグのテキストが「フリガナ」を含む要素を探す
+    let dlKatakanaElements = await driver.findElements(
+      By.xpath(
+        "//dl[contains(., 'フリ')or contains(., 'ガナ')or contains(., 'カナ')]",
+      ),
+    );
+    if (dlKatakanaElements.length !== 0) {
+      // フリガナフルネーム入力処理
+      for (let dlKatakanaElement of dlKatakanaElements) {
+        try {
+          // XPathで「dl」の次の兄弟「dd」を探し、その中のすべてのinputを取得
+          let inputElements = await dlKatakanaElement.findElements(
+            By.xpath("following-sibling::dd//input[@type='text']"),
+          );
+          if (inputElements.length === 0) {
+            console.warn('対応するinput要素(フリガナ)が見つかりませんでした。');
+            continue;
+          }
+          // 各input要素にふりがなフルネームを入力
+          for (let inputElement of inputElements) {
+            await inputElement.sendKeys(
+              inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
+            );
+            console.log(
+              inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
+              'を入力しました。',
+            );
+          }
+        } catch (innerErr) {
+          console.error(
+            'フリガナフルネームの処理中にエラーが発生しました:',
+            innerErr,
+          );
+        }
+      }
+    } else {
+      console.log(
+        '「フリガナ」というテキストを含むdlタグが見つかりませんでした。',
+      );
+    }
+  }
+
+  /**
    * dlタグ内に住所を入れる処理
    *
    * @param driver - Selenium WebDriverのインスタンス
    * @param inquiryData - お問い合わせ情報
    */
-  async handleaddressInputDefinitionListElements(
+  async handleAddressInputDefinitionListElements(
     driver: WebDriver,
     inquiryData: { [key: string]: string },
   ): Promise<void> {
+    // 「dt」タグのテキストが「住所」を含む要素を探す
+    let dtAddressElements = await driver.findElements(
+      By.xpath("//dt[contains(., '住所')]"),
+    );
+    if (dtAddressElements.length !== 0) {
+      // 住所入力処理
+      for (let dtAddressElement of dtAddressElements) {
+        try {
+          // XPathで「dt」の次の兄弟「dd」を探し、その中のすべてのinputを取得
+          let inputElements = await dtAddressElement.findElements(
+            By.xpath("following-sibling::dd//input[@type='text']"),
+          );
+          if (inputElements.length === 0) {
+            console.warn('対応するinput要素(住所)が見つかりませんでした。');
+            continue;
+          }
+          // 各input要素に住所を入力
+          for (let inputElement of inputElements) {
+            await inputElement.sendKeys(
+              inquiryData.prefecture +
+                inquiryData.city +
+                inquiryData.streetAddress +
+                inquiryData.buildingName,
+            );
+            console.log(inquiryData.prefecture, 'を入力しました。');
+          }
+        } catch (innerErr) {
+          console.error('住所の処理中にエラーが発生しました:', innerErr);
+        }
+      }
+    } else {
+      console.log('「住所」というテキストを含むdtタグが見つかりませんでした。');
+    }
+
     // 「dt」タグのテキストが「都道府県」を含む要素を探す
     let dtPrefectureElements = await driver.findElements(
       By.xpath("//dt[contains(., '都道府県')]"),
