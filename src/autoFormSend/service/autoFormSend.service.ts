@@ -768,10 +768,6 @@ export class AutoFormSendService {
           );
           categorizedData = await this.categorizeData(extractedData);
 
-          // tableタグに対応するもの
-          await this.handleNameInputTableElements(driver, data.inquiryData);
-          await this.handleaddressInputTableElements(driver, data.inquiryData);
-
           // dlタグに対応するもの
           await this.handleNameInputDefinitionListElements(
             driver,
@@ -781,6 +777,9 @@ export class AutoFormSendService {
             driver,
             data.inquiryData,
           );
+          // tableタグに対応するもの
+          await this.handleNameInputTableElements(driver, data.inquiryData);
+          await this.handleaddressInputTableElements(driver, data.inquiryData);
 
           await this.handleIframeInputAndTextareaElements(
             driver,
@@ -799,16 +798,6 @@ export class AutoFormSendService {
             iframes,
             data.inquiryData.emailAddress,
           );
-          await this.inputPhoneNumbers(
-            driver,
-            categorizedData,
-            data.inquiryData.phoneNumber,
-          );
-          await this.inputPhoneNumbers2(
-            driver,
-            categorizedData,
-            data.inquiryData.phoneNumber,
-          );
           await this.inputFaxNumbers(
             driver,
             categorizedData,
@@ -818,6 +807,16 @@ export class AutoFormSendService {
             driver,
             categorizedData,
             data.inquiryData.fax,
+          );
+          await this.inputPhoneNumbers(
+            driver,
+            categorizedData,
+            data.inquiryData.phoneNumber,
+          );
+          await this.inputPhoneNumbers2(
+            driver,
+            categorizedData,
+            data.inquiryData.phoneNumber,
           );
           await this.inputPostCode(
             driver,
@@ -1075,15 +1074,15 @@ export class AutoFormSendService {
             categorizedData,
             data.inquiryData.lastName,
           );
-          await this.inputKanjiMei(
-            driver,
-            categorizedData,
-            data.inquiryData.firstName,
-          );
           await this.inputKanjiFullname(
             driver,
             categorizedData,
             data.inquiryData.lastName,
+            data.inquiryData.firstName,
+          );
+          await this.inputKanjiMei(
+            driver,
+            categorizedData,
             data.inquiryData.firstName,
           );
           await this.inputKatakanaSei(
@@ -1091,15 +1090,15 @@ export class AutoFormSendService {
             categorizedData,
             data.inquiryData.lastNameKatakana,
           );
-          await this.inputKatakanaMei(
-            driver,
-            categorizedData,
-            data.inquiryData.firstNameKatakana,
-          );
           await this.inputKatakanaFullname(
             driver,
             categorizedData,
             data.inquiryData.lastNameKatakana,
+            data.inquiryData.firstNameKatakana,
+          );
+          await this.inputKatakanaMei(
+            driver,
+            categorizedData,
             data.inquiryData.firstNameKatakana,
           );
           await this.inputHiraganaSei(
@@ -1107,15 +1106,15 @@ export class AutoFormSendService {
             categorizedData,
             data.inquiryData.lastNameHiragana,
           );
-          await this.inputHiraganaMei(
-            driver,
-            categorizedData,
-            data.inquiryData.firstNameHiragana,
-          );
           await this.inputHiraganaFullname(
             driver,
             categorizedData,
             data.inquiryData.lastNameHiragana,
+            data.inquiryData.firstNameHiragana,
+          );
+          await this.inputHiraganaMei(
+            driver,
+            categorizedData,
             data.inquiryData.firstNameHiragana,
           );
           await this.inputKanjiSeiInIframe(
@@ -1124,17 +1123,17 @@ export class AutoFormSendService {
             iframes,
             data.inquiryData.lastName,
           );
-          await this.inputKanjiMeiInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.firstName,
-          );
           await this.inputKanjiFullnameInIframe(
             driver,
             categorizedData,
             iframes,
             data.inquiryData.lastName,
+            data.inquiryData.firstName,
+          );
+          await this.inputKanjiMeiInIframe(
+            driver,
+            categorizedData,
+            iframes,
             data.inquiryData.firstName,
           );
           await this.inputKatakanaSeiInIframe(
@@ -1143,17 +1142,17 @@ export class AutoFormSendService {
             iframes,
             data.inquiryData.lastNameKatakana,
           );
-          await this.inputKatakanaMeiInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.firstNameKatakana,
-          );
           await this.inputKatakanaFullnameInIframe(
             driver,
             categorizedData,
             iframes,
             data.inquiryData.lastNameKatakana,
+            data.inquiryData.firstNameKatakana,
+          );
+          await this.inputKatakanaMeiInIframe(
+            driver,
+            categorizedData,
+            iframes,
             data.inquiryData.firstNameKatakana,
           );
           await this.inputHiraganaSeiInIframe(
@@ -1162,17 +1161,17 @@ export class AutoFormSendService {
             iframes,
             data.inquiryData.lastNameHiragana,
           );
-          await this.inputHiraganaMeiInIframe(
-            driver,
-            categorizedData,
-            iframes,
-            data.inquiryData.firstNameHiragana,
-          );
           await this.inputHiraganaFullnameInIframe(
             driver,
             categorizedData,
             iframes,
             data.inquiryData.lastNameHiragana,
+            data.inquiryData.firstNameHiragana,
+          );
+          await this.inputHiraganaMeiInIframe(
+            driver,
+            categorizedData,
+            iframes,
             data.inquiryData.firstNameHiragana,
           );
 
@@ -1255,7 +1254,6 @@ export class AutoFormSendService {
           // 分類されたデータを表示
           console.log('\nカテゴリー:');
           console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
-
 
           console.log('お問い合わせフォームの送信が完了しました。');
           await this.updateSendStatus(CSVurl, InsertformResult, '0');
@@ -4781,19 +4779,32 @@ export class AutoFormSendService {
           let inputElements = await thKanjiElement.findElements(
             By.xpath("following-sibling::td//input[@type='text']"),
           );
-          if (inputElements.length === 0) {
+          // 取得したinput要素の量によって、フルネームか姓名に分けるか選択し入力
+          if (inputElements.length === 2) {
+            // 姓名に分けて入力
+            for (let i = 0; inputElements.length > i; i++) {
+              if ((i = 0)) {
+                await inputElements[i].sendKeys(inquiryData.lastName);
+                console.log(inquiryData.lastName, 'を入力しました。');
+              }
+              if ((i = 1)) {
+                await inputElements[i].sendKeys(inquiryData.firstName);
+                console.log(inquiryData.firstName, 'を入力しました。');
+              }
+            }
+          } else if (inputElements.length === 1) {
+            // フルネームを入力
+            for (let inputElement of inputElements) {
+              await inputElement.sendKeys(
+                inquiryData.lastName + inquiryData.firstName,
+              );
+              console.log(
+                inquiryData.lastName + inquiryData.firstName,
+                'を入力しました。',
+              );
+            }
+          } else if (inputElements.length === 0) {
             console.warn('対応するinput要素(お名前)が見つかりませんでした。');
-            continue;
-          }
-          // 各input要素に漢字フルネームを入力
-          for (let inputElement of inputElements) {
-            await inputElement.sendKeys(
-              inquiryData.lastName + inquiryData.firstName,
-            );
-            console.log(
-              inquiryData.lastName + inquiryData.firstName,
-              'を入力しました。',
-            );
           }
         } catch (innerErr) {
           console.error(
@@ -4822,19 +4833,32 @@ export class AutoFormSendService {
           let inputElements = await thHiraganaElement.findElements(
             By.xpath("following-sibling::td//input[@type='text']"),
           );
-          if (inputElements.length === 0) {
+          // 取得したinput要素の量によって、フルネームか姓名に分けるか選択し入力
+          if (inputElements.length === 2) {
+            // 姓名に分けて入力
+            for (let i = 0; inputElements.length > i; i++) {
+              if ((i = 0)) {
+                await inputElements[i].sendKeys(inquiryData.lastNameHiragana);
+                console.log(inquiryData.lastNameHiragana, 'を入力しました。');
+              }
+              if ((i = 1)) {
+                await inputElements[i].sendKeys(inquiryData.firstNameHiragana);
+                console.log(inquiryData.firstNameHiragana, 'を入力しました。');
+              }
+            }
+          } else if (inputElements.length === 1) {
+            // フルネームを入力
+            for (let inputElement of inputElements) {
+              await inputElement.sendKeys(
+                inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
+              );
+              console.log(
+                inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
+                'を入力しました。',
+              );
+            }
+          } else if (inputElements.length === 0) {
             console.warn('対応するinput要素(ふりがな)が見つかりませんでした。');
-            continue;
-          }
-          // 各input要素にふりがなフルネームを入力
-          for (let inputElement of inputElements) {
-            await inputElement.sendKeys(
-              inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
-            );
-            console.log(
-              inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
-              'を入力しました。',
-            );
           }
         } catch (innerErr) {
           console.error(
@@ -4863,19 +4887,32 @@ export class AutoFormSendService {
           let inputElements = await thKatakanaElement.findElements(
             By.xpath("following-sibling::td//input[@type='text']"),
           );
-          if (inputElements.length === 0) {
+          // 取得したinput要素の量によって、フルネームか姓名に分けるか選択し入力
+          if (inputElements.length === 2) {
+            // 姓名に分けて入力
+            for (let i = 0; inputElements.length > i; i++) {
+              if ((i = 0)) {
+                await inputElements[i].sendKeys(inquiryData.lastNameKatakana);
+                console.log(inquiryData.lastNameKatakana, 'を入力しました。');
+              }
+              if ((i = 1)) {
+                await inputElements[i].sendKeys(inquiryData.firstNameKatakana);
+                console.log(inquiryData.firstNameKatakana, 'を入力しました。');
+              }
+            }
+          } else if (inputElements.length === 1) {
+            // フルネームを入力
+            for (let inputElement of inputElements) {
+              await inputElement.sendKeys(
+                inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
+              );
+              console.log(
+                inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
+                'を入力しました。',
+              );
+            }
+          } else if (inputElements.length === 0) {
             console.warn('対応するinput要素(フリガナ)が見つかりませんでした。');
-            continue;
-          }
-          // 各input要素にふりがなフルネームを入力
-          for (let inputElement of inputElements) {
-            await inputElement.sendKeys(
-              inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
-            );
-            console.log(
-              inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
-              'を入力しました。',
-            );
           }
         } catch (innerErr) {
           console.error(
@@ -4901,39 +4938,6 @@ export class AutoFormSendService {
     driver: WebDriver,
     inquiryData: { [key: string]: string },
   ): Promise<void> {
-    // 「th」タグのテキストが「住所」を含む要素を探す
-    let thAddressElements = await driver.findElements(
-      By.xpath("//th[contains(., '住所')]"),
-    );
-    if (thAddressElements.length !== 0) {
-      // 住所入力処理
-      for (let thAddressElement of thAddressElements) {
-        try {
-          // XPathで「th」の次の兄弟「td」を探し、その中のすべてのinputを取得
-          let inputElements = await thAddressElement.findElements(
-            By.xpath("following-sibling::td//input[@type='text']"),
-          );
-          if (inputElements.length === 0) {
-            console.warn('対応するinput要素(住所)が見つかりませんでした。');
-            continue;
-          }
-          // 各input要素に住所を入力
-          for (let inputElement of inputElements) {
-            await inputElement.sendKeys(
-              inquiryData.prefecture +
-                inquiryData.city +
-                inquiryData.streetAddress +
-                inquiryData.buildingName,
-            );
-            console.log(inquiryData.prefecture, 'を入力しました。');
-          }
-        } catch (innerErr) {
-          console.error('住所の処理中にエラーが発生しました:', innerErr);
-        }
-      }
-    } else {
-      console.log('「住所」というテキストを含むthタグが見つかりませんでした。');
-    }
     // 「th」タグのテキストが「都道府県」を含む要素を探す
     let thPrefectureElements = await driver.findElements(
       By.xpath("//th[contains(., '都道府県')]"),
@@ -5059,6 +5063,52 @@ export class AutoFormSendService {
         '「建物」「マンション」というテキストを含むthタグが見つかりませんでした。',
       );
     }
+
+    // 「th」タグのテキストが「住所」を含む要素を探す
+    let thAddressElements = await driver.findElements(
+      By.xpath("//th[contains(., '住所')]"),
+    );
+    if (thAddressElements.length !== 0) {
+      // 住所入力処理
+      for (let thAddressElement of thAddressElements) {
+        try {
+          // XPathで「th」の次の兄弟「td」を探し、その中のすべてのinputを取得
+          let inputElements = await thAddressElement.findElements(
+            By.xpath("following-sibling::td//input[@type='text']"),
+          );
+          if (inputElements.length === 0) {
+            console.warn('対応するinput要素(住所)が見つかりませんでした。');
+            continue;
+          }
+          // 各input要素に住所を入力
+          for (let inputElement of inputElements) {
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              // 入力欄が空の場合だけ入力
+              await inputElement.sendKeys(
+                inquiryData.prefecture +
+                  inquiryData.city +
+                  inquiryData.streetAddress +
+                  inquiryData.buildingName,
+              );
+            }
+
+            console.log(
+              inquiryData.prefecture +
+                inquiryData.city +
+                inquiryData.streetAddress +
+                inquiryData.buildingName,
+              'を入力しました。',
+            );
+          }
+        } catch (innerErr) {
+          console.error('住所の処理中にエラーが発生しました:', innerErr);
+        }
+      }
+    } else {
+      console.log('「住所」というテキストを含むthタグが見つかりませんでした。');
+    }
   }
 
   /**
@@ -5073,7 +5123,7 @@ export class AutoFormSendService {
   ): Promise<void> {
     // 「dt」タグのテキストが「お名前」または「氏名」を含む要素を探す
     let dtKanjiElements = await driver.findElements(
-      By.xpath("//dt[contains(., 'お名前')]"),
+      By.xpath("//dt[contains(., 'お名前')or contains(., '氏名')]"),
     );
     if (dtKanjiElements.length !== 0) {
       // 漢字フルネーム入力処理
@@ -5083,25 +5133,35 @@ export class AutoFormSendService {
           let inputElements = await dtKanjiElement.findElements(
             By.xpath("following-sibling::dd//input[@type='text']"),
           );
-          if (inputElements.length === 0) {
+          // 取得したinput要素の量によって、フルネームか姓名に分けるか選択し入力
+          if (inputElements.length === 2) {
+            // 姓名に分けて入力
+            for (let i = 0; inputElements.length > i; i++) {
+              if ((i = 0)) {
+                await inputElements[i].sendKeys(inquiryData.lastName);
+                console.log(inquiryData.lastName, 'を入力しました。');
+              }
+              if ((i = 1)) {
+                await inputElements[i].sendKeys(inquiryData.firstName);
+                console.log(inquiryData.firstName, 'を入力しました。');
+              }
+            }
+          } else if (inputElements.length === 1) {
+            // フルネームを入力
+            for (let inputElement of inputElements) {
+              await inputElement.sendKeys(
+                inquiryData.lastName + inquiryData.firstName,
+              );
+              console.log(
+                inquiryData.lastName + inquiryData.firstName,
+                'を入力しました。',
+              );
+            }
+          } else if (inputElements.length === 0) {
             console.warn('対応するinput要素(お名前)が見つかりませんでした。');
-            continue;
-          }
-          // 各input要素に漢字フルネームを入力
-          for (let inputElement of inputElements) {
-            await inputElement.sendKeys(
-              inquiryData.lastName + inquiryData.firstName,
-            );
-            console.log(
-              inquiryData.lastName + inquiryData.firstName,
-              'を入力しました。',
-            );
           }
         } catch (innerErr) {
-          console.error(
-            '漢字フルネームの処理中にエラーが発生しました:',
-            innerErr,
-          );
+          console.error('名前漢字の処理中にエラーが発生しました:', innerErr);
         }
       }
     } else {
@@ -5124,25 +5184,35 @@ export class AutoFormSendService {
           let inputElements = await dtHiraganaElement.findElements(
             By.xpath("following-sibling::dd//input[@type='text']"),
           );
-          if (inputElements.length === 0) {
+          // 取得したinput要素の量によって、フルネームか姓名に分けるか選択し入力
+          if (inputElements.length === 2) {
+            // 姓名に分けて入力
+            for (let i = 0; inputElements.length > i; i++) {
+              if ((i = 0)) {
+                await inputElements[i].sendKeys(inquiryData.lastNameHiragana);
+                console.log(inquiryData.lastNameHiragana, 'を入力しました。');
+              }
+              if ((i = 1)) {
+                await inputElements[i].sendKeys(inquiryData.firstNameHiragana);
+                console.log(inquiryData.firstNameHiragana, 'を入力しました。');
+              }
+            }
+          } else if (inputElements.length === 1) {
+            // フルネームを入力
+            for (let inputElement of inputElements) {
+              await inputElement.sendKeys(
+                inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
+              );
+              console.log(
+                inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
+                'を入力しました。',
+              );
+            }
+          } else if (inputElements.length === 0) {
             console.warn('対応するinput要素(ふりがな)が見つかりませんでした。');
-            continue;
-          }
-          // 各input要素にふりがなフルネームを入力
-          for (let inputElement of inputElements) {
-            await inputElement.sendKeys(
-              inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
-            );
-            console.log(
-              inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
-              'を入力しました。',
-            );
           }
         } catch (innerErr) {
-          console.error(
-            'フリガナフルネームの処理中にエラーが発生しました:',
-            innerErr,
-          );
+          console.error('ふりがなの処理中にエラーが発生しました:', innerErr);
         }
       }
     } else {
@@ -5165,19 +5235,32 @@ export class AutoFormSendService {
           let inputElements = await dtKatakanaElement.findElements(
             By.xpath("following-sibling::dd//input[@type='text']"),
           );
-          if (inputElements.length === 0) {
+          // 取得したinput要素の量によって、フルネームか姓名に分けるか選択し入力
+          if (inputElements.length === 2) {
+            // 姓名に分けて入力
+            for (let i = 0; inputElements.length > i; i++) {
+              if ((i = 0)) {
+                await inputElements[i].sendKeys(inquiryData.lastNameKatakana);
+                console.log(inquiryData.lastNameKatakana, 'を入力しました。');
+              }
+              if ((i = 1)) {
+                await inputElements[i].sendKeys(inquiryData.firstNameKatakana);
+                console.log(inquiryData.firstNameKatakana, 'を入力しました。');
+              }
+            }
+          } else if (inputElements.length === 1) {
+            // フルネームを入力
+            for (let inputElement of inputElements) {
+              await inputElement.sendKeys(
+                inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
+              );
+              console.log(
+                inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
+                'を入力しました。',
+              );
+            }
+          } else if (inputElements.length === 0) {
             console.warn('対応するinput要素(フリガナ)が見つかりませんでした。');
-            continue;
-          }
-          // 各input要素にふりがなフルネームを入力
-          for (let inputElement of inputElements) {
-            await inputElement.sendKeys(
-              inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
-            );
-            console.log(
-              inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
-              'を入力しました。',
-            );
           }
         } catch (innerErr) {
           console.error(
@@ -5203,40 +5286,6 @@ export class AutoFormSendService {
     driver: WebDriver,
     inquiryData: { [key: string]: string },
   ): Promise<void> {
-    // 「dt」タグのテキストが「住所」を含む要素を探す
-    let dtAddressElements = await driver.findElements(
-      By.xpath("//dt[contains(., '住所')]"),
-    );
-    if (dtAddressElements.length !== 0) {
-      // 住所入力処理
-      for (let dtAddressElement of dtAddressElements) {
-        try {
-          // XPathで「dt」の次の兄弟「dd」を探し、その中のすべてのinputを取得
-          let inputElements = await dtAddressElement.findElements(
-            By.xpath("following-sibling::dd//input[@type='text']"),
-          );
-          if (inputElements.length === 0) {
-            console.warn('対応するinput要素(住所)が見つかりませんでした。');
-            continue;
-          }
-          // 各input要素に住所を入力
-          for (let inputElement of inputElements) {
-            await inputElement.sendKeys(
-              inquiryData.prefecture +
-                inquiryData.city +
-                inquiryData.streetAddress +
-                inquiryData.buildingName,
-            );
-            console.log(inquiryData.prefecture, 'を入力しました。');
-          }
-        } catch (innerErr) {
-          console.error('住所の処理中にエラーが発生しました:', innerErr);
-        }
-      }
-    } else {
-      console.log('「住所」というテキストを含むdtタグが見つかりませんでした。');
-    }
-
     // 「dt」タグのテキストが「都道府県」を含む要素を探す
     let dtPrefectureElements = await driver.findElements(
       By.xpath("//dt[contains(., '都道府県')]"),
@@ -5361,6 +5410,52 @@ export class AutoFormSendService {
       console.log(
         '「建物」「マンション」というテキストを含むdtタグが見つかりませんでした。',
       );
+    }
+
+    // 「dt」タグのテキストが「住所」を含む要素を探す
+    let dtAddressElements = await driver.findElements(
+      By.xpath("//dt[contains(., '住所')]"),
+    );
+    if (dtAddressElements.length !== 0) {
+      // 住所入力処理
+      for (let dtAddressElement of dtAddressElements) {
+        try {
+          // XPathで「dt」の次の兄弟「dd」を探し、その中のすべてのinputを取得
+          let inputElements = await dtAddressElement.findElements(
+            By.xpath("following-sibling::dd//input[@type='text']"),
+          );
+          if (inputElements.length === 0) {
+            console.warn('対応するinput要素(住所)が見つかりませんでした。');
+            continue;
+          }
+          // 各input要素に住所を入力
+          for (let inputElement of inputElements) {
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              // 入力欄が空の場合だけ入力
+              await inputElement.sendKeys(
+                inquiryData.prefecture +
+                  inquiryData.city +
+                  inquiryData.streetAddress +
+                  inquiryData.buildingName,
+              );
+            }
+
+            console.log(
+              inquiryData.prefecture +
+                inquiryData.city +
+                inquiryData.streetAddress +
+                inquiryData.buildingName,
+              'を入力しました。',
+            );
+          }
+        } catch (innerErr) {
+          console.error('住所の処理中にエラーが発生しました:', innerErr);
+        }
+      }
+    } else {
+      console.log('「住所」というテキストを含むdtタグが見つかりませんでした。');
     }
   }
 
@@ -9172,12 +9267,17 @@ export class AutoFormSendService {
 
     for (const [category, value] of Object.entries(inputValues)) {
       for (const element of categories[category]) {
-        const currentValue: string =
-          (await element.getAttribute('value')) || '';
-        if (!currentValue.trim()) {
-          // 入力欄が空の場合だけ入力
-          await element.sendKeys(value);
-          console.log(`'${category}' に '${value}' を入力しました。`);
+        try {
+          const currentValue: string =
+            (await element.getAttribute('value')) || '';
+          if (!currentValue.trim()) {
+            // 入力欄が空の場合だけ入力
+            await element.sendKeys(value);
+            console.log(`'${category}' に '${value}' を入力しました。`);
+          }
+        } catch (error) {
+          console.log(error);
+          continue;
         }
       }
     }
