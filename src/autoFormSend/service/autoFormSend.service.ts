@@ -106,7 +106,7 @@ export class AutoFormSendService {
     chromeOptions.addArguments('--disable-gpu'); // GPUレンダリングを無効化
     chromeOptions.addArguments('--no-sandbox'); // サンドボックスモードを無効化
     chromeOptions.addArguments('--disable-dev-shm-usage'); // 開発者向け共有メモリの使用を無効化
-    // chromeOptions.addArguments('--headless');
+    chromeOptions.addArguments('--headless');
     chromeOptions.addArguments('--window-size=1920,1080');
 
     // WebDriverのビルダーを使用してChromeドライバーをセットアップ
@@ -612,6 +612,101 @@ export class AutoFormSendService {
           industryTypeKeywords = ['その他', '該当'];
         }
 
+        // 従業員規模のキーワードリストを作成
+        let employeeSizesKeywords = [];
+        if (data.inquiryData.employeeSize === '1~10') {
+          employeeSizesKeywords = ['1', '10', '5'];
+        }
+
+        if (data.inquiryData.employeeSize === '10~30') {
+          employeeSizesKeywords = ['10', '20', '30'];
+        }
+
+        if (data.inquiryData.employeeSize === '30~50') {
+          employeeSizesKeywords = [
+            '30',
+            '40',
+            '50',
+            '31',
+            '50',
+            '51',
+            '99',
+            '100',
+            '60',
+            '70',
+            '80',
+            '90',
+          ];
+        }
+
+        if (data.inquiryData.employeeSize === '50~100') {
+          employeeSizesKeywords = [
+            '50',
+            '51',
+            '99',
+            '100',
+            '60',
+            '70',
+            '80',
+            '90',
+            '30',
+            '40',
+            '50',
+            '31',
+          ];
+        }
+
+        if (data.inquiryData.employeeSize === '100~300') {
+          employeeSizesKeywords = [
+            '100',
+            '101',
+            '200',
+            '250',
+            '300',
+            '299',
+            '199',
+            '50',
+            '51',
+            '99',
+            '100',
+            '60',
+            '70',
+            '80',
+            '90',
+          ];
+        }
+
+        if (data.inquiryData.employeeSize === '300~500') {
+          employeeSizesKeywords = [
+            '300',
+            '301',
+            '500',
+            '501',
+            '100',
+            '101',
+            '200',
+            '250',
+            '300',
+            '299',
+          ];
+        }
+
+        if (data.inquiryData.employeeSize === '500~1000') {
+          employeeSizesKeywords = [
+            '499',
+            '500',
+            '501',
+            '1000',
+            '1001',
+            '600',
+            '750',
+          ];
+        }
+
+        if (data.inquiryData.employeeSize === '1000~') {
+          employeeSizesKeywords = ['999', '1000', '1001'];
+        }
+
         // キーワードを定義
         const Keywords: { [category: string]: string[] } = {
           inquiry_genre: [
@@ -627,7 +722,7 @@ export class AutoFormSendService {
           ],
           how_found: ['検索', 'その他', 'セールス'],
           departments: departmentKeywords, // 変数 部署★
-          employee_sizes: [data.inquiryData.employeeSize], // 変数 従業員数★
+          employee_sizes: employeeSizesKeywords, // 変数 従業員数★
           positions: jobPositionKeywords, // 変数 役職★
           address: [data.inquiryData.prefecture], // 変数 住所(都道府県のみ)★
           industry: industryTypeKeywords, // 変数 業種★
@@ -869,7 +964,7 @@ export class AutoFormSendService {
           await this.selectEmployeeSizes(
             driver,
             categorizedData,
-            data.inquiryData.employeeSize,
+            employeeSizesKeywords,
           );
           await this.inputUrl(
             driver,
@@ -970,7 +1065,7 @@ export class AutoFormSendService {
             driver,
             categorizedData,
             iframes,
-            data.inquiryData.employeeSize,
+            employeeSizesKeywords,
           );
           await this.inputUrlInIframe(
             driver,
@@ -6838,7 +6933,7 @@ export class AutoFormSendService {
   async selectEmployeeSizes(
     driver: WebDriver,
     categorizedData: Categories,
-    employeeSize: string,
+    employeeSizesKeywords: string[],
   ): Promise<void> {
     for (const employeeSizesItem of categorizedData.employee_sizes) {
       if (employeeSizesItem.element_type === 'Select') {
@@ -6850,15 +6945,25 @@ export class AutoFormSendService {
           const options = await selectElement.findElements(
             By.tagName('option'),
           );
-          for (const option of options) {
-            const optionText = await option.getText();
-            if (optionText.includes(employeeSize)) {
-              await option.click();
-              console.log(
-                `Employee_sizes input successful for ${employeeSizesItem.element_name} with option '${optionText}'.`,
-              );
+          let selectedOption: string | null = null;
+
+          for (const keyword of employeeSizesKeywords) {
+            for (const option of options) {
+              const optionText = await option.getText();
+              if (optionText.includes(keyword)) {
+                selectedOption = optionText;
+                await option.click();
+                console.log(`employeeSizesItem input successful.`);
+                break;
+              }
+            }
+            if (selectedOption) {
               break;
             }
+          }
+
+          if (!selectedOption) {
+            console.log(`No matching keyword found for employeeSizesItem.`);
           }
         } catch (e) {
           console.log(`Failed to input employee_sizes: ${e}`);
@@ -8135,7 +8240,7 @@ export class AutoFormSendService {
     driver: WebDriver,
     categorizedData: Categories,
     iframes: WebElement[],
-    employeeSize: string,
+    employeeSizesKeywords: string[],
   ): Promise<void> {
     for (const employeeSizesItem of categorizedData.employee_sizes) {
       if (employeeSizesItem.element_type === 'Select in iframe') {
@@ -8149,24 +8254,24 @@ export class AutoFormSendService {
             const options = await selectElement.findElements(
               By.tagName('option'),
             );
-            let optionSelected = false;
-            for (const option of options) {
-              const text = await option.getText();
-              if (text.includes(employeeSize)) {
-                await option.click();
-                console.log(
-                  `Employee_sizes input successful for ${
-                    employeeSizesItem.element_name
-                  } with option '${text}' in iframe ${iframes.indexOf(
-                    iframe,
-                  )}.`,
-                );
-                optionSelected = true;
+            let selectedOption: string | null = null;
+
+            for (const keyword of employeeSizesKeywords) {
+              for (const option of options) {
+                const optionText = await option.getText();
+                if (optionText.includes(keyword)) {
+                  selectedOption = optionText;
+                  await option.click();
+                  console.log(`employeeSizesItem input successful.`);
+                  break;
+                }
+              }
+              if (selectedOption) {
                 break;
               }
             }
 
-            if (!optionSelected) {
+            if (!selectedOption) {
               console.log(
                 `No suitable option found for ${
                   employeeSizesItem.element_name
