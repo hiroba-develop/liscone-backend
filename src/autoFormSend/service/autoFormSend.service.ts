@@ -106,7 +106,7 @@ export class AutoFormSendService {
     chromeOptions.addArguments('--disable-gpu'); // GPUレンダリングを無効化
     chromeOptions.addArguments('--no-sandbox'); // サンドボックスモードを無効化
     chromeOptions.addArguments('--disable-dev-shm-usage'); // 開発者向け共有メモリの使用を無効化
-    // chromeOptions.addArguments('--headless');
+    chromeOptions.addArguments('--headless');
     chromeOptions.addArguments('--window-size=1920,1080');
 
     // WebDriverのビルダーを使用してChromeドライバーをセットアップ
