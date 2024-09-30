@@ -6416,7 +6416,9 @@ export class AutoFormSendService {
             3000,
           );
           const value = await companyElement.getAttribute('value');
-          if (!value) {
+          const currentValue: string =
+            (await companyElement.getAttribute('value')) || '';
+          if (!currentValue.trim()) {
             await companyElement.sendKeys(corporateName);
             console.log(
               `corporateName input successful for ${companyElement.element_name}.`,
@@ -10101,76 +10103,76 @@ export class AutoFormSendService {
     }
 
     // ページ内のすべてのtextarea要素を処理
-    // try {
-    //   // ページ内のすべてのtextarea要素を取得
-    //   const textareaElements: WebElement[] = await driver.findElements(
-    //     By.xpath('//textarea'),
-    //   );
+    try {
+      // ページ内のすべてのtextarea要素を取得
+      const textareaElements: WebElement[] = await driver.findElements(
+        By.xpath('//textarea'),
+      );
 
-    //   // textarea要素に対して操作を行う
-    //   for (const textareaElement of textareaElements) {
-    //     try {
-    //       // テキストエリアが空欄かどうかをチェック
-    //       const textareaValue: string =
-    //         (await textareaElement.getAttribute('value')) || '';
-    //       if (!textareaValue.trim()) {
-    //         // 空欄なら適切な値を入力 ▲謎の処理
-    //         await textareaElement.sendKeys(inquiryData.inquiryBody);
-    //         console.log(
-    //           `Textarea input successful for ${
-    //             (await textareaElement.getAttribute('name')) ||
-    //             (await textareaElement.getAttribute('id'))
-    //           }.`,
-    //         );
+      // textarea要素に対して操作を行う
+      for (const textareaElement of textareaElements) {
+        try {
+          // テキストエリアが空欄かどうかをチェック
+          const textareaValue: string =
+            (await textareaElement.getAttribute('value')) || '';
+          if (!textareaValue.trim()) {
+            // 空欄なら適切な値を入力 ▲謎の処理
+            await textareaElement.sendKeys(inquiryData.inquiryBody);
+            console.log(
+              `Textarea input successful for ${
+                (await textareaElement.getAttribute('name')) ||
+                (await textareaElement.getAttribute('id'))
+              }.`,
+            );
 
-    //         // 抽出データに追加
-    //         try {
-    //           const parentElement: WebElement | null =
-    //             await textareaElement.findElement(By.xpath('..'));
-    //           const trElement: WebElement | null =
-    //             await textareaElement.findElement(By.xpath('ancestor::tr'));
+            // 抽出データに追加
+            try {
+              const parentElement: WebElement | null =
+                await textareaElement.findElement(By.xpath('..'));
+              const trElement: WebElement | null =
+                await textareaElement.findElement(By.xpath('ancestor::tr'));
 
-    //           const parentText: string = parentElement
-    //             ? (await parentElement.getText()).trim()
-    //             : '';
-    //           const trText: string = trElement
-    //             ? (await trElement.getText()).trim()
-    //             : '';
+              const parentText: string = parentElement
+                ? (await parentElement.getText()).trim()
+                : '';
+              const trText: string = trElement
+                ? (await trElement.getText()).trim()
+                : '';
 
-    //           extractedData.push({
-    //             id: null,
-    //             category: null,
-    //             element_name:
-    //               (await textareaElement.getAttribute('name')) ||
-    //               (await textareaElement.getAttribute('id')),
-    //             element_text: inquiryData.inquiryBody,
-    //             element_value: null,
-    //             parent_text: parentText,
-    //             siblings_text: '', // 必要に応じて追加
-    //             class_name: (await textareaElement.getAttribute('class')) || '',
-    //             label_text: '', // 必要に応じて追加
-    //             element_type: 'textarea',
-    //             tr_text: trText,
-    //           });
-    //         } catch (err) {
-    //           console.error(
-    //             `Failed to extract additional information for textarea: ${
-    //               (err as Error).message
-    //             }`,
-    //           );
-    //         }
-    //       }
-    //     } catch (e) {
-    //       console.error(
-    //         `Failed to handle textarea element: ${(e as Error).message}`,
-    //       );
-    //     }
-    //   }
-    // } catch (e) {
-    //   console.error(
-    //     `Failed to retrieve textarea elements: ${(e as Error).message}`,
-    //   );
-    // }
+              extractedData.push({
+                id: null,
+                category: null,
+                element_name:
+                  (await textareaElement.getAttribute('name')) ||
+                  (await textareaElement.getAttribute('id')),
+                element_text: inquiryData.inquiryBody,
+                element_value: null,
+                parent_text: parentText,
+                siblings_text: '', // 必要に応じて追加
+                class_name: (await textareaElement.getAttribute('class')) || '',
+                label_text: '', // 必要に応じて追加
+                element_type: 'textarea',
+                tr_text: trText,
+              });
+            } catch (err) {
+              console.error(
+                `Failed to extract additional information for textarea: ${
+                  (err as Error).message
+                }`,
+              );
+            }
+          }
+        } catch (e) {
+          console.error(
+            `Failed to handle textarea element: ${(e as Error).message}`,
+          );
+        }
+      }
+    } catch (e) {
+      console.error(
+        `Failed to retrieve textarea elements: ${(e as Error).message}`,
+      );
+    }
   }
 
   /**
@@ -10579,8 +10581,13 @@ export class AutoFormSendService {
             await inputElement.sendKeys(inquiryData.phoneNumber);
             break;
           case 'company_names':
-            await inputElement.sendKeys(inquiryData.corporateName);
-            break;
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElement.sendKeys(inquiryData.corporateName);
+              console.log(inquiryData.corporateName, 'を入力しました。');
+              break;
+            }
           case 'post_code':
             await inputElement.sendKeys(inquiryData.postalCode);
             break;
@@ -10712,11 +10719,35 @@ export class AutoFormSendService {
                   console.log(
                     `${url}: 送信ボタンをiframe #${i + 1} で検出しました。`,
                   );
-                  await sendButton.click(); // 必要に応じてコメントアウトを外してください
-                  console.log(`${url}: 送信ボタンをクリックしました。`);
-                  // 送信ボタンをクリックした後、元のコンテキストに戻る
-                  await driver.switchTo().defaultContent();
-                  return true;
+                  // 標準のクリックを試みる
+                  try {
+                    await sendButton.click();
+                    console.log(`${url}: 送信ボタンをクリックしました。`);
+                    return true;
+                  } catch (clickError) {
+                    console.warn(
+                      `${url}: 標準のクリックに失敗しました。DOM 操作でクリックを試みます。`,
+                    );
+                    // JavaScript を使用してクリック
+                    try {
+                      await driver.executeScript(
+                        'arguments[0].click();',
+                        sendButton,
+                      );
+                      console.log(
+                        `${url}: DOM 操作で送信ボタンをクリックしました。`,
+                      );
+                      return true;
+                    } catch (jsClickError) {
+                      console.error(
+                        `${url}: DOM 操作によるクリックにも失敗しました。`,
+                        jsClickError,
+                      );
+                      return false;
+                    } finally {
+                      await driver.switchTo().defaultContent();
+                    }
+                  }
                 }
               } catch (err) {
                 // 見つからなかった場合は次のセレクターを試す
@@ -10761,9 +10792,31 @@ export class AutoFormSendService {
           mainSendButton = await driver.findElement(selector);
           if (mainSendButton) {
             console.log(`${url}: メインコンテンツで送信ボタンを検出しました。`);
-            await mainSendButton.click(); // 必要に応じてコメントアウトを外してください
-            console.log(`${url}: 送信ボタンをクリックしました。`);
-            return true;
+            // 標準のクリックを試みる
+            try {
+              await mainSendButton.click();
+              console.log(`${url}: 送信ボタンをクリックしました。`);
+              return true;
+            } catch (clickError) {
+              console.warn(
+                `${url}: 標準のクリックに失敗しました。DOM 操作でクリックを試みます。`,
+              );
+              // JavaScript を使用してクリック
+              try {
+                await driver.executeScript(
+                  'arguments[0].click();',
+                  mainSendButton,
+                );
+                console.log(`${url}: DOM 操作で送信ボタンをクリックしました。`);
+                return true;
+              } catch (jsClickError) {
+                console.error(
+                  `${url}: DOM 操作によるクリックにも失敗しました。`,
+                  jsClickError,
+                );
+                return false;
+              }
+            }
           }
         } catch (err) {
           // 見つからなかった場合は次のセレクターを試す
