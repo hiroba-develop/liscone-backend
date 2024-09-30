@@ -615,40 +615,139 @@ export class AutoFormSendService {
         // 従業員規模のキーワードリストを作成
         let employeeSizesKeywords = [];
         if (data.inquiryData.employeeSize === '1~10') {
-          employeeSizesKeywords = ['1','10','5','25','24','29','10','20','30'];
+          employeeSizesKeywords = [
+            '1',
+            '10',
+            '5',
+            '25',
+            '24',
+            '29',
+            '10',
+            '20',
+            '30',
+          ];
         }
 
         if (data.inquiryData.employeeSize === '10~30') {
-          employeeSizesKeywords = ['25','24','29','10','20','30','31','49','51','30','40','50'];
+          employeeSizesKeywords = [
+            '25',
+            '24',
+            '29',
+            '10',
+            '20',
+            '30',
+            '31',
+            '49',
+            '51',
+            '30',
+            '40',
+            '50',
+          ];
         }
 
         if (data.inquiryData.employeeSize === '30~50') {
           employeeSizesKeywords = [
-            '31','49','51','30','40','50','51','99','75','50','100'
+            '31',
+            '49',
+            '51',
+            '30',
+            '40',
+            '50',
+            '51',
+            '99',
+            '75',
+            '50',
+            '100',
           ];
         }
 
         if (data.inquiryData.employeeSize === '50~100') {
           employeeSizesKeywords = [
-            '51','99','75','50','100','101','299','199','249','100','150','200','250','300'
+            '51',
+            '99',
+            '75',
+            '50',
+            '100',
+            '101',
+            '299',
+            '199',
+            '249',
+            '100',
+            '150',
+            '200',
+            '250',
+            '300',
           ];
         }
 
         if (data.inquiryData.employeeSize === '100~300') {
           employeeSizesKeywords = [
-            '101','299','199','249','100','150','200','250','300','301','499','399','449','300','350','400','450','500'
+            '101',
+            '299',
+            '199',
+            '249',
+            '100',
+            '150',
+            '200',
+            '250',
+            '300',
+            '301',
+            '499',
+            '399',
+            '449',
+            '300',
+            '350',
+            '400',
+            '450',
+            '500',
           ];
         }
 
         if (data.inquiryData.employeeSize === '300~500') {
           employeeSizesKeywords = [
-            '301','499','399','449','300','350','400','450','500','501','999','599','500','550','600','650','700','750','800','850','900','950'
+            '301',
+            '499',
+            '399',
+            '449',
+            '300',
+            '350',
+            '400',
+            '450',
+            '500',
+            '501',
+            '999',
+            '599',
+            '500',
+            '550',
+            '600',
+            '650',
+            '700',
+            '750',
+            '800',
+            '850',
+            '900',
+            '950',
           ];
         }
 
         if (data.inquiryData.employeeSize === '500~1000') {
           employeeSizesKeywords = [
-            '501','999','599','500','550','600','650','700','750','800','850','900','950','999','1000','1001'
+            '501',
+            '999',
+            '599',
+            '500',
+            '550',
+            '600',
+            '650',
+            '700',
+            '750',
+            '800',
+            '850',
+            '900',
+            '950',
+            '999',
+            '1000',
+            '1001',
           ];
         }
 
@@ -763,9 +862,9 @@ export class AutoFormSendService {
 
           categorizedData = await this.categorizeData(extractedData);
 
-          // // 抽出したデータを表示
-          // console.log('抽出したデータ:');
-          // console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
+          // 抽出したデータを表示
+          console.log('抽出したデータ:');
+          console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
 
           // // 分類されたデータを表示
           // console.log('\nカテゴリー:');
@@ -810,6 +909,9 @@ export class AutoFormSendService {
             data.inquiryData.inquiryBody,
           );
           categorizedData = await this.categorizeData(extractedData);
+
+          // placeholder属性を確認して入力を行う
+          await this.handleInputPlaceholderElements(driver, data.inquiryData);
 
           // dlタグに対応するもの
           await this.handleAddressInputDefinitionListElements(
@@ -4990,8 +5092,21 @@ export class AutoFormSendService {
           }
           // 各input要素に都道府県を入力
           for (let inputElement of inputElements) {
-            await inputElement.sendKeys(inquiryData.prefecture);
-            console.log(inquiryData.prefecture, 'を入力しました。');
+            let prefectureData = '';
+            if (inquiryData.prefecture === '東京') {
+              prefectureData = inquiryData.prefecture + '都';
+            } else if (
+              inquiryData.prefecture === '大阪' ||
+              inquiryData.prefecture === '京都'
+            ) {
+              prefectureData = inquiryData.prefecture + '府';
+            } else if (inquiryData.prefecture === '北海道') {
+              prefectureData = inquiryData.prefecture;
+            } else {
+              prefectureData = inquiryData.prefecture + '県';
+            }
+            await inputElement.sendKeys(prefectureData);
+            console.log(prefectureData, 'を入力しました。');
           }
         } catch (innerErr) {
           console.error('都道府県の処理中にエラーが発生しました:', innerErr);
@@ -5120,21 +5235,33 @@ export class AutoFormSendService {
               (await inputElement.getAttribute('value')) || '';
             if (!currentValue.trim()) {
               // 入力欄が空の場合だけ入力
+              let prefectureData = '';
+              if (inquiryData.prefecture === '東京') {
+                prefectureData = inquiryData.prefecture + '都';
+              } else if (
+                inquiryData.prefecture === '大阪' ||
+                inquiryData.prefecture === '京都'
+              ) {
+                prefectureData = inquiryData.prefecture + '府';
+              } else if (inquiryData.prefecture === '北海道') {
+                prefectureData = inquiryData.prefecture;
+              } else {
+                prefectureData = inquiryData.prefecture + '県';
+              }
               await inputElement.sendKeys(
-                inquiryData.prefecture +
+                prefectureData +
                   inquiryData.city +
                   inquiryData.streetAddress +
                   inquiryData.buildingName,
               );
+              console.log(
+                prefectureData +
+                  inquiryData.city +
+                  inquiryData.streetAddress +
+                  inquiryData.buildingName,
+                'を入力しました。',
+              );
             }
-
-            console.log(
-              inquiryData.prefecture +
-                inquiryData.city +
-                inquiryData.streetAddress +
-                inquiryData.buildingName,
-              'を入力しました。',
-            );
           }
         } catch (innerErr) {
           console.error('住所の処理中にエラーが発生しました:', innerErr);
@@ -5168,8 +5295,12 @@ export class AutoFormSendService {
             By.xpath("following-sibling::td//input[@type='text']"),
           );
           for (let inputElement of inputElements) {
-            await inputElement.sendKeys(inquiryData.department);
-            console.log(inquiryData.department, 'を入力しました。');
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElement.sendKeys(inquiryData.department);
+              console.log(inquiryData.department, 'を入力しました。');
+            }
           }
         } catch (innerErr) {
           console.error('部署の処理中にエラーが発生しました:', innerErr);
@@ -5205,8 +5336,12 @@ export class AutoFormSendService {
             By.xpath("following-sibling::td//input[@type='text']"),
           );
           for (let inputElement of inputElements) {
-            await inputElement.sendKeys(inquiryData.corporateName);
-            console.log(inquiryData.corporateName, 'を入力しました。');
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElement.sendKeys(inquiryData.corporateName);
+              console.log(inquiryData.corporateName, 'を入力しました。');
+            }
           }
         } catch (innerErr) {
           console.error(
@@ -5299,19 +5434,30 @@ export class AutoFormSendService {
           if (inputElements.length === 2) {
             // 姓名に分けて入力
             for (let i = 0; inputElements.length > i; i++) {
-              if ((i = 0)) {
-                await inputElements[i].sendKeys(inquiryData.lastNameHiragana);
-                console.log(inquiryData.lastNameHiragana, 'を入力しました。');
-              }
-              if ((i = 1)) {
-                await inputElements[i].sendKeys(inquiryData.firstNameHiragana);
-                console.log(inquiryData.firstNameHiragana, 'を入力しました。');
+              const currentValue: string =
+                (await inputElements[i].getAttribute('value')) || '';
+              if (!currentValue.trim()) {
+                if ((i = 0)) {
+                  await inputElements[i].sendKeys(inquiryData.lastNameHiragana);
+                  console.log(inquiryData.lastNameHiragana, 'を入力しました。');
+                }
+                if ((i = 1)) {
+                  await inputElements[i].sendKeys(
+                    inquiryData.firstNameHiragana,
+                  );
+                  console.log(
+                    inquiryData.firstNameHiragana,
+                    'を入力しました。',
+                  );
+                }
               }
             }
           } else if (inputElements.length === 1) {
             // フルネームを入力
-            for (let inputElement of inputElements) {
-              await inputElement.sendKeys(
+            const currentValue: string =
+              (await inputElements[0].getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElements[0].sendKeys(
                 inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
               );
               console.log(
@@ -5350,19 +5496,30 @@ export class AutoFormSendService {
           if (inputElements.length === 2) {
             // 姓名に分けて入力
             for (let i = 0; inputElements.length > i; i++) {
-              if ((i = 0)) {
-                await inputElements[i].sendKeys(inquiryData.lastNameKatakana);
-                console.log(inquiryData.lastNameKatakana, 'を入力しました。');
-              }
-              if ((i = 1)) {
-                await inputElements[i].sendKeys(inquiryData.firstNameKatakana);
-                console.log(inquiryData.firstNameKatakana, 'を入力しました。');
+              const currentValue: string =
+                (await inputElements[i].getAttribute('value')) || '';
+              if (!currentValue.trim()) {
+                if ((i = 0)) {
+                  await inputElements[i].sendKeys(inquiryData.lastNameKatakana);
+                  console.log(inquiryData.lastNameKatakana, 'を入力しました。');
+                }
+                if ((i = 1)) {
+                  await inputElements[i].sendKeys(
+                    inquiryData.firstNameKatakana,
+                  );
+                  console.log(
+                    inquiryData.firstNameKatakana,
+                    'を入力しました。',
+                  );
+                }
               }
             }
           } else if (inputElements.length === 1) {
             // フルネームを入力
-            for (let inputElement of inputElements) {
-              await inputElement.sendKeys(
+            const currentValue: string =
+              (await inputElements[0].getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElements[0].sendKeys(
                 inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
               );
               console.log(
@@ -5415,8 +5572,25 @@ export class AutoFormSendService {
           }
           // 各input要素に都道府県を入力
           for (let inputElement of inputElements) {
-            await inputElement.sendKeys(inquiryData.prefecture);
-            console.log(inquiryData.prefecture, 'を入力しました。');
+            let prefectureData = '';
+            if (inquiryData.prefecture === '東京') {
+              prefectureData = inquiryData.prefecture + '都';
+            } else if (
+              inquiryData.prefecture === '大阪' ||
+              inquiryData.prefecture === '京都'
+            ) {
+              prefectureData = inquiryData.prefecture + '府';
+            } else if (inquiryData.prefecture === '北海道') {
+              prefectureData = inquiryData.prefecture;
+            } else {
+              prefectureData = inquiryData.prefecture + '県';
+            }
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElement.sendKeys(prefectureData);
+              console.log(prefectureData, 'を入力しました。');
+            }
           }
         } catch (innerErr) {
           console.error('都道府県の処理中にエラーが発生しました:', innerErr);
@@ -5445,8 +5619,12 @@ export class AutoFormSendService {
           }
           // 各input要素に市町村を入力
           for (let inputElement of inputElements) {
-            await inputElement.sendKeys(inquiryData.city);
-            console.log(inquiryData.city, 'を入力しました。');
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElement.sendKeys(inquiryData.city);
+              console.log(inquiryData.city, 'を入力しました。');
+            }
           }
         } catch (innerErr) {
           console.error('市町村の処理中にエラーが発生しました:', innerErr);
@@ -5476,8 +5654,12 @@ export class AutoFormSendService {
           }
           // 各input要素に番地を入力
           for (let inputElement of inputElements) {
-            await inputElement.sendKeys(inquiryData.streetAddress);
-            console.log(inquiryData.streetAddress, 'を入力しました。');
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElement.sendKeys(inquiryData.streetAddress);
+              console.log(inquiryData.streetAddress, 'を入力しました。');
+            }
           }
         } catch (innerErr) {
           console.error('番地の処理中にエラーが発生しました:', innerErr);
@@ -5507,8 +5689,12 @@ export class AutoFormSendService {
           }
           // 各input要素に建物名を入力
           for (let inputElement of inputElements) {
-            await inputElement.sendKeys(inquiryData.buildingName);
-            console.log(inquiryData.buildingName, 'を入力しました。');
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElement.sendKeys(inquiryData.buildingName);
+              console.log(inquiryData.buildingName, 'を入力しました。');
+            }
           }
         } catch (innerErr) {
           console.error(
@@ -5545,21 +5731,33 @@ export class AutoFormSendService {
               (await inputElement.getAttribute('value')) || '';
             if (!currentValue.trim()) {
               // 入力欄が空の場合だけ入力
+              let prefectureData = '';
+              if (inquiryData.prefecture === '東京') {
+                prefectureData = inquiryData.prefecture + '都';
+              } else if (
+                inquiryData.prefecture === '大阪' ||
+                inquiryData.prefecture === '京都'
+              ) {
+                prefectureData = inquiryData.prefecture + '府';
+              } else if (inquiryData.prefecture === '北海道') {
+                prefectureData = inquiryData.prefecture;
+              } else {
+                prefectureData = inquiryData.prefecture + '県';
+              }
               await inputElement.sendKeys(
-                inquiryData.prefecture +
+                prefectureData +
                   inquiryData.city +
                   inquiryData.streetAddress +
                   inquiryData.buildingName,
               );
+              console.log(
+                prefectureData +
+                  inquiryData.city +
+                  inquiryData.streetAddress +
+                  inquiryData.buildingName,
+                'を入力しました。',
+              );
             }
-
-            console.log(
-              inquiryData.prefecture +
-                inquiryData.city +
-                inquiryData.streetAddress +
-                inquiryData.buildingName,
-              'を入力しました。',
-            );
           }
         } catch (innerErr) {
           console.error('住所の処理中にエラーが発生しました:', innerErr);
@@ -5593,8 +5791,12 @@ export class AutoFormSendService {
             By.xpath("following-sibling::dd//input[@type='text']"),
           );
           for (let inputElement of inputElements) {
-            await inputElement.sendKeys(inquiryData.department);
-            console.log(inquiryData.department, 'を入力しました。');
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElement.sendKeys(inquiryData.department);
+              console.log(inquiryData.department, 'を入力しました。');
+            }
           }
         } catch (innerErr) {
           console.error('部署の処理中にエラーが発生しました:', innerErr);
@@ -5630,8 +5832,12 @@ export class AutoFormSendService {
             By.xpath("following-sibling::dd//input[@type='text']"),
           );
           for (let inputElement of inputElements) {
-            await inputElement.sendKeys(inquiryData.corporateName);
-            console.log(inquiryData.corporateName, 'を入力しました。');
+            const currentValue: string =
+              (await inputElement.getAttribute('value')) || '';
+            if (!currentValue.trim()) {
+              await inputElement.sendKeys(inquiryData.corporateName);
+              console.log(inquiryData.corporateName, 'を入力しました。');
+            }
           }
         } catch (innerErr) {
           console.error(
@@ -5644,6 +5850,147 @@ export class AutoFormSendService {
       console.log(
         '「会社名、御社名、貴社名」というテキストを含むdtタグが見つかりませんでした。',
       );
+    }
+  }
+
+  /**
+   * Placeholder属性を確認して名前を入れる処理
+   *
+   * @param driver - Selenium WebDriverのインスタンス
+   * @param inquiryData - お問い合わせ情報
+   */
+  async handleInputPlaceholderElements(
+    driver: WebDriver,
+    inquiryData: { [key: string]: string },
+  ): Promise<void> {
+    // すべての<input>要素を取得
+    let inputElements = await driver.findElements(By.tagName('input'));
+
+    console.log(`見つかった<input>要素の数: ${inputElements.length}`);
+
+    // 各<input>要素のplaceholder属性を取得してコンソールに出力
+    for (let i = 0; i < inputElements.length; i++) {
+      let inputElement = inputElements[i];
+      let name = await inputElement.getAttribute('name'); // name属性を取得（オプション）
+      let placeholder = await inputElement.getAttribute('placeholder');
+
+      console.log(`要素名: ${name}, Placeholderの値: ${placeholder || 'なし'}`);
+
+      // 要素が表示されているか確認
+      const isDisplayed = await inputElement.isDisplayed();
+      // 要素が有効か確認
+      const isEnabled = await inputElement.isEnabled();
+
+      if (!isDisplayed || !isEnabled) {
+        console.log(`要素 ${name} は表示されていないか、無効化されています。スキップします。`);
+        continue; // 次の要素にスキップ
+      }
+
+      const currentValue: string =
+        (await inputElement.getAttribute('value')) || '';
+      // 名前(漢字)入力
+      if (placeholder.includes('山田 太郎')) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(
+            inquiryData.lastName + inquiryData.firstName,
+          );
+          console.log(
+            inquiryData.lastName + inquiryData.firstName,
+            'を入力しました。',
+          );
+        }
+      } else if (placeholder.includes('山田')) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(inquiryData.lastName);
+          console.log(inquiryData.lastName, 'を入力しました。');
+        }
+      } else if (placeholder.includes('太郎')) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(inquiryData.firstName);
+          console.log(inquiryData.firstName, 'を入力しました。');
+        }
+      }
+      // 名前(カナ)入力
+      if (placeholder.includes('ヤマダ タロウ')) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(
+            inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
+          );
+          console.log(
+            inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
+            'を入力しました。',
+          );
+        }
+      } else if (
+        placeholder.includes('ヤマダ')
+      ) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(inquiryData.lastNameKatakana);
+          console.log(inquiryData.lastNameKatakana, 'を入力しました。');
+        }
+      } else if (
+        placeholder.includes('タロウ')
+      ) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(inquiryData.firstNameKatakana);
+          console.log(inquiryData.firstNameKatakana, 'を入力しました。');
+        }
+      }
+      // 名前(かな)入力
+      if (placeholder.includes('やまだ たろう')) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(
+            inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
+          );
+          console.log(
+            inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
+            'を入力しました。',
+          );
+        }
+      } else if (
+        placeholder.includes('やまだ')
+      ) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(inquiryData.lastNameHiragana);
+          console.log(inquiryData.lastNameHiragana, 'を入力しました。');
+        }
+      } else if (
+        placeholder.includes('たろう')
+      ) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(inquiryData.fifirstNameHiraganastName);
+          console.log(
+            inquiryData.fifirstNameHiraganastName,
+            'を入力しました。',
+          );
+        }
+      }
+
+      // 会社名
+      if (placeholder.includes('会社名')) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(inquiryData.corporateName);
+          console.log(inquiryData.corporateName, 'を入力しました。');
+        }
+      } else if (placeholder.includes('御社名')) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(inquiryData.corporateName);
+          console.log(inquiryData.corporateName, 'を入力しました。');
+        }
+      } else if (placeholder.includes('貴社名')) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(inquiryData.corporateName);
+          console.log(inquiryData.corporateName, 'を入力しました。');
+        }
+      }
+
+      // 会社名
+      if (placeholder.includes('123-4567')) {
+        if (!currentValue.trim()) {
+          await inputElement.sendKeys(inquiryData.postalCode);
+          console.log(inquiryData.postalCode, 'を入力しました。');
+        }
+      } 
     }
   }
 
@@ -7041,8 +7388,18 @@ export class AutoFormSendService {
           );
           const value = await addressElement.getAttribute('value');
           if (!value.trim()) {
+            let prefectureData = '';
+            if (prefecture === '東京') {
+              prefectureData = prefecture + '都';
+            } else if (prefecture === '大阪' || prefecture === '京都') {
+              prefectureData = prefecture + '府';
+            } else if (prefecture === '北海道') {
+              prefectureData = prefecture;
+            } else {
+              prefectureData = prefecture + '県';
+            }
             await addressElement.sendKeys(
-              prefecture + city + streetAddress + buildingName,
+              prefectureData + city + streetAddress + buildingName,
             );
             console.log(
               `Address input successful for ${addressItem.element_name}.`,
@@ -7151,7 +7508,17 @@ export class AutoFormSendService {
           );
           const value = await addressPrefectureElement.getAttribute('value');
           if (!value.trim()) {
-            await addressPrefectureElement.sendKeys(prefecture);
+            let prefectureData = '';
+            if (prefecture === '東京') {
+              prefectureData = prefecture + '都';
+            } else if (prefecture === '大阪' || prefecture === '京都') {
+              prefectureData = prefecture + '府';
+            } else if (prefecture === '北海道') {
+              prefectureData = prefecture;
+            } else {
+              prefectureData = prefecture + '県';
+            }
+            await addressPrefectureElement.sendKeys(prefectureData);
             console.log(
               `Address_prefecture input successful for ${addressPrefectureItem.element_name}.`,
             );
@@ -8756,8 +9123,18 @@ export class AutoFormSendService {
             await driver.wait(until.elementIsVisible(addressElement), 3000);
             const value = await addressElement.getAttribute('value');
             if (!value.trim()) {
+              let prefectureData = '';
+              if (prefecture === '東京') {
+                prefectureData = prefecture + '都';
+              } else if (prefecture === '大阪' || prefecture === '京都') {
+                prefectureData = prefecture + '府';
+              } else if (prefecture === '北海道') {
+                prefectureData = prefecture;
+              } else {
+                prefectureData = prefecture + '県';
+              }
               await addressElement.sendKeys(
-                prefecture + city + streetAddress + buildingName,
+                prefectureData + city + streetAddress + buildingName,
               );
               console.log(
                 `Address input successful for ${
@@ -8814,7 +9191,17 @@ export class AutoFormSendService {
             );
             const value = await addressPrefectureElement.getAttribute('value');
             if (!value.trim()) {
-              await addressPrefectureElement.sendKeys(prefecture);
+              let prefectureData = '';
+              if (prefecture === '東京') {
+                prefectureData = prefecture + '都';
+              } else if (prefecture === '大阪' || prefecture === '京都') {
+                prefectureData = prefecture + '府';
+              } else if (prefecture === '北海道') {
+                prefectureData = prefecture;
+              } else {
+                prefectureData = prefecture + '県';
+              }
+              await addressPrefectureElement.sendKeys(prefectureData);
               console.log(
                 `Address_prefecture input successful for ${
                   addressPrefectureItem.element_name
@@ -9546,6 +9933,19 @@ export class AutoFormSendService {
                   );
                   continue;
                 }
+                let prefectureData = '';
+                if (inquiryData.prefecture === '東京') {
+                  prefectureData = inquiryData.prefecture + '都';
+                } else if (
+                  inquiryData.prefecture === '大阪' ||
+                  inquiryData.prefecture === '京都'
+                ) {
+                  prefectureData = inquiryData.prefecture + '府';
+                } else if (inquiryData.prefecture === '北海道') {
+                  prefectureData = inquiryData.prefecture;
+                } else {
+                  prefectureData = inquiryData.prefecture + '県';
+                }
 
                 // カテゴリに基づいて適切な値を入力
                 switch (category) {
@@ -9579,13 +9979,13 @@ export class AutoFormSendService {
                     break;
                   case 'address':
                     await inputElement.sendKeys(
-                      inquiryData.prefecture +
+                      prefectureData +
                         inquiryData.city +
                         inquiryData.streetAddress +
                         inquiryData.buildingName,
                     );
                     selectedInput =
-                      inquiryData.prefecture +
+                      prefectureData +
                       inquiryData.city +
                       inquiryData.streetAddress +
                       inquiryData.buildingName;
@@ -9608,8 +10008,8 @@ export class AutoFormSendService {
                     selectedInput = inquiryData.streetAddress;
                     break;
                   case 'address_prefecture':
-                    await inputElement.sendKeys(inquiryData.prefecture);
-                    selectedInput = inquiryData.prefecture;
+                    await inputElement.sendKeys(prefectureData);
+                    selectedInput = prefectureData;
                     break;
                   case 'address_city':
                     await inputElement.sendKeys(inquiryData.city);
@@ -10152,6 +10552,19 @@ export class AutoFormSendService {
     try {
       const value = await inputElement.getAttribute('value');
       if (!value || value.trim() === '') {
+        let prefectureData = '';
+        if (inquiryData.prefecture === '東京') {
+          prefectureData = inquiryData.prefecture + '都';
+        } else if (
+          inquiryData.prefecture === '大阪' ||
+          inquiryData.prefecture === '京都'
+        ) {
+          prefectureData = inquiryData.prefecture + '府';
+        } else if (inquiryData.prefecture === '北海道') {
+          prefectureData = inquiryData.prefecture;
+        } else {
+          prefectureData = inquiryData.prefecture + '県';
+        }
         // 空欄チェック
         switch (category) {
           case 'email_addresses':
@@ -10177,7 +10590,7 @@ export class AutoFormSendService {
             break;
           case 'address':
             await inputElement.sendKeys(
-              inquiryData.prefecture +
+              prefectureData +
                 inquiryData.city +
                 inquiryData.streetAddress +
                 inquiryData.buildingName,
@@ -10196,7 +10609,7 @@ export class AutoFormSendService {
             await inputElement.sendKeys(inquiryData.streetAddress);
             break;
           case 'address_prefecture':
-            await inputElement.sendKeys(inquiryData.prefecture);
+            await inputElement.sendKeys(prefectureData);
             break;
           case 'address_city':
             await inputElement.sendKeys(inquiryData.city);
