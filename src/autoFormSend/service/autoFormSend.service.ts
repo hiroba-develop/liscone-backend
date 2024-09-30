@@ -1351,10 +1351,11 @@ export class AutoFormSendService {
           );
 
           // お問い合わせフォームの送信ボタンを検出してクリックします。クリック成功でTrue
-          const clickSendButton: boolean = await this.isClickSendButton(
-            driver,
-            url,
-          );
+          const clickSendButton: boolean = await driver
+            .wait(async () => {
+              return await this.isClickSendButton(driver, url);
+            }, 10000)
+            .catch(() => false);
           if (clickSendButton) {
             // 入力項目エラー画面が表示されているかを検出（最大3秒）
             const inputErrorDisplayed: boolean = await driver
@@ -1373,7 +1374,9 @@ export class AutoFormSendService {
 
               if (confirmationDisplayed) {
                 // 確認画面が表示された場合、再度送信ボタンをクリックします
-                await this.isClickSendButton(driver, url);
+                await driver.wait(async () => {
+                  return await this.isClickSendButton(driver, url);
+                }, 3000);
               } else {
                 console.log('確認画面は表示されませんでした。');
               }
@@ -1395,6 +1398,29 @@ export class AutoFormSendService {
             } else {
               console.log('入力項目に不備がありました。');
               await this.updateSendStatus(CSVurl, InsertformResult, '3');
+
+              // 確認画面が表示されるまで待機します（最大3秒）
+              const confirmationDisplayed: boolean = await driver
+                .wait(async () => {
+                  return await this.isConfirmationScreenDisplayed(driver);
+                }, 3000)
+                .catch(() => false);
+
+              if (confirmationDisplayed) {
+                // 確認画面が表示された場合、再度送信ボタンをクリックします
+                await driver.wait(async () => {
+                  return await this.isClickSendButton(driver, url);
+                }, 3000);
+              } else {
+                console.log('確認画面は表示されませんでした。');
+              }
+
+              // 送信完了画面が表示されるまで待機します（最大3秒）
+              const sendCompleteDisplayed: boolean = await driver
+                .wait(async () => {
+                  return await this.isSendCompleteScreenDisplayed(driver);
+                }, 3000)
+                .catch(() => false);
             }
           } else {
             console.log('送信ボタンが見つかりませんでした。');
@@ -2411,7 +2437,7 @@ export class AutoFormSendService {
   async handleCheckboxInPage(
     driver: WebDriver,
     keyword: string,
-    timeout: number = 10,
+    timeout: number = 1,
   ): Promise<boolean> {
     try {
       // ページ内のli要素を探索し、ラベルにキーワードが含まれているかチェック
@@ -2487,7 +2513,7 @@ export class AutoFormSendService {
   async switchToIframeAndHandleAllCheckboxes(
     driver: WebDriver,
     checkboxKeywords: { [category: string]: string[] },
-    timeout: number = 10,
+    timeout: number = 1,
   ): Promise<boolean> {
     try {
       // すべてのiframeを取得
@@ -2540,7 +2566,7 @@ export class AutoFormSendService {
   async handleRadioButtonInPage(
     driver: WebDriver,
     keyword: string,
-    timeout: number = 10,
+    timeout: number = 1,
   ): Promise<boolean> {
     try {
       // ページ内のli要素を探索し、ラベルにキーワードが含まれているかチェック
@@ -2626,7 +2652,7 @@ export class AutoFormSendService {
   async switchToIframeAndHandleAllRadioButtons(
     driver: WebDriver,
     radioKeywords: { [category: string]: string[] },
-    timeout: number = 10,
+    timeout: number = 1,
   ): Promise<boolean> {
     try {
       // すべてのiframeを取得
@@ -3216,7 +3242,7 @@ export class AutoFormSendService {
   async handleAgreementCheckbox(
     driver: WebDriver,
     keywords: string[] = null,
-    timeout: number = 10,
+    timeout: number = 1,
   ): Promise<boolean> {
     try {
       // デフォルトのキーワードリストを定義
@@ -10699,14 +10725,28 @@ export class AutoFormSendService {
 
             // 送信ボタンを探すためのセレクターを複数試みます
             const sendButtonSelectors = [
-              By.css('button[type="submit"]'),
-              By.css('input[type="submit"]'),
               By.xpath("//button[contains(text(), '送信')]"),
-              By.xpath("//input[@value='送信']"),
               By.xpath("//button[contains(text(), '確認')]"),
               By.xpath("//button[.//*[contains(text(), '送信')]]"),
-              By.css('button[name="submit"]'),
-              By.css('input[name="submit"]'),
+              By.xpath("//button[.//*[contains(text(), '確認')]]"),
+              By.xpath("//input[@value='送信']"),
+              By.xpath("//input[@value='入力内容を確認']"),
+              By.xpath("//input[@value='送信内容を確認する']"),
+              By.xpath("//input[@value='入力内容を送信する']"),
+              By.xpath("//input[@value='入力内容確認']"),
+              By.xpath("//input[@value='送信する']"),
+              By.xpath("//input[@value='確認画面へ']"),
+              By.xpath("//input[@value='確認画面']"),
+              By.xpath("//button[@value='送信']"),
+              By.xpath("//button[@value='入力内容を確認']"),
+              By.xpath("//button[@value='送信内容を確認する']"),
+              By.xpath("//button[@value='入力内容を送信する']"),
+              By.xpath("//button[@value='入力内容確認']"),
+              By.xpath("//button[@value='送信する']"),
+              By.xpath("//button[@value='確認画面へ']"),
+              By.xpath("//button[@value='確認画面']"),
+              By.css('button[type="submit"]'),
+              By.css('input[type="submit"]'),
             ];
 
             let sendButton: WebElement | null = null;
@@ -10715,6 +10755,22 @@ export class AutoFormSendService {
               try {
                 console.log(`${url}: 検出条件: ${selector}`);
                 sendButton = await driver.findElement(selector);
+
+                const className = await sendButton.getAttribute('class');
+                const name = await sendButton.getAttribute('name');
+                const id = await sendButton.getAttribute('id');
+                const type = await sendButton.getAttribute('type');
+                const value = await sendButton.getAttribute('value');
+                // 要素情報を表示
+                console.log('-'.repeat(21));
+                console.log('送信ボタン検出');
+                console.log(`クラス名: ${className}`);
+                console.log(`name属性: ${name}`);
+                console.log(`id属性: ${id}`);
+                console.log(`type属性: ${type}`);
+                console.log(`value属性: ${value}`);
+                console.log('-'.repeat(21));
+
                 if (sendButton) {
                   console.log(
                     `${url}: 送信ボタンをiframe #${i + 1} で検出しました。`,
@@ -10723,30 +10779,12 @@ export class AutoFormSendService {
                   try {
                     await sendButton.click();
                     console.log(`${url}: 送信ボタンをクリックしました。`);
+                    await driver.switchTo().defaultContent();
                     return true;
                   } catch (clickError) {
-                    console.warn(
-                      `${url}: 標準のクリックに失敗しました。DOM 操作でクリックを試みます。`,
-                    );
-                    // JavaScript を使用してクリック
-                    try {
-                      await driver.executeScript(
-                        'arguments[0].click();',
-                        sendButton,
-                      );
-                      console.log(
-                        `${url}: DOM 操作で送信ボタンをクリックしました。`,
-                      );
-                      return true;
-                    } catch (jsClickError) {
-                      console.error(
-                        `${url}: DOM 操作によるクリックにも失敗しました。`,
-                        jsClickError,
-                      );
-                      return false;
-                    } finally {
-                      await driver.switchTo().defaultContent();
-                    }
+                    console.warn(`${url}: 送信ボタンクリックに失敗しました`);
+                    await driver.switchTo().defaultContent();
+                    return false;
                   }
                 }
               } catch (err) {
@@ -10774,14 +10812,28 @@ export class AutoFormSendService {
         `${url}: iframe内で送信ボタンが見つからなかったため、メインコンテンツをチェックします。`,
       );
       const mainContentSendButtonSelectors = [
-        By.css('button[type="submit"]'),
-        By.css('input[type="submit"]'),
         By.xpath("//button[contains(text(), '送信')]"),
-        By.xpath("//input[@value='送信']"),
         By.xpath("//button[contains(text(), '確認')]"),
         By.xpath("//button[.//*[contains(text(), '送信')]]"),
-        By.css('button[name="submit"]'),
-        By.css('input[name="submit"]'),
+        By.xpath("//button[.//*[contains(text(), '確認')]]"),
+        By.xpath("//input[@value='送信']"),
+        By.xpath("//input[@value='入力内容を確認']"),
+        By.xpath("//input[@value='送信内容を確認する']"),
+        By.xpath("//input[@value='入力内容を送信する']"),
+        By.xpath("//input[@value='入力内容確認']"),
+        By.xpath("//input[@value='送信する']"),
+        By.xpath("//input[@value='確認画面へ']"),
+        By.xpath("//input[@value='確認画面']"),
+        By.xpath("//button[@value='送信']"),
+        By.xpath("//button[@value='入力内容を確認']"),
+        By.xpath("//button[@value='送信内容を確認する']"),
+        By.xpath("//button[@value='入力内容を送信する']"),
+        By.xpath("//button[@value='入力内容確認']"),
+        By.xpath("//button[@value='送信する']"),
+        By.xpath("//button[@value='確認画面へ']"),
+        By.xpath("//button[@value='確認画面']"),
+        By.css('button[type="submit"]'),
+        By.css('input[type="submit"]'),
       ];
 
       let mainSendButton: WebElement | null = null;
@@ -10790,6 +10842,22 @@ export class AutoFormSendService {
         try {
           console.log(`${url}: メインコンテンツの検出条件: ${selector}`);
           mainSendButton = await driver.findElement(selector);
+
+          const className = await mainSendButton.getAttribute('class');
+          const name = await mainSendButton.getAttribute('name');
+          const id = await mainSendButton.getAttribute('id');
+          const type = await mainSendButton.getAttribute('type');
+          const value = await mainSendButton.getAttribute('value');
+          // 要素情報を表示
+          console.log('-'.repeat(21));
+          console.log('送信ボタン検出');
+          console.log(`クラス名: ${className}`);
+          console.log(`name属性: ${name}`);
+          console.log(`id属性: ${id}`);
+          console.log(`type属性: ${type}`);
+          console.log(`value属性: ${value}`);
+          console.log('-'.repeat(21));
+
           if (mainSendButton) {
             console.log(`${url}: メインコンテンツで送信ボタンを検出しました。`);
             // 標準のクリックを試みる
