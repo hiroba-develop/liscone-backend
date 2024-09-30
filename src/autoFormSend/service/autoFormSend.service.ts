@@ -106,7 +106,7 @@ export class AutoFormSendService {
     chromeOptions.addArguments('--disable-gpu'); // GPUレンダリングを無効化
     chromeOptions.addArguments('--no-sandbox'); // サンドボックスモードを無効化
     chromeOptions.addArguments('--disable-dev-shm-usage'); // 開発者向け共有メモリの使用を無効化
-    // chromeOptions.addArguments('--headless');
+    chromeOptions.addArguments('--headless');
     chromeOptions.addArguments('--window-size=1920,1080');
 
     // WebDriverのビルダーを使用してChromeドライバーをセットアップ
@@ -1355,51 +1355,51 @@ export class AutoFormSendService {
             driver,
             url,
           );
-          // if (clickSendButton) {
-          //   // 入力項目エラー画面が表示されているかを検出（最大3秒）
-          //   const inputErrorDisplayed: boolean = await driver
-          //     .wait(async () => {
-          //       return await this.isInputErrorDisplayed(driver);
-          //     }, 3000)
-          //     .catch(() => false);
+          if (clickSendButton) {
+            // 入力項目エラー画面が表示されているかを検出（最大3秒）
+            const inputErrorDisplayed: boolean = await driver
+              .wait(async () => {
+                return await this.isInputErrorDisplayed(driver);
+              }, 3000)
+              .catch(() => false);
 
-          //   if (inputErrorDisplayed) {
-          //     // 確認画面が表示されるまで待機します（最大3秒）
-          //     const confirmationDisplayed: boolean = await driver
-          //       .wait(async () => {
-          //         return await this.isConfirmationScreenDisplayed(driver);
-          //       }, 3000)
-          //       .catch(() => false);
+            if (inputErrorDisplayed) {
+              // 確認画面が表示されるまで待機します（最大3秒）
+              const confirmationDisplayed: boolean = await driver
+                .wait(async () => {
+                  return await this.isConfirmationScreenDisplayed(driver);
+                }, 3000)
+                .catch(() => false);
 
-          //     if (confirmationDisplayed) {
-          //       // 確認画面が表示された場合、再度送信ボタンをクリックします
-          //       await this.isClickSendButton(driver, url);
-          //     } else {
-          //       console.log('確認画面は表示されませんでした。');
-          //     }
+              if (confirmationDisplayed) {
+                // 確認画面が表示された場合、再度送信ボタンをクリックします
+                await this.isClickSendButton(driver, url);
+              } else {
+                console.log('確認画面は表示されませんでした。');
+              }
 
-          //     // 送信完了画面が表示されるまで待機します（最大3秒）
-          //     const sendCompleteDisplayed: boolean = await driver
-          //       .wait(async () => {
-          //         return await this.isSendCompleteScreenDisplayed(driver);
-          //       }, 3000)
-          //       .catch(() => false);
+              // 送信完了画面が表示されるまで待機します（最大3秒）
+              const sendCompleteDisplayed: boolean = await driver
+                .wait(async () => {
+                  return await this.isSendCompleteScreenDisplayed(driver);
+                }, 3000)
+                .catch(() => false);
 
-          //     if (sendCompleteDisplayed) {
-          //       console.log('お問い合わせフォームの送信が完了しました。');
-          //       await this.updateSendStatus(CSVurl, InsertformResult, '0');
-          //     } else {
-          //       console.log('送信完了画面は表示されませんでした。');
-          //       await this.updateSendStatus(CSVurl, InsertformResult, '4');
-          //     }
-          //   } else {
-          //     console.log('入力項目に不備がありました。');
-          //     await this.updateSendStatus(CSVurl, InsertformResult, '3');
-          //   }
-          // } else {
-          //   console.log('送信ボタンが見つかりませんでした。');
-          //   await this.updateSendStatus(CSVurl, InsertformResult, '2');
-          // }
+              if (sendCompleteDisplayed) {
+                console.log('お問い合わせフォームの送信が完了しました。');
+                await this.updateSendStatus(CSVurl, InsertformResult, '0');
+              } else {
+                console.log('送信完了画面は表示されませんでした。');
+                await this.updateSendStatus(CSVurl, InsertformResult, '4');
+              }
+            } else {
+              console.log('入力項目に不備がありました。');
+              await this.updateSendStatus(CSVurl, InsertformResult, '3');
+            }
+          } else {
+            console.log('送信ボタンが見つかりませんでした。');
+            await this.updateSendStatus(CSVurl, InsertformResult, '2');
+          }
 
           // // 抽出したデータを表示
           // console.log('抽出したデータ:');
@@ -10707,7 +10707,7 @@ export class AutoFormSendService {
                   console.log(
                     `${url}: 送信ボタンをiframe #${i + 1} で検出しました。`,
                   );
-                  // await sendButton.click(); // 必要に応じてコメントアウトを外してください
+                  await sendButton.click(); // 必要に応じてコメントアウトを外してください
                   console.log(`${url}: 送信ボタンをクリックしました。`);
                   // 送信ボタンをクリックした後、元のコンテキストに戻る
                   await driver.switchTo().defaultContent();
@@ -10756,7 +10756,7 @@ export class AutoFormSendService {
           mainSendButton = await driver.findElement(selector);
           if (mainSendButton) {
             console.log(`${url}: メインコンテンツで送信ボタンを検出しました。`);
-            // await mainSendButton.click(); // 必要に応じてコメントアウトを外してください
+            await mainSendButton.click(); // 必要に応じてコメントアウトを外してください
             console.log(`${url}: 送信ボタンをクリックしました。`);
             return true;
           }
