@@ -106,7 +106,7 @@ export class AutoFormSendService {
     chromeOptions.addArguments('--disable-gpu'); // GPUレンダリングを無効化
     chromeOptions.addArguments('--no-sandbox'); // サンドボックスモードを無効化
     chromeOptions.addArguments('--disable-dev-shm-usage'); // 開発者向け共有メモリの使用を無効化
-    chromeOptions.addArguments('--headless');
+    // chromeOptions.addArguments('--headless');
     chromeOptions.addArguments('--window-size=1920,1080');
 
     // WebDriverのビルダーを使用してChromeドライバーをセットアップ
@@ -863,8 +863,8 @@ export class AutoFormSendService {
           categorizedData = await this.categorizeData(extractedData);
 
           // 抽出したデータを表示
-          console.log('抽出したデータ:');
-          console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
+          // console.log('抽出したデータ:');
+          // console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
 
           // // 分類されたデータを表示
           // console.log('\nカテゴリー:');
@@ -1406,8 +1406,8 @@ export class AutoFormSendService {
           // console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
 
           // // 分類されたデータを表示
-          // console.log('\nカテゴリー:');
-          // console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
+          console.log('\nカテゴリー:');
+          console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
 
           // 5秒間待機
           await driver.sleep(5000);
@@ -5882,7 +5882,9 @@ export class AutoFormSendService {
       const isEnabled = await inputElement.isEnabled();
 
       if (!isDisplayed || !isEnabled) {
-        console.log(`要素 ${name} は表示されていないか、無効化されています。スキップします。`);
+        console.log(
+          `要素 ${name} は表示されていないか、無効化されています。スキップします。`,
+        );
         continue; // 次の要素にスキップ
       }
 
@@ -5921,16 +5923,12 @@ export class AutoFormSendService {
             'を入力しました。',
           );
         }
-      } else if (
-        placeholder.includes('ヤマダ')
-      ) {
+      } else if (placeholder.includes('ヤマダ')) {
         if (!currentValue.trim()) {
           await inputElement.sendKeys(inquiryData.lastNameKatakana);
           console.log(inquiryData.lastNameKatakana, 'を入力しました。');
         }
-      } else if (
-        placeholder.includes('タロウ')
-      ) {
+      } else if (placeholder.includes('タロウ')) {
         if (!currentValue.trim()) {
           await inputElement.sendKeys(inquiryData.firstNameKatakana);
           console.log(inquiryData.firstNameKatakana, 'を入力しました。');
@@ -5947,16 +5945,12 @@ export class AutoFormSendService {
             'を入力しました。',
           );
         }
-      } else if (
-        placeholder.includes('やまだ')
-      ) {
+      } else if (placeholder.includes('やまだ')) {
         if (!currentValue.trim()) {
           await inputElement.sendKeys(inquiryData.lastNameHiragana);
           console.log(inquiryData.lastNameHiragana, 'を入力しました。');
         }
-      } else if (
-        placeholder.includes('たろう')
-      ) {
+      } else if (placeholder.includes('たろう')) {
         if (!currentValue.trim()) {
           await inputElement.sendKeys(inquiryData.fifirstNameHiraganastName);
           console.log(
@@ -5990,7 +5984,7 @@ export class AutoFormSendService {
           await inputElement.sendKeys(inquiryData.postalCode);
           console.log(inquiryData.postalCode, 'を入力しました。');
         }
-      } 
+      }
     }
   }
 
@@ -7668,11 +7662,16 @@ export class AutoFormSendService {
               until.elementLocated(By.name(companyItem.element_name)),
               3000,
             );
-            await companyElement.sendKeys(corporateName);
-            const index = iframes.indexOf(iframe);
-            console.log(
-              `Company input successful for ${companyItem.element_name} in iframe ${index}.`,
-            );
+            const currentValue: string =
+              (await companyElement.getAttribute('value')) || '';
+
+            if (!currentValue.trim()) {
+              await companyElement.sendKeys(corporateName);
+              const index = iframes.indexOf(iframe);
+              console.log(
+                `Company input successful for ${companyItem.element_name} in iframe ${index}.`,
+              );
+            }
             break;
           } catch (e) {
             const index = iframes.indexOf(iframe);
@@ -9966,8 +9965,14 @@ export class AutoFormSendService {
                     selectedInput = inquiryData.phoneNumber;
                     break;
                   case 'company_names':
-                    await inputElement.sendKeys(inquiryData.corporateName);
-                    selectedInput = inquiryData.corporateName;
+                    const currentValue: string =
+                      (await inputElement.getAttribute('value')) || '';
+
+                    if (!currentValue.trim()) {
+                      await inputElement.sendKeys(inquiryData.corporateName);
+                      selectedInput = inquiryData.corporateName;
+                    }
+
                     break;
                   case 'employee_sizes':
                     await inputElement.sendKeys(inquiryData.employeeSize);
