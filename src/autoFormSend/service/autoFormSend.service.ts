@@ -615,91 +615,40 @@ export class AutoFormSendService {
         // 従業員規模のキーワードリストを作成
         let employeeSizesKeywords = [];
         if (data.inquiryData.employeeSize === '1~10') {
-          employeeSizesKeywords = ['1', '10', '5'];
+          employeeSizesKeywords = ['1','10','5','25','24','29','10','20','30'];
         }
 
         if (data.inquiryData.employeeSize === '10~30') {
-          employeeSizesKeywords = ['10', '20', '30'];
+          employeeSizesKeywords = ['25','24','29','10','20','30','31','49','51','30','40','50'];
         }
 
         if (data.inquiryData.employeeSize === '30~50') {
           employeeSizesKeywords = [
-            '30',
-            '40',
-            '50',
-            '31',
-            '50',
-            '51',
-            '99',
-            '100',
-            '60',
-            '70',
-            '80',
-            '90',
+            '31','49','51','30','40','50','51','99','75','50','100'
           ];
         }
 
         if (data.inquiryData.employeeSize === '50~100') {
           employeeSizesKeywords = [
-            '50',
-            '51',
-            '99',
-            '100',
-            '60',
-            '70',
-            '80',
-            '90',
-            '30',
-            '40',
-            '50',
-            '31',
+            '51','99','75','50','100','101','299','199','249','100','150','200','250','300'
           ];
         }
 
         if (data.inquiryData.employeeSize === '100~300') {
           employeeSizesKeywords = [
-            '100',
-            '101',
-            '200',
-            '250',
-            '300',
-            '299',
-            '199',
-            '50',
-            '51',
-            '99',
-            '100',
-            '60',
-            '70',
-            '80',
-            '90',
+            '101','299','199','249','100','150','200','250','300','301','499','399','449','300','350','400','450','500'
           ];
         }
 
         if (data.inquiryData.employeeSize === '300~500') {
           employeeSizesKeywords = [
-            '300',
-            '301',
-            '500',
-            '501',
-            '100',
-            '101',
-            '200',
-            '250',
-            '300',
-            '299',
+            '301','499','399','449','300','350','400','450','500','501','999','599','500','550','600','650','700','750','800','850','900','950'
           ];
         }
 
         if (data.inquiryData.employeeSize === '500~1000') {
           employeeSizesKeywords = [
-            '499',
-            '500',
-            '501',
-            '1000',
-            '1001',
-            '600',
-            '750',
+            '501','999','599','500','550','600','650','700','750','800','850','900','950','999','1000','1001'
           ];
         }
 
@@ -867,8 +816,25 @@ export class AutoFormSendService {
             driver,
             data.inquiryData,
           );
+          await this.handleDepartmentInputDefinitionListElements(
+            driver,
+            data.inquiryData,
+          );
+          await this.handleCorporateNameInputDefinitionListElements(
+            driver,
+            data.inquiryData,
+          );
+
           // tableタグに対応するもの
           await this.handleaddressInputTableElements(driver, data.inquiryData);
+          await this.handleDepartmentInputTableElements(
+            driver,
+            data.inquiryData,
+          );
+          await this.handleCorporateNameInputTableElements(
+            driver,
+            data.inquiryData,
+          );
 
           await this.handleIframeInputAndTextareaElements(
             driver,
@@ -1273,25 +1239,12 @@ export class AutoFormSendService {
           // 入力が読み込まれるまで2秒待機（ミリ秒単位）
           await driver.sleep(2000);
 
-          await this.handleInputElementsWithIframes(
-            driver,
-            extractedData,
-            inputKeywords,
-            data.inquiryData,
-          );
-
           await this.handleAgreementCheckboxesCombined(driver, extractedData);
 
           await this.processInputsAndTextareas2(
             driver,
             inputKeywords,
             extractedData,
-            data.inquiryData,
-          );
-          await this.handleInputAndTextareaElements(
-            driver,
-            extractedData,
-            inputKeywords,
             data.inquiryData,
           );
 
@@ -4423,7 +4376,7 @@ export class AutoFormSendService {
             );
             label = (await labelElement.getText()).trim();
           } catch (e) {
-            label = ''
+            label = '';
           }
 
           // 親要素を<tr>まで遡って、そのテキストを取得
@@ -5193,6 +5146,83 @@ export class AutoFormSendService {
   }
 
   /**
+   * trタグ内に部署を入れる処理
+   *
+   * @param driver - Selenium WebDriverのインスタンス
+   * @param inquiryData - お問い合わせ情報
+   */
+  async handleDepartmentInputTableElements(
+    driver: WebDriver,
+    inquiryData: { [key: string]: string },
+  ): Promise<void> {
+    // テキストが「部署」を含む要素を探す
+    let DepartmentElements = await driver.findElements(
+      By.xpath("//th[contains(., '部署')]"),
+    );
+    if (DepartmentElements.length !== 0) {
+      // 部署入力処理
+      for (let DepartmentElement of DepartmentElements) {
+        try {
+          // Xpathで兄弟要素を探し、その中のすべてのinputを取得
+          let inputElements = await DepartmentElement.findElements(
+            By.xpath("following-sibling::td//input[@type='text']"),
+          );
+          for (let inputElement of inputElements) {
+            await inputElement.sendKeys(inquiryData.department);
+            console.log(inquiryData.department, 'を入力しました。');
+          }
+        } catch (innerErr) {
+          console.error('部署の処理中にエラーが発生しました:', innerErr);
+        }
+      }
+    } else {
+      console.log('「部署」というテキストを含むthタグが見つかりませんでした。');
+    }
+  }
+
+  /**
+   * trタグ内に会社名を入れる処理
+   *
+   * @param driver - Selenium WebDriverのインスタンス
+   * @param inquiryData - お問い合わせ情報
+   */
+  async handleCorporateNameInputTableElements(
+    driver: WebDriver,
+    inquiryData: { [key: string]: string },
+  ): Promise<void> {
+    // テキストが「会社名、御社名、貴社名」を含む要素を探す
+    let CorporateNameElements = await driver.findElements(
+      By.xpath(
+        "//th[contains(., '会社名')or contains(., '御社名')or contains(., '貴社名')]",
+      ),
+    );
+    if (CorporateNameElements.length !== 0) {
+      // 会社名、御社名、貴社名入力処理
+      for (let CorporateNameElement of CorporateNameElements) {
+        try {
+          // Xpathで兄弟要素を探し、その中のすべてのinputを取得
+          let inputElements = await CorporateNameElement.findElements(
+            By.xpath("following-sibling::td//input[@type='text']"),
+          );
+          for (let inputElement of inputElements) {
+            await inputElement.sendKeys(inquiryData.corporateName);
+            console.log(inquiryData.corporateName, 'を入力しました。');
+          }
+        } catch (innerErr) {
+          console.error(
+            '会社名、御社名、貴社名の処理中にエラーが発生しました:',
+            innerErr,
+          );
+        }
+      }
+    } else {
+      console.log(
+        '「会社名、御社名、貴社名」というテキストを含むthタグが見つかりませんでした。',
+      );
+    }
+  }
+
+  /**
    * dlタグ内に名前を入れる処理
    *
    * @param driver - Selenium WebDriverのインスタンス
@@ -5541,166 +5571,78 @@ export class AutoFormSendService {
   }
 
   /**
-   * 兄弟タグ内に名前を入れる処理
+   * dlタグ内に部署を入れる処理
    *
    * @param driver - Selenium WebDriverのインスタンス
    * @param inquiryData - お問い合わせ情報
    */
-  async handleNameInputBrotherElements(
+  async handleDepartmentInputDefinitionListElements(
     driver: WebDriver,
     inquiryData: { [key: string]: string },
   ): Promise<void> {
-    // テキストが「お名前」または「氏名」を含む要素を探す
-    let KanjiElements = await driver.findElements(
-      By.xpath("//*[contains(., 'お名前')or contains(., '氏名')]"),
+    // テキストが「部署」を含む要素を探す
+    let DepartmentElements = await driver.findElements(
+      By.xpath("//dt[contains(., '部署')]"),
     );
-    if (KanjiElements.length !== 0) {
-      // 漢字フルネーム入力処理
-      for (let KanjiElement of KanjiElements) {
+    if (DepartmentElements.length !== 0) {
+      // 部署入力処理
+      for (let DepartmentElement of DepartmentElements) {
         try {
           // Xpathで兄弟要素を探し、その中のすべてのinputを取得
-          let inputElements = await KanjiElement.findElements(
-            By.xpath("following-sibling::*//input[@type='text']"),
+          let inputElements = await DepartmentElement.findElements(
+            By.xpath("following-sibling::dd//input[@type='text']"),
           );
-          // 取得したinput要素の量によって、フルネームか姓名に分けるか選択し入力
-          if (inputElements.length === 2) {
-            // 姓名に分けて入力
-            for (let i = 0; inputElements.length > i; i++) {
-              if ((i = 0)) {
-                await inputElements[i].sendKeys(inquiryData.lastName);
-                console.log(inquiryData.lastName, 'を入力しました。');
-              }
-              if ((i = 1)) {
-                await inputElements[i].sendKeys(inquiryData.firstName);
-                console.log(inquiryData.firstName, 'を入力しました。');
-              }
-            }
-          } else if (inputElements.length === 1) {
-            // フルネームを入力
-            for (let inputElement of inputElements) {
-              await inputElement.sendKeys(
-                inquiryData.lastName + inquiryData.firstName,
-              );
-              console.log(
-                inquiryData.lastName + inquiryData.firstName,
-                'を入力しました。',
-              );
-            }
-          } else if (inputElements.length === 0) {
-            console.warn('対応するinput要素(お名前)が見つかりませんでした。');
+          for (let inputElement of inputElements) {
+            await inputElement.sendKeys(inquiryData.department);
+            console.log(inquiryData.department, 'を入力しました。');
           }
         } catch (innerErr) {
-          console.error('名前漢字の処理中にエラーが発生しました:', innerErr);
+          console.error('部署の処理中にエラーが発生しました:', innerErr);
         }
       }
     } else {
-      console.log(
-        '「お名前」というテキストを含むdtタグが見つかりませんでした。',
-      );
+      console.log('「部署」というテキストを含むdtタグが見つかりませんでした。');
     }
+  }
 
-    // テキストが「ふりがな」を含む要素を探す
-    let HiraganaElements = await driver.findElements(
+  /**
+   * dlタグ内に会社名を入れる処理
+   *
+   * @param driver - Selenium WebDriverのインスタンス
+   * @param inquiryData - お問い合わせ情報
+   */
+  async handleCorporateNameInputDefinitionListElements(
+    driver: WebDriver,
+    inquiryData: { [key: string]: string },
+  ): Promise<void> {
+    // テキストが「会社名、御社名、貴社名」を含む要素を探す
+    let CorporateNameElements = await driver.findElements(
       By.xpath(
-        "//*[contains(., 'ふり')or contains(., 'がな')or contains(., 'かな')]",
+        "//dt[contains(., '会社名')or contains(., '御社名')or contains(., '貴社名')]",
       ),
     );
-    if (HiraganaElements.length !== 0) {
-      // ふりがなフルネーム入力処理
-      for (let HiraganaElement of HiraganaElements) {
+    if (CorporateNameElements.length !== 0) {
+      // 会社名、御社名、貴社名入力処理
+      for (let CorporateNameElement of CorporateNameElements) {
         try {
-          // XPathで兄弟要素を探し、その中のすべてのinputを取得
-          let inputElements = await HiraganaElement.findElements(
-            By.xpath("following-sibling::*//input[@type='text']"),
+          // Xpathで兄弟要素を探し、その中のすべてのinputを取得
+          let inputElements = await CorporateNameElement.findElements(
+            By.xpath("following-sibling::dd//input[@type='text']"),
           );
-          // 取得したinput要素の量によって、フルネームか姓名に分けるか選択し入力
-          if (inputElements.length === 2) {
-            // 姓名に分けて入力
-            for (let i = 0; inputElements.length > i; i++) {
-              if ((i = 0)) {
-                await inputElements[i].sendKeys(inquiryData.lastNameHiragana);
-                console.log(inquiryData.lastNameHiragana, 'を入力しました。');
-              }
-              if ((i = 1)) {
-                await inputElements[i].sendKeys(inquiryData.firstNameHiragana);
-                console.log(inquiryData.firstNameHiragana, 'を入力しました。');
-              }
-            }
-          } else if (inputElements.length === 1) {
-            // フルネームを入力
-            for (let inputElement of inputElements) {
-              await inputElement.sendKeys(
-                inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
-              );
-              console.log(
-                inquiryData.lastNameHiragana + inquiryData.firstNameHiragana,
-                'を入力しました。',
-              );
-            }
-          } else if (inputElements.length === 0) {
-            console.warn('対応するinput要素(ふりがな)が見つかりませんでした。');
-          }
-        } catch (innerErr) {
-          console.error('ふりがなの処理中にエラーが発生しました:', innerErr);
-        }
-      }
-    } else {
-      console.log(
-        '「ふりがな」というテキストを含むdtタグが見つかりませんでした。',
-      );
-    }
-
-    // テキストが「フリガナ」を含む要素を探す
-    let dtKatakanaElements = await driver.findElements(
-      By.xpath(
-        "//*[contains(., 'フリ')or contains(., 'ガナ')or contains(., 'カナ')]",
-      ),
-    );
-    if (dtKatakanaElements.length !== 0) {
-      // フリガナフルネーム入力処理
-      for (let dtKatakanaElement of dtKatakanaElements) {
-        try {
-          // XPathで兄弟要素を探し、その中のすべてのinputを取得
-          let inputElements = await dtKatakanaElement.findElements(
-            By.xpath("following-sibling::*//input[@type='text']"),
-          );
-          // 取得したinput要素の量によって、フルネームか姓名に分けるか選択し入力
-          if (inputElements.length === 2) {
-            // 姓名に分けて入力
-            for (let i = 0; inputElements.length > i; i++) {
-              if ((i = 0)) {
-                await inputElements[i].sendKeys(inquiryData.lastNameKatakana);
-                console.log(inquiryData.lastNameKatakana, 'を入力しました。');
-              }
-              if ((i = 1)) {
-                await inputElements[i].sendKeys(inquiryData.firstNameKatakana);
-                console.log(inquiryData.firstNameKatakana, 'を入力しました。');
-              }
-            }
-          } else if (inputElements.length === 1) {
-            // フルネームを入力
-            for (let inputElement of inputElements) {
-              await inputElement.sendKeys(
-                inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
-              );
-              console.log(
-                inquiryData.lastNameKatakana + inquiryData.firstNameKatakana,
-                'を入力しました。',
-              );
-            }
-          } else if (inputElements.length === 0) {
-            console.warn('対応するinput要素(フリガナ)が見つかりませんでした。');
+          for (let inputElement of inputElements) {
+            await inputElement.sendKeys(inquiryData.corporateName);
+            console.log(inquiryData.corporateName, 'を入力しました。');
           }
         } catch (innerErr) {
           console.error(
-            'フリガナフルネームの処理中にエラーが発生しました:',
+            '会社名、御社名、貴社名の処理中にエラーが発生しました:',
             innerErr,
           );
         }
       }
     } else {
       console.log(
-        '「フリガナ」というテキストを含むdtタグが見つかりませんでした。',
+        '「会社名、御社名、貴社名」というテキストを含むdtタグが見つかりませんでした。',
       );
     }
   }
@@ -9549,102 +9491,6 @@ export class AutoFormSendService {
     }
   }
 
-  /**
-   * ページ内のすべてのiframeを取得し、それぞれのiframe内で入力要素とテキストエリア要素を処理します。
-   *
-   * @param driver - Selenium WebDriverのインスタンス
-   * @param extractedData - 抽出されたデータ
-   * @param inputKeywords - カテゴリごとのキーワードリストを定義
-   * @param inquiryData - お問い合わせ情報
-   */
-  async handleInputElementsWithIframes(
-    driver: WebDriver,
-    extractedData: ExtractedData[],
-    inputKeywords: Record<string, string[]>,
-    inquiryData: { [key: string]: string },
-  ): Promise<void> {
-    // ページ内のすべてのiframeを取得
-    const iframes: WebElement[] = await driver.findElements(
-      By.tagName('iframe'),
-    );
-
-    for (let index = 0; index < iframes.length; index++) {
-      const iframe = iframes[index];
-      try {
-        // iframeに切り替え
-        await driver.switchTo().frame(iframe);
-        console.log(`Processing iframe ${index}`);
-
-        // input と textarea 要素を処理
-        await this.handleInputAndTextareaElements(
-          driver,
-          extractedData,
-          inputKeywords,
-          inquiryData,
-        );
-      } catch (error) {
-        console.error(
-          `Failed to process iframe ${index}: ${(error as Error).message}`,
-        );
-      } finally {
-        // iframeから戻る
-        await driver.switchTo().defaultContent();
-      }
-    }
-  }
-  /**
-   * inputボックスとテキストエリアを処理し、適切な値を入力する関数
-   *
-   * @param driver - Selenium WebDriverのインスタンス
-   * @param extractedData - 抽出されたデータ
-   * @param inputKeywords - カテゴリごとのキーワードリストを定義
-   * @param inquiryData - お問い合わせ情報
-   */
-  async handleInputAndTextareaElements(
-    driver: WebDriver,
-    extractedData: any,
-    inputKeywords: Record<string, string[]>,
-    inquiryData: { [key: string]: string },
-  ): Promise<void> {
-    // すべてのiframeを取得
-    const iframeElements: WebElement[] = await driver.findElements(
-      By.tagName('iframe'),
-    );
-
-    // まず、メインページのすべてのinputおよびtextarea要素を処理
-    await this.processInputsAndTextareas(
-      driver,
-      inputKeywords,
-      extractedData,
-      inquiryData,
-    );
-
-    // すべてのiframeに対して処理を実行
-    for (let index = 0; index < iframeElements.length; index++) {
-      const iframe = iframeElements[index];
-      try {
-        // iframeに切り替え
-        await driver.switchTo().frame(iframe);
-        console.log(`Processing iframe ${index}`);
-
-        // iframe内のinputおよびtextarea要素を処理
-        await this.processInputsAndTextareas(
-          driver,
-          inputKeywords,
-          extractedData,
-          inquiryData,
-        );
-
-        // メインコンテンツに戻る
-        await driver.switchTo().defaultContent();
-        console.log('Switched back to main content.');
-      } catch (e) {
-        console.error(
-          `Failed to process iframe ${index}: ${(e as Error).message}`,
-        );
-      }
-    }
-  }
   /**
    * inputとtextarea要素を処理し、適切な値を入力する関数
    *
