@@ -106,7 +106,7 @@ export class AutoFormSendService {
     chromeOptions.addArguments('--disable-gpu'); // GPUレンダリングを無効化
     chromeOptions.addArguments('--no-sandbox'); // サンドボックスモードを無効化
     chromeOptions.addArguments('--disable-dev-shm-usage'); // 開発者向け共有メモリの使用を無効化
-    chromeOptions.addArguments('--headless');
+    // chromeOptions.addArguments('--headless');
     chromeOptions.addArguments('--window-size=1920,1080');
 
     // WebDriverのビルダーを使用してChromeドライバーをセットアップ
@@ -1300,51 +1300,51 @@ export class AutoFormSendService {
             driver,
             url,
           );
-          if (clickSendButton) {
-            // 入力項目エラー画面が表示されているかを検出（最大3秒）
-            const inputErrorDisplayed: boolean = await driver
-              .wait(async () => {
-                return await this.isInputErrorDisplayed(driver);
-              }, 3000)
-              .catch(() => false);
+          // if (clickSendButton) {
+          //   // 入力項目エラー画面が表示されているかを検出（最大3秒）
+          //   const inputErrorDisplayed: boolean = await driver
+          //     .wait(async () => {
+          //       return await this.isInputErrorDisplayed(driver);
+          //     }, 3000)
+          //     .catch(() => false);
 
-            if (inputErrorDisplayed) {
-              // 確認画面が表示されるまで待機します（最大3秒）
-              const confirmationDisplayed: boolean = await driver
-                .wait(async () => {
-                  return await this.isConfirmationScreenDisplayed(driver);
-                }, 3000)
-                .catch(() => false);
+          //   if (inputErrorDisplayed) {
+          //     // 確認画面が表示されるまで待機します（最大3秒）
+          //     const confirmationDisplayed: boolean = await driver
+          //       .wait(async () => {
+          //         return await this.isConfirmationScreenDisplayed(driver);
+          //       }, 3000)
+          //       .catch(() => false);
 
-              if (confirmationDisplayed) {
-                // 確認画面が表示された場合、再度送信ボタンをクリックします
-                await this.isClickSendButton(driver, url);
-              } else {
-                console.log('確認画面は表示されませんでした。');
-              }
+          //     if (confirmationDisplayed) {
+          //       // 確認画面が表示された場合、再度送信ボタンをクリックします
+          //       await this.isClickSendButton(driver, url);
+          //     } else {
+          //       console.log('確認画面は表示されませんでした。');
+          //     }
 
-              // 送信完了画面が表示されるまで待機します（最大3秒）
-              const sendCompleteDisplayed: boolean = await driver
-                .wait(async () => {
-                  return await this.isSendCompleteScreenDisplayed(driver);
-                }, 3000)
-                .catch(() => false);
+          //     // 送信完了画面が表示されるまで待機します（最大3秒）
+          //     const sendCompleteDisplayed: boolean = await driver
+          //       .wait(async () => {
+          //         return await this.isSendCompleteScreenDisplayed(driver);
+          //       }, 3000)
+          //       .catch(() => false);
 
-              if (sendCompleteDisplayed) {
-                console.log('お問い合わせフォームの送信が完了しました。');
-                await this.updateSendStatus(CSVurl, InsertformResult, '0');
-              } else {
-                console.log('送信完了画面は表示されませんでした。');
-                await this.updateSendStatus(CSVurl, InsertformResult, '4');
-              }
-            } else {
-              console.log('入力項目に不備がありました。');
-              await this.updateSendStatus(CSVurl, InsertformResult, '3');
-            }
-          } else {
-            console.log('送信ボタンが見つかりませんでした。');
-            await this.updateSendStatus(CSVurl, InsertformResult, '2');
-          }
+          //     if (sendCompleteDisplayed) {
+          //       console.log('お問い合わせフォームの送信が完了しました。');
+          //       await this.updateSendStatus(CSVurl, InsertformResult, '0');
+          //     } else {
+          //       console.log('送信完了画面は表示されませんでした。');
+          //       await this.updateSendStatus(CSVurl, InsertformResult, '4');
+          //     }
+          //   } else {
+          //     console.log('入力項目に不備がありました。');
+          //     await this.updateSendStatus(CSVurl, InsertformResult, '3');
+          //   }
+          // } else {
+          //   console.log('送信ボタンが見つかりませんでした。');
+          //   await this.updateSendStatus(CSVurl, InsertformResult, '2');
+          // }
 
           // // 抽出したデータを表示
           // console.log('抽出したデータ:');
@@ -4423,22 +4423,7 @@ export class AutoFormSendService {
             );
             label = (await labelElement.getText()).trim();
           } catch (e) {
-            if (e instanceof error.NoSuchElementError) {
-              try {
-                const labelElement = await parent.findElement(
-                  By.xpath('./preceding-sibling::label'),
-                );
-                label = (await labelElement.getText()).trim();
-              } catch (e) {
-                if (e instanceof error.NoSuchElementError) {
-                  label = ''; // ラベルが見つからない場合
-                } else {
-                  throw e;
-                }
-              }
-            } else {
-              throw e;
-            }
+            label = ''
           }
 
           // 親要素を<tr>まで遡って、そのテキストを取得
@@ -9865,76 +9850,76 @@ export class AutoFormSendService {
     }
 
     // ページ内のすべてのtextarea要素を処理
-    try {
-      // ページ内のすべてのtextarea要素を取得
-      const textareaElements: WebElement[] = await driver.findElements(
-        By.xpath('//textarea'),
-      );
+    // try {
+    //   // ページ内のすべてのtextarea要素を取得
+    //   const textareaElements: WebElement[] = await driver.findElements(
+    //     By.xpath('//textarea'),
+    //   );
 
-      // textarea要素に対して操作を行う
-      for (const textareaElement of textareaElements) {
-        try {
-          // テキストエリアが空欄かどうかをチェック
-          const textareaValue: string =
-            (await textareaElement.getAttribute('value')) || '';
-          if (!textareaValue.trim()) {
-            // 空欄なら適切な値を入力 ▲謎の処理
-            await textareaElement.sendKeys(inquiryData.inquiryBody);
-            console.log(
-              `Textarea input successful for ${
-                (await textareaElement.getAttribute('name')) ||
-                (await textareaElement.getAttribute('id'))
-              }.`,
-            );
+    //   // textarea要素に対して操作を行う
+    //   for (const textareaElement of textareaElements) {
+    //     try {
+    //       // テキストエリアが空欄かどうかをチェック
+    //       const textareaValue: string =
+    //         (await textareaElement.getAttribute('value')) || '';
+    //       if (!textareaValue.trim()) {
+    //         // 空欄なら適切な値を入力 ▲謎の処理
+    //         await textareaElement.sendKeys(inquiryData.inquiryBody);
+    //         console.log(
+    //           `Textarea input successful for ${
+    //             (await textareaElement.getAttribute('name')) ||
+    //             (await textareaElement.getAttribute('id'))
+    //           }.`,
+    //         );
 
-            // 抽出データに追加
-            try {
-              const parentElement: WebElement | null =
-                await textareaElement.findElement(By.xpath('..'));
-              const trElement: WebElement | null =
-                await textareaElement.findElement(By.xpath('ancestor::tr'));
+    //         // 抽出データに追加
+    //         try {
+    //           const parentElement: WebElement | null =
+    //             await textareaElement.findElement(By.xpath('..'));
+    //           const trElement: WebElement | null =
+    //             await textareaElement.findElement(By.xpath('ancestor::tr'));
 
-              const parentText: string = parentElement
-                ? (await parentElement.getText()).trim()
-                : '';
-              const trText: string = trElement
-                ? (await trElement.getText()).trim()
-                : '';
+    //           const parentText: string = parentElement
+    //             ? (await parentElement.getText()).trim()
+    //             : '';
+    //           const trText: string = trElement
+    //             ? (await trElement.getText()).trim()
+    //             : '';
 
-              extractedData.push({
-                id: null,
-                category: null,
-                element_name:
-                  (await textareaElement.getAttribute('name')) ||
-                  (await textareaElement.getAttribute('id')),
-                element_text: inquiryData.inquiryBody,
-                element_value: null,
-                parent_text: parentText,
-                siblings_text: '', // 必要に応じて追加
-                class_name: (await textareaElement.getAttribute('class')) || '',
-                label_text: '', // 必要に応じて追加
-                element_type: 'textarea',
-                tr_text: trText,
-              });
-            } catch (err) {
-              console.error(
-                `Failed to extract additional information for textarea: ${
-                  (err as Error).message
-                }`,
-              );
-            }
-          }
-        } catch (e) {
-          console.error(
-            `Failed to handle textarea element: ${(e as Error).message}`,
-          );
-        }
-      }
-    } catch (e) {
-      console.error(
-        `Failed to retrieve textarea elements: ${(e as Error).message}`,
-      );
-    }
+    //           extractedData.push({
+    //             id: null,
+    //             category: null,
+    //             element_name:
+    //               (await textareaElement.getAttribute('name')) ||
+    //               (await textareaElement.getAttribute('id')),
+    //             element_text: inquiryData.inquiryBody,
+    //             element_value: null,
+    //             parent_text: parentText,
+    //             siblings_text: '', // 必要に応じて追加
+    //             class_name: (await textareaElement.getAttribute('class')) || '',
+    //             label_text: '', // 必要に応じて追加
+    //             element_type: 'textarea',
+    //             tr_text: trText,
+    //           });
+    //         } catch (err) {
+    //           console.error(
+    //             `Failed to extract additional information for textarea: ${
+    //               (err as Error).message
+    //             }`,
+    //           );
+    //         }
+    //       }
+    //     } catch (e) {
+    //       console.error(
+    //         `Failed to handle textarea element: ${(e as Error).message}`,
+    //       );
+    //     }
+    //   }
+    // } catch (e) {
+    //   console.error(
+    //     `Failed to retrieve textarea elements: ${(e as Error).message}`,
+    //   );
+    // }
   }
 
   /**
@@ -10463,7 +10448,7 @@ export class AutoFormSendService {
                   console.log(
                     `${url}: 送信ボタンをiframe #${i + 1} で検出しました。`,
                   );
-                  await sendButton.click(); // 必要に応じてコメントアウトを外してください
+                  // await sendButton.click(); // 必要に応じてコメントアウトを外してください
                   console.log(`${url}: 送信ボタンをクリックしました。`);
                   // 送信ボタンをクリックした後、元のコンテキストに戻る
                   await driver.switchTo().defaultContent();
@@ -10512,7 +10497,7 @@ export class AutoFormSendService {
           mainSendButton = await driver.findElement(selector);
           if (mainSendButton) {
             console.log(`${url}: メインコンテンツで送信ボタンを検出しました。`);
-            await mainSendButton.click(); // 必要に応じてコメントアウトを外してください
+            // await mainSendButton.click(); // 必要に応じてコメントアウトを外してください
             console.log(`${url}: 送信ボタンをクリックしました。`);
             return true;
           }
@@ -10567,10 +10552,15 @@ export class AutoFormSendService {
             // 送信ボタンを探すためのセレクターを複数試みます
             const iframeInputErrorSelectors: By[] = [
               By.xpath("//*[contains(text(), '入力しなおして')]"),
+              By.xpath("//*[contains(text(), '入力してください')]"),
+              By.xpath("//*[contains(text(), '必須項目です')]"),
+              By.xpath("//*[contains(text(), '誤りがあります')]"),
               By.xpath("//*[contains(text(), '再度入力')]"),
               By.xpath("//*[contains(text(), '有効な数字')]"),
               By.xpath("//*[contains(text(), '有効な日付')]"),
               By.xpath("//*[contains(text(), '無効な文字')]"),
+              By.xpath("//*[contains(text(), '短すぎます')]"),
+              By.xpath("//*[contains(text(), '長すぎます')]"),
             ];
 
             for (const selector of iframeInputErrorSelectors) {
@@ -10601,10 +10591,15 @@ export class AutoFormSendService {
       );
       const inputErrorSelectors: By[] = [
         By.xpath("//*[contains(text(), '入力しなおして')]"),
+        By.xpath("//*[contains(text(), '入力してください')]"),
+        By.xpath("//*[contains(text(), '必須項目です')]"),
+        By.xpath("//*[contains(text(), '誤りがあります')]"),
         By.xpath("//*[contains(text(), '再度入力')]"),
         By.xpath("//*[contains(text(), '有効な数字')]"),
         By.xpath("//*[contains(text(), '有効な日付')]"),
         By.xpath("//*[contains(text(), '無効な文字')]"),
+        By.xpath("//*[contains(text(), '短すぎます')]"),
+        By.xpath("//*[contains(text(), '長すぎます')]"),
       ];
 
       for (const selector of inputErrorSelectors) {
@@ -10661,6 +10656,7 @@ export class AutoFormSendService {
               By.xpath("//*[contains(text(), '間違いがなければ')]"),
               By.xpath("//*[contains(text(), '送信してもよろしい')]"),
               By.xpath("//*[contains(text(), '送信する')]"),
+              By.xpath("//*[contains(text(), '送信')]"),
               By.css('.confirm'), // クラス名がconfirmの要素
               By.css('.confirmation'), // クラス名がconfirmationの要素
               By.xpath("//div[contains(@id, 'confirm')]"), // idにconfirmationを含むdiv
@@ -10699,6 +10695,7 @@ export class AutoFormSendService {
         By.xpath("//*[contains(text(), '間違いがなければ')]"),
         By.xpath("//*[contains(text(), '送信してもよろしい')]"),
         By.xpath("//*[contains(text(), '送信する')]"),
+        By.xpath("//*[contains(text(), '送信')]"),
         By.css('.confirm'), // クラス名がconfirmの要素
         By.css('.confirmation'), // クラス名がconfirmationの要素
         By.xpath("//div[contains(@id, 'confirm')]"), // idにconfirmationを含むdiv
@@ -10754,7 +10751,6 @@ export class AutoFormSendService {
             const iframeSendCompleteSelectors: By[] = [
               By.xpath("//*[contains(text(), '送信完了')]"),
               By.xpath("//*[contains(text(), '送信が完了')]"),
-              By.xpath("//*[contains(text(), '完了')]"),
               By.xpath("//*[contains(text(), 'ありがとうございます')]"),
               By.xpath("//*[contains(text(), 'ありがとうございました')]"),
               By.xpath("//*[contains(text(), 'しばらくお待ち')]"),
@@ -10798,7 +10794,6 @@ export class AutoFormSendService {
       const sendCompleteSelectors: By[] = [
         By.xpath("//*[contains(text(), '送信完了')]"),
         By.xpath("//*[contains(text(), '送信が完了')]"),
-        By.xpath("//*[contains(text(), '完了')]"),
         By.xpath("//*[contains(text(), 'ありがとうございます')]"),
         By.xpath("//*[contains(text(), 'ありがとうございました')]"),
         By.xpath("//*[contains(text(), 'しばらくお待ち')]"),
