@@ -1429,25 +1429,21 @@ export class AutoFormSendService {
             await this.updateSendStatus(CSVurl, InsertformResult, '2');
           }
 
-          // // 抽出したデータを表示
-          // console.log('抽出したデータ:');
-          // console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
-
-          // // 分類されたデータを表示
-          console.log('\nカテゴリー:');
-          console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
-
+          console.log('スクリーンショット開始');
           try {
             const base64 = await driver.takeScreenshot();
             const buffer = Buffer.from(base64, 'base64');
             // 保存先ディレクトリを指定
-            const saveDir: string = path.join(process.cwd(), 'formSendEvidence');
-            
+            const saveDir: string = path.join(
+              process.cwd(),
+              'formSendEvidence',
+            );
+
             // ディレクトリが存在しない場合は作成
             if (!fs.existsSync(saveDir)) {
               fs.mkdirSync(saveDir, { recursive: true });
             }
-            
+
             // ファイル名を変数に設定
             const filename: string =
               InsertformResult +
@@ -1462,6 +1458,15 @@ export class AutoFormSendService {
           } catch (error) {
             console.error('エラーが発生しました:', error);
           }
+          console.log('スクリーンショット終了');
+
+          // // 抽出したデータを表示
+          // console.log('抽出したデータ:');
+          // console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
+
+          // // 分類されたデータを表示
+          console.log('\nカテゴリー:');
+          console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
 
           // 5秒間待機
           await driver.sleep(5000);
@@ -1475,12 +1480,12 @@ export class AutoFormSendService {
           const buffer = Buffer.from(base64, 'base64');
           // 保存先ディレクトリを指定
           const saveDir: string = path.join(process.cwd(), 'formSendEvidence');
-          
+
           // ディレクトリが存在しない場合は作成
           if (!fs.existsSync(saveDir)) {
             fs.mkdirSync(saveDir, { recursive: true });
           }
-          
+
           // ファイル名を変数に設定
           const filename: string =
             InsertformResult +
@@ -1491,13 +1496,13 @@ export class AutoFormSendService {
           const filePath: string = path.join(saveDir, filename);
           console.log(filePath);
           fs.writeFileSync(filePath, buffer);
-          console.log('スクリーンショットが正常に保存されました。');
+          console.log('エラー内でスクリーンショットが正常に保存されました。');
         } catch (error) {
           console.error('エラーが発生しました:', error);
         }
-      }
-      console.error('不明なエラーが発生しました:', error);
+        console.error('不明なエラーが発生しました:', error.message);
         await this.updateSendStatus(CSVurl, InsertformResult, '5');
+      }
     }
     // ブラウザを閉じる
     await driver.quit();
