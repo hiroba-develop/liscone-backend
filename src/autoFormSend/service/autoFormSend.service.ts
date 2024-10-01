@@ -109,7 +109,7 @@ export class AutoFormSendService {
     chromeOptions.addArguments('--no-sandbox'); // サンドボックスモードを無効化
     chromeOptions.addArguments('--disable-dev-shm-usage'); // 開発者向け共有メモリの使用を無効化
     chromeOptions.addArguments('--headless');
-    chromeOptions.addArguments('--window-size=2500,3000');
+    chromeOptions.addArguments('--window-size=1920,3000');
 
     // WebDriverのビルダーを使用してChromeドライバーをセットアップ
     const driver: WebDriver = await new Builder()
