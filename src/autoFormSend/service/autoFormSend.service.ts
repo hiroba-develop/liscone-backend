@@ -1476,7 +1476,7 @@ export class AutoFormSendService {
           const base64 = await driver.takeScreenshot();
           const buffer = Buffer.from(base64, 'base64');
           // 保存先ディレクトリを指定
-          const saveDir: string = path.join(process.cwd(), 'src\\formSendEvidence');
+          const saveDir: string = path.join(process.cwd(), 'src/formSendEvidence');
           
           // ディレクトリが存在しない場合は作成
           if (!fs.existsSync(saveDir)) {
