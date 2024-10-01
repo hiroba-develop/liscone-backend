@@ -1441,7 +1441,7 @@ export class AutoFormSendService {
             const base64 = await driver.takeScreenshot();
             const buffer = Buffer.from(base64, 'base64');
             // 保存先ディレクトリを指定
-            const saveDir: string = path.join(process.cwd(), 'srcformSendEvidence');
+            const saveDir: string = path.join(process.cwd(), 'formSendEvidence');
             
             // ディレクトリが存在しない場合は作成
             if (!fs.existsSync(saveDir)) {
@@ -1470,8 +1470,6 @@ export class AutoFormSendService {
           await this.updateSendStatus(CSVurl, InsertformResult, '1');
         }
       } catch (error) {
-        console.error('不明なエラーが発生しました:', error);
-        await this.updateSendStatus(CSVurl, InsertformResult, '5');
         try {
           const base64 = await driver.takeScreenshot();
           const buffer = Buffer.from(base64, 'base64');
@@ -1498,6 +1496,8 @@ export class AutoFormSendService {
           console.error('エラーが発生しました:', error);
         }
       }
+      console.error('不明なエラーが発生しました:', error);
+        await this.updateSendStatus(CSVurl, InsertformResult, '5');
     }
     // ブラウザを閉じる
     await driver.quit();
