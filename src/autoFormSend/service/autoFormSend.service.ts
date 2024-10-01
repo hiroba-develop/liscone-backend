@@ -1437,7 +1437,6 @@ export class AutoFormSendService {
           console.log('\nカテゴリー:');
           console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
 
-          console.log(fs);
           try {
             const base64 = await driver.takeScreenshot();
             const buffer = Buffer.from(base64, 'base64');
@@ -1467,6 +1466,25 @@ export class AutoFormSendService {
       } catch (error) {
         console.error('不明なエラーが発生しました:', error);
         await this.updateSendStatus(CSVurl, InsertformResult, '5');
+        try {
+          const base64 = await driver.takeScreenshot();
+          const buffer = Buffer.from(base64, 'base64');
+          // 保存先ディレクトリを指定
+          const saveDir: string = path.join(process.cwd(), 'formSendEvidence');
+          // ファイル名を変数に設定
+          const filename: string =
+            InsertformResult +
+            '_' +
+            data.csvData[i][1].trim() +
+            '_screenshot.jpg';
+          // 完全なファイルパスを生成
+          const filePath: string = path.join(saveDir, filename);
+          console.log(filePath);
+          fs.writeFileSync(filePath, buffer);
+          console.log('スクリーンショットが正常に保存されました。');
+        } catch (error) {
+          console.error('エラーが発生しました:', error);
+        }
       }
     }
     // ブラウザを閉じる
