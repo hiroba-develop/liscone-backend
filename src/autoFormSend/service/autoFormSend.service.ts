@@ -14,6 +14,8 @@ import { AutoFormSendLogEntity } from '../entities/autoFormSendLog.entity';
 import { AutoFormSendEntity } from '../entities/autoFormSend.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
+import * as fs from 'fs';
+import * as path from 'path';
 import * as chrome from 'selenium-webdriver/chrome';
 import axios from 'axios';
 
@@ -107,7 +109,7 @@ export class AutoFormSendService {
     chromeOptions.addArguments('--no-sandbox'); // サンドボックスモードを無効化
     chromeOptions.addArguments('--disable-dev-shm-usage'); // 開発者向け共有メモリの使用を無効化
     chromeOptions.addArguments('--headless');
-    chromeOptions.addArguments('--window-size=1920,1080');
+    chromeOptions.addArguments('--window-size=2500,3000');
 
     // WebDriverのビルダーを使用してChromeドライバーをセットアップ
     const driver: WebDriver = await new Builder()
@@ -1434,6 +1436,27 @@ export class AutoFormSendService {
           // // 分類されたデータを表示
           console.log('\nカテゴリー:');
           console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
+
+          console.log(fs);
+          try {
+            const base64 = await driver.takeScreenshot();
+            const buffer = Buffer.from(base64, 'base64');
+            // 保存先ディレクトリを指定
+            const saveDir: string = path.join(process.cwd(), 'formSendEvidence');
+            // ファイル名を変数に設定
+            const filename: string =
+              InsertformResult +
+              '_' +
+              data.csvData[i][1].trim() +
+              '_screenshot.jpg';
+            // 完全なファイルパスを生成
+            const filePath: string = path.join(saveDir, filename);
+            console.log(filePath);
+            fs.writeFileSync(filePath, buffer);
+            console.log('スクリーンショットが正常に保存されました。');
+          } catch (error) {
+            console.error('エラーが発生しました:', error);
+          }
 
           // 5秒間待機
           await driver.sleep(5000);
@@ -10778,13 +10801,33 @@ export class AutoFormSendService {
                   // 標準のクリックを試みる
                   try {
                     await sendButton.click();
+                    // await driver.executeScript("arguments[0].click();", sendButton);
                     console.log(`${url}: 送信ボタンをクリックしました。`);
                     await driver.switchTo().defaultContent();
                     return true;
                   } catch (clickError) {
-                    console.warn(`${url}: 送信ボタンクリックに失敗しました`);
-                    await driver.switchTo().defaultContent();
-                    return false;
+                    console.warn(
+                      `${url}: 標準のクリックに失敗しました。DOM 操作でクリックを試みます。`,
+                    );
+                    // JavaScript を使用してクリック
+                    try {
+                      await driver.executeScript(
+                        'arguments[0].click();',
+                        sendButton,
+                      );
+                      console.log(
+                        `${url}: DOM 操作で送信ボタンをクリックしました。`,
+                      );
+                      await driver.switchTo().defaultContent();
+                      return true;
+                    } catch (jsClickError) {
+                      console.error(
+                        `${url}: DOM 操作によるクリックにも失敗しました。`,
+                        jsClickError,
+                      );
+                      await driver.switchTo().defaultContent();
+                      return false;
+                    }
                   }
                 }
               } catch (err) {
@@ -10863,6 +10906,7 @@ export class AutoFormSendService {
             // 標準のクリックを試みる
             try {
               await mainSendButton.click();
+              // await driver.executeScript("arguments[0].click();", mainSendButton);
               console.log(`${url}: 送信ボタンをクリックしました。`);
               return true;
             } catch (clickError) {
