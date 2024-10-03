@@ -10914,6 +10914,7 @@ export class AutoFormSendService {
             );
             // 標準のクリックを試みる
             try {
+              await driver.sleep(1000);
               await driver.executeScript(
                 'arguments[0].click();',
                 mainSendButton,
@@ -11021,6 +11022,7 @@ export class AutoFormSendService {
                   console.log(`送信ボタンをiframe #${i + 1} で検出しました。`);
                   // クリックを試みる
                   try {
+                    await driver.sleep(1000);
                     await driver.executeScript(
                       'arguments[0].click();',
                       sendButton,
@@ -11190,27 +11192,46 @@ export class AutoFormSendService {
         By.xpath("//*[contains(text(), '入力をお願い')]"),
       ];
 
-      // reCAPTCHAのiframeを検索する
+      // reCAPTCHA検出処理
       let recaptchaIframes = await driver.findElements(
         By.css('iframe[src*="recaptcha"]'),
       );
-      if (recaptchaIframes.length > 0) {
-        console.log('reCAPTCHAが検出されました（iframe）。');
-        return false;
-      }
-      let recaptchaElements = await driver.findElements(By.css('.g-recaptcha'));
-      if (recaptchaElements.length > 0) {
-        console.log('reCAPTCHAが検出されました（クラス名）。');
-        return false;
+      if (recaptchaIframes.length === 0) {
+        console.log('reCAPTCHAは存在しません。');
+      }else{
+        console.log('reCAPTCHAのiframeが見つかりました。');
+        // 各iframeをチェック
+        for (let iframe of recaptchaIframes) {
+            // iframeに切り替え
+            await driver.switchTo().frame(iframe);
+
+            // メッセージを探す
+            try {
+                // XPathを使用して特定のメッセージを含む要素を探す
+                let messageElement = await driver.findElement(By.xpath("//*[contains(text(), 'This reCAPTCHA is for testing purposes only.')]"));
+                if (messageElement) {
+                    console.log('特定のreCAPTCHAメッセージが検出されました。');
+                    return false;
+                }
+            } catch (err) {
+                // メッセージが見つからない場合はスキップ
+                console.log('特定のメッセージは見つかりませんでした。');
+            }
+
+            // 元のコンテキストに戻す
+            await driver.switchTo().defaultContent();
+        }
+        // 特定のメッセージが見つからなかった場合
+        console.log('reCAPTCHAは存在しますが、特定のメッセージは表示されていません。');
       }
 
-      // 1. すべてのiframeを取得
+      // すべてのiframeを取得
       const iframes: WebElement[] = await driver.findElements(
         By.tagName('iframe'),
       );
 
       if (iframes.length > 0) {
-        // 2. 各iframeを順番にチェック
+        // 各iframeを順番にチェック
         for (let i = 0; i < iframes.length; i++) {
           try {
             // iframeに切り替える
