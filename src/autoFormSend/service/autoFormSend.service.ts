@@ -1352,85 +1352,20 @@ export class AutoFormSendService {
             data.inquiryData,
           );
 
-          // お問い合わせフォームの送信ボタンを検出してクリックします。クリック成功でTrue
-          const clickSendButton: boolean = await driver
-            .wait(async () => {
-              return await this.isClickSendButton(driver, url);
-            }, 10000)
-            .catch(() => false);
-          if (clickSendButton) {
-            // 入力項目エラー画面が表示されているかを検出（最大3秒）
-            const inputErrorDisplayed: boolean = await driver
-              .wait(async () => {
-                return await this.isInputErrorDisplayed(driver);
-              }, 3000)
-              .catch(() => false);
-
-            if (inputErrorDisplayed) {
-              // 確認画面が表示されるまで待機します（最大3秒）
-              const confirmationDisplayed: boolean = await driver
-                .wait(async () => {
-                  return await this.isConfirmationScreenDisplayed(driver);
-                }, 3000)
-                .catch(() => false);
-
-              if (confirmationDisplayed) {
-                // 確認画面が表示された場合、再度送信ボタンをクリックします
-                await driver.wait(async () => {
-                  return await this.isClickSendButton(driver, url);
-                }, 3000);
-              } else {
-                console.log('確認画面は表示されませんでした。');
-              }
-
-              // 送信完了画面が表示されるまで待機します（最大3秒）
-              const sendCompleteDisplayed: boolean = await driver
-                .wait(async () => {
-                  return await this.isSendCompleteScreenDisplayed(driver);
-                }, 3000)
-                .catch(() => false);
-
-              if (sendCompleteDisplayed) {
-                console.log('お問い合わせフォームの送信が完了しました。');
-                await this.updateSendStatus(CSVurl, InsertformResult, '0');
-              } else {
-                console.log('送信完了画面は表示されませんでした。');
-                await this.updateSendStatus(CSVurl, InsertformResult, '4');
-              }
-            } else {
-              console.log('入力項目に不備がありました。');
-              await this.updateSendStatus(CSVurl, InsertformResult, '3');
-
-              // 確認画面が表示されるまで待機します（最大3秒）
-              const confirmationDisplayed: boolean = await driver
-                .wait(async () => {
-                  return await this.isConfirmationScreenDisplayed(driver);
-                }, 3000)
-                .catch(() => false);
-
-              if (confirmationDisplayed) {
-                // 確認画面が表示された場合、再度送信ボタンをクリックします
-                await driver.wait(async () => {
-                  return await this.isClickSendButton(driver, url);
-                }, 3000);
-              } else {
-                console.log('確認画面は表示されませんでした。');
-              }
-
-              // 送信完了画面が表示されるまで待機します（最大3秒）
-              const sendCompleteDisplayed: boolean = await driver
-                .wait(async () => {
-                  return await this.isSendCompleteScreenDisplayed(driver);
-                }, 3000)
-                .catch(() => false);
-            }
-          } else {
-            console.log('送信ボタンが見つかりませんでした。');
-            await this.updateSendStatus(CSVurl, InsertformResult, '2');
-          }
-
-          console.log('スクリーンショット開始');
           try {
+            // 今の時間をミリ秒単位で取得
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const milliseconds = String(now.getMilliseconds()).padStart(
+              3,
+              '0',
+            );
+
             const base64 = await driver.takeScreenshot();
             const buffer = Buffer.from(base64, 'base64');
             // 保存先ディレクトリを指定
@@ -1445,26 +1380,299 @@ export class AutoFormSendService {
             }
 
             // ファイル名を変数に設定
-            const filename: string =
-              InsertformResult +
-              '_' +
-              data.csvData[i][1].trim() +
-              '_screenshot.jpg';
+            const filename: string = `${InsertformResult}_${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${data.csvData[
+              i
+            ][1].trim()}formInputComplete.jpg`;
             // 完全なファイルパスを生成
             const filePath: string = path.join(saveDir, filename);
             console.log(filePath);
             fs.writeFileSync(filePath, buffer);
-            console.log('スクリーンショットが正常に保存されました。');
+            console.log(
+              'フォーム入力完了時のスクリーンショットが正常に保存されました。',
+            );
           } catch (error) {
-            console.error('エラーが発生しました:', error);
+            console.error(
+              'スクリーンショット処理中にエラーが発生しました:',
+              error,
+            );
           }
-          console.log('スクリーンショット終了');
+          // お問い合わせフォームの送信ボタンを検出してクリックします。クリック成功でTrue
+          const clickSendButton: boolean = await driver
+            .wait(async () => {
+              return await this.isClickSendButton(driver, url);
+            }, 3000)
+            .catch(() => false);
+          if (clickSendButton) {
+            // 読み込まれるまで1秒待機（ミリ秒単位）
+            await driver.sleep(1000);
 
-          // // 抽出したデータを表示
-          // console.log('抽出したデータ:');
-          // console.log(JSON.stringify(extractedData, null, 2)); // 抽出したフォーム要素のデータを見やすい形式で表示
+            // スクリーンショット実行
+            try {
+              // 今の時間をミリ秒単位で取得
+              const now = new Date();
+              const year = now.getFullYear();
+              const month = String(now.getMonth() + 1).padStart(2, '0');
+              const day = String(now.getDate()).padStart(2, '0');
+              const hours = String(now.getHours()).padStart(2, '0');
+              const minutes = String(now.getMinutes()).padStart(2, '0');
+              const seconds = String(now.getSeconds()).padStart(2, '0');
+              const milliseconds = String(now.getMilliseconds()).padStart(
+                3,
+                '0',
+              );
+  
+              const base64 = await driver.takeScreenshot();
+              const buffer = Buffer.from(base64, 'base64');
+              // 保存先ディレクトリを指定
+              const saveDir: string = path.join(
+                process.cwd(),
+                'formSendEvidence',
+              );
+  
+              // ディレクトリが存在しない場合は作成
+              if (!fs.existsSync(saveDir)) {
+                fs.mkdirSync(saveDir, { recursive: true });
+              }
+  
+              // ファイル名を変数に設定
+              const filename: string = `${InsertformResult}_${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${data.csvData[
+                i
+              ][1].trim()}clickSendButton.jpg`;
+              // 完全なファイルパスを生成
+              const filePath: string = path.join(saveDir, filename);
+              console.log(filePath);
+              fs.writeFileSync(filePath, buffer);
+              console.log(
+                '送信ボタンクリック成功時のスクリーンショットが正常に保存されました。',
+              );
+            } catch (error) {
+              console.error(
+                'スクリーンショット処理中にエラーが発生しました:',
+                error,
+              );
+            }
 
-          // // 分類されたデータを表示
+            // 入力項目エラー画面が表示されているかを検出（最大3秒）
+            const inputErrorDisplayed: boolean = await driver
+              .wait(async () => {
+                return await this.isInputErrorDisplayed(driver);
+              }, 3000)
+              .catch(() => false);
+
+            if (inputErrorDisplayed) {
+              // 読み込まれるまで1秒待機（ミリ秒単位）
+              await driver.sleep(1000);
+              // 確認画面が表示されるまで待機します（最大3秒）
+              const confirmationDisplayed: boolean = await driver
+                .wait(async () => {
+                  return await this.isConfirmationScreenDisplayed(driver);
+                }, 3000)
+                .catch(() => false);
+
+              if (!confirmationDisplayed) {
+                // 読み込まれるまで1秒待機（ミリ秒単位）
+                await driver.sleep(1000);
+                // 確認画面が表示された場合、再度送信ボタンをクリックします
+                const clickSendButtonOnConfirmation: boolean = await driver
+                  .wait(async () => {
+                    return await this.isClickSendButton(driver, url);
+                  }, 3000)
+                  .catch(() => false);
+                if (!clickSendButtonOnConfirmation) {
+                  console.log('確認/送信ボタンが見つかりませんでした。');
+                  await this.updateSendStatus(CSVurl, InsertformResult, '2');
+                  try {
+                    // 今の時間をミリ秒単位で取得
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const day = String(now.getDate()).padStart(2, '0');
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                    const milliseconds = String(now.getMilliseconds()).padStart(
+                      3,
+                      '0',
+                    );
+
+                    const base64 = await driver.takeScreenshot();
+                    const buffer = Buffer.from(base64, 'base64');
+                    // 保存先ディレクトリを指定
+                    const saveDir: string = path.join(
+                      process.cwd(),
+                      'formSendEvidence',
+                    );
+
+                    // ディレクトリが存在しない場合は作成
+                    if (!fs.existsSync(saveDir)) {
+                      fs.mkdirSync(saveDir, { recursive: true });
+                    }
+
+                    // ファイル名を変数に設定
+                    const filename: string = `${InsertformResult}_${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${data.csvData[
+                      i
+                    ][1].trim()}_submitButtonNotFound.jpg`;
+                    // 完全なファイルパスを生成
+                    const filePath: string = path.join(saveDir, filename);
+                    console.log(filePath);
+                    fs.writeFileSync(filePath, buffer);
+                    console.log(
+                      '送信ボタン未検出時のスクリーンショットが正常に保存されました。',
+                    );
+                  } catch (error) {
+                    console.error(
+                      'スクリーンショット処理中にエラーが発生しました:',
+                      error,
+                    );
+                  }
+                  continue;
+                }
+              }
+
+              console.log('お問い合わせフォームの送信が完了しました。');
+              await this.updateSendStatus(CSVurl, InsertformResult, '0');
+              try {
+                // 今の時間をミリ秒単位で取得
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const milliseconds = String(now.getMilliseconds()).padStart(
+                  3,
+                  '0',
+                );
+
+                const base64 = await driver.takeScreenshot();
+                const buffer = Buffer.from(base64, 'base64');
+                // 保存先ディレクトリを指定
+                const saveDir: string = path.join(
+                  process.cwd(),
+                  'formSendEvidence',
+                );
+
+                // ディレクトリが存在しない場合は作成
+                if (!fs.existsSync(saveDir)) {
+                  fs.mkdirSync(saveDir, { recursive: true });
+                }
+
+                // ファイル名を変数に設定
+                const filename: string = `${InsertformResult}_${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${data.csvData[
+                  i
+                ][1].trim()}_contactFormComplete.jpg`;
+                // 完全なファイルパスを生成
+                const filePath: string = path.join(saveDir, filename);
+                console.log(filePath);
+                fs.writeFileSync(filePath, buffer);
+                console.log(
+                  '送信完了時のスクリーンショットが正常に保存されました。',
+                );
+              } catch (error) {
+                console.error(
+                  'スクリーンショット処理中にエラーが発生しました:',
+                  error,
+                );
+              }
+            } else {
+              console.log('入力項目に不備がありました。');
+              await this.updateSendStatus(CSVurl, InsertformResult, '3');
+              try {
+                // 今の時間をミリ秒単位で取得
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const milliseconds = String(now.getMilliseconds()).padStart(
+                  3,
+                  '0',
+                );
+
+                const base64 = await driver.takeScreenshot();
+                const buffer = Buffer.from(base64, 'base64');
+                // 保存先ディレクトリを指定
+                const saveDir: string = path.join(
+                  process.cwd(),
+                  'formSendEvidence',
+                );
+
+                // ディレクトリが存在しない場合は作成
+                if (!fs.existsSync(saveDir)) {
+                  fs.mkdirSync(saveDir, { recursive: true });
+                }
+
+                // ファイル名を変数に設定
+                const filename: string = `${InsertformResult}_${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${data.csvData[
+                  i
+                ][1].trim()}_inputFieldError.jpg`;
+                // 完全なファイルパスを生成
+                const filePath: string = path.join(saveDir, filename);
+                console.log(filePath);
+                fs.writeFileSync(filePath, buffer);
+                console.log(
+                  '入力項目不備時のスクリーンショットが正常に保存されました。',
+                );
+              } catch (error) {
+                console.error(
+                  'スクリーンショット処理中にエラーが発生しました:',
+                  error,
+                );
+              }
+            }
+          } else {
+            console.log('確認/送信ボタンが見つかりませんでした。');
+            await this.updateSendStatus(CSVurl, InsertformResult, '2');
+            try {
+              // 今の時間をミリ秒単位で取得
+              const now = new Date();
+              const year = now.getFullYear();
+              const month = String(now.getMonth() + 1).padStart(2, '0');
+              const day = String(now.getDate()).padStart(2, '0');
+              const hours = String(now.getHours()).padStart(2, '0');
+              const minutes = String(now.getMinutes()).padStart(2, '0');
+              const seconds = String(now.getSeconds()).padStart(2, '0');
+              const milliseconds = String(now.getMilliseconds()).padStart(
+                3,
+                '0',
+              );
+
+              const base64 = await driver.takeScreenshot();
+              const buffer = Buffer.from(base64, 'base64');
+              // 保存先ディレクトリを指定
+              const saveDir: string = path.join(
+                process.cwd(),
+                'formSendEvidence',
+              );
+
+              // ディレクトリが存在しない場合は作成
+              if (!fs.existsSync(saveDir)) {
+                fs.mkdirSync(saveDir, { recursive: true });
+              }
+
+              // ファイル名を変数に設定
+              const filename: string = `${InsertformResult}_${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${data.csvData[
+                i
+              ][1].trim()}_submitButtonNotFound.jpg`;
+              // 完全なファイルパスを生成
+              const filePath: string = path.join(saveDir, filename);
+              console.log(filePath);
+              fs.writeFileSync(filePath, buffer);
+              console.log(
+                '送信ボタン未検出時のスクリーンショットが正常に保存されました。',
+              );
+            } catch (error) {
+              console.error(
+                'スクリーンショット処理中にエラーが発生しました:',
+                error,
+              );
+            }
+          }
+
+          // 分類されたデータを表示
           console.log('\nカテゴリー:');
           console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
 
@@ -1473,9 +1681,62 @@ export class AutoFormSendService {
         } else {
           console.log('お問い合わせフォームが見つかりません。');
           await this.updateSendStatus(CSVurl, InsertformResult, '1');
+          try {
+            // 今の時間をミリ秒単位で取得
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+
+            const base64 = await driver.takeScreenshot();
+            const buffer = Buffer.from(base64, 'base64');
+            // 保存先ディレクトリを指定
+            const saveDir: string = path.join(
+              process.cwd(),
+              'formSendEvidence',
+            );
+
+            // ディレクトリが存在しない場合は作成
+            if (!fs.existsSync(saveDir)) {
+              fs.mkdirSync(saveDir, { recursive: true });
+            }
+
+            // ファイル名を変数に設定
+            const filename: string = `${InsertformResult}_${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${data.csvData[
+              i
+            ][1].trim()}_contactFormNotFound.jpg`;
+            // 完全なファイルパスを生成
+            const filePath: string = path.join(saveDir, filename);
+            console.log(filePath);
+            fs.writeFileSync(filePath, buffer);
+            console.log(
+              'お問い合わせフォームが見つからない時のスクリーンショットが正常に保存されました。',
+            );
+          } catch (error) {
+            console.error(
+              'スクリーンショット処理中にエラーが発生しました:',
+              error,
+            );
+          }
         }
       } catch (error) {
+        console.error('不明なエラーが発生しました:', error.message);
+        await this.updateSendStatus(CSVurl, InsertformResult, '5');
         try {
+          // 今の時間をミリ秒単位で取得
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          const seconds = String(now.getSeconds()).padStart(2, '0');
+          const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+
           const base64 = await driver.takeScreenshot();
           const buffer = Buffer.from(base64, 'base64');
           // 保存先ディレクトリを指定
@@ -1487,21 +1748,22 @@ export class AutoFormSendService {
           }
 
           // ファイル名を変数に設定
-          const filename: string =
-            InsertformResult +
-            '_' +
-            data.csvData[i][1].trim() +
-            '_screenshot.jpg';
+          const filename: string = `${InsertformResult}_${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${data.csvData[
+            i
+          ][1].trim()}_unknownErrorOccurred.jpg`;
           // 完全なファイルパスを生成
           const filePath: string = path.join(saveDir, filename);
           console.log(filePath);
           fs.writeFileSync(filePath, buffer);
-          console.log('エラー内でスクリーンショットが正常に保存されました。');
+          console.log(
+            '不明なエラー時のスクリーンショットが正常に保存されました。',
+          );
         } catch (error) {
-          console.error('エラーが発生しました:', error);
+          console.error(
+            'スクリーンショット処理中にエラーが発生しました:',
+            error,
+          );
         }
-        console.error('不明なエラーが発生しました:', error.message);
-        await this.updateSendStatus(CSVurl, InsertformResult, '5');
       }
     }
     // ブラウザを閉じる
@@ -10767,45 +11029,36 @@ export class AutoFormSendService {
    */
   async isClickSendButton(driver: WebDriver, url: string): Promise<boolean> {
     try {
-      // 1. すべてのiframeを取得
+      // 送信ボタンを探すためのセレクター
+      const sendButtonSelectors = [
+        By.xpath("//button[contains(text(), '送信')]"),
+        By.xpath("//button[.//*[contains(text(), '送信')]]"),
+        By.xpath("//input[contains(@value, '送信')]"),
+        By.xpath("//input[.//*[contains(@value, '送信')]]"),
+        By.xpath("//button[contains(text(), '確認')]"),
+        By.xpath("//button[.//*[contains(text(), '確認')]]"),
+        By.xpath("//input[contains(@value, '確認')]"),
+        By.xpath("//input[.//*[contains(@value, '確認')]]"),
+      ];
+
+      // フォーム全取得
+      let elementsBefore: any[] = [];
+      let elementsAfter: any[] = [];
+
+      // 送信ボタンクリック前のhtml要素全取得
+      await this.getAllElements(driver, elementsBefore);
+
+      // すべてのiframeを取得
       const iframes: WebElement[] = await driver.findElements(
         By.tagName('iframe'),
       );
-      console.log(`${url}: 見つかったiframeの数: ${iframes.length}`);
-
       if (iframes.length > 0) {
-        // 2. 各iframeを順番にチェック
+        // 各iframeを順番にチェック
         for (let i = 0; i < iframes.length; i++) {
           try {
             // iframeに切り替える
             await driver.switchTo().frame(iframes[i]);
             console.log(`${url}: iframe #${i + 1} に切り替えました。`);
-
-            // 送信ボタンを探すためのセレクターを複数試みます
-            const sendButtonSelectors = [
-              By.xpath("//button[contains(text(), '送信')]"),
-              By.xpath("//button[contains(text(), '確認')]"),
-              By.xpath("//button[.//*[contains(text(), '送信')]]"),
-              By.xpath("//button[.//*[contains(text(), '確認')]]"),
-              By.xpath("//input[@value='送信']"),
-              By.xpath("//input[@value='入力内容を確認']"),
-              By.xpath("//input[@value='送信内容を確認する']"),
-              By.xpath("//input[@value='入力内容を送信する']"),
-              By.xpath("//input[@value='入力内容確認']"),
-              By.xpath("//input[@value='送信する']"),
-              By.xpath("//input[@value='確認画面へ']"),
-              By.xpath("//input[@value='確認画面']"),
-              By.xpath("//button[@value='送信']"),
-              By.xpath("//button[@value='入力内容を確認']"),
-              By.xpath("//button[@value='送信内容を確認する']"),
-              By.xpath("//button[@value='入力内容を送信する']"),
-              By.xpath("//button[@value='入力内容確認']"),
-              By.xpath("//button[@value='送信する']"),
-              By.xpath("//button[@value='確認画面へ']"),
-              By.xpath("//button[@value='確認画面']"),
-              By.css('button[type="submit"]'),
-              By.css('input[type="submit"]'),
-            ];
 
             let sendButton: WebElement | null = null;
 
@@ -10814,55 +11067,38 @@ export class AutoFormSendService {
                 console.log(`${url}: 検出条件: ${selector}`);
                 sendButton = await driver.findElement(selector);
 
-                const className = await sendButton.getAttribute('class');
-                const name = await sendButton.getAttribute('name');
-                const id = await sendButton.getAttribute('id');
-                const type = await sendButton.getAttribute('type');
-                const value = await sendButton.getAttribute('value');
-                // 要素情報を表示
-                console.log('-'.repeat(21));
-                console.log('送信ボタン検出');
-                console.log(`クラス名: ${className}`);
-                console.log(`name属性: ${name}`);
-                console.log(`id属性: ${id}`);
-                console.log(`type属性: ${type}`);
-                console.log(`value属性: ${value}`);
-                console.log('-'.repeat(21));
-
                 if (sendButton) {
                   console.log(
                     `${url}: 送信ボタンをiframe #${i + 1} で検出しました。`,
                   );
-                  // 標準のクリックを試みる
+                  // クリックを試みる
                   try {
-                    await sendButton.click();
-                    // await driver.executeScript("arguments[0].click();", sendButton);
+                    await driver.executeScript(
+                      'arguments[0].click();',
+                      sendButton,
+                    );
                     console.log(`${url}: 送信ボタンをクリックしました。`);
                     await driver.switchTo().defaultContent();
-                    return true;
-                  } catch (clickError) {
-                    console.warn(
-                      `${url}: 標準のクリックに失敗しました。DOM 操作でクリックを試みます。`,
-                    );
-                    // JavaScript を使用してクリック
-                    try {
-                      await driver.executeScript(
-                        'arguments[0].click();',
-                        sendButton,
-                      );
-                      console.log(
-                        `${url}: DOM 操作で送信ボタンをクリックしました。`,
-                      );
-                      await driver.switchTo().defaultContent();
-                      return true;
-                    } catch (jsClickError) {
-                      console.error(
-                        `${url}: DOM 操作によるクリックにも失敗しました。`,
-                        jsClickError,
-                      );
-                      await driver.switchTo().defaultContent();
+
+                    await driver.sleep(3000);
+                    // 送信ボタンクリック後のhtml要素全取得
+                    await this.getAllElements(driver, elementsAfter);
+
+                    // html要素に変更があったか
+                    let elementsCheck =
+                      JSON.stringify(elementsBefore) ===
+                      JSON.stringify(elementsAfter);
+                    if (elementsCheck) {
+                      console.log('要素は変更されていません。');
                       return false;
+                    } else {
+                      console.log('要素が変更されました。');
+                      return true;
                     }
+                  } catch (clickError) {
+                    console.warn(`${url}: クリックに失敗しました。`);
+                    await driver.switchTo().defaultContent();
+                    return false;
                   }
                 }
               } catch (err) {
@@ -10870,7 +11106,6 @@ export class AutoFormSendService {
                 continue;
               }
             }
-
             // 送信ボタンが見つからなかった場合、元のコンテキストに戻る
             await driver.switchTo().defaultContent();
           } catch (iframeError) {
@@ -10889,80 +11124,41 @@ export class AutoFormSendService {
       console.log(
         `${url}: iframe内で送信ボタンが見つからなかったため、メインコンテンツをチェックします。`,
       );
-      const mainContentSendButtonSelectors = [
-        By.xpath("//button[contains(text(), '送信')]"),
-        By.xpath("//button[contains(text(), '確認')]"),
-        By.xpath("//button[.//*[contains(text(), '送信')]]"),
-        By.xpath("//button[.//*[contains(text(), '確認')]]"),
-        By.xpath("//input[@value='送信']"),
-        By.xpath("//input[@value='入力内容を確認']"),
-        By.xpath("//input[@value='送信内容を確認する']"),
-        By.xpath("//input[@value='入力内容を送信する']"),
-        By.xpath("//input[@value='入力内容確認']"),
-        By.xpath("//input[@value='送信する']"),
-        By.xpath("//input[@value='確認画面へ']"),
-        By.xpath("//input[@value='確認画面']"),
-        By.xpath("//button[@value='送信']"),
-        By.xpath("//button[@value='入力内容を確認']"),
-        By.xpath("//button[@value='送信内容を確認する']"),
-        By.xpath("//button[@value='入力内容を送信する']"),
-        By.xpath("//button[@value='入力内容確認']"),
-        By.xpath("//button[@value='送信する']"),
-        By.xpath("//button[@value='確認画面へ']"),
-        By.xpath("//button[@value='確認画面']"),
-        By.css('button[type="submit"]'),
-        By.css('input[type="submit"]'),
-      ];
 
       let mainSendButton: WebElement | null = null;
 
-      for (const selector of mainContentSendButtonSelectors) {
+      for (const selector of sendButtonSelectors) {
         try {
           console.log(`${url}: メインコンテンツの検出条件: ${selector}`);
           mainSendButton = await driver.findElement(selector);
-
-          const className = await mainSendButton.getAttribute('class');
-          const name = await mainSendButton.getAttribute('name');
-          const id = await mainSendButton.getAttribute('id');
-          const type = await mainSendButton.getAttribute('type');
-          const value = await mainSendButton.getAttribute('value');
-          // 要素情報を表示
-          console.log('-'.repeat(21));
-          console.log('送信ボタン検出');
-          console.log(`クラス名: ${className}`);
-          console.log(`name属性: ${name}`);
-          console.log(`id属性: ${id}`);
-          console.log(`type属性: ${type}`);
-          console.log(`value属性: ${value}`);
-          console.log('-'.repeat(21));
 
           if (mainSendButton) {
             console.log(`${url}: メインコンテンツで送信ボタンを検出しました。`);
             // 標準のクリックを試みる
             try {
-              await mainSendButton.click();
-              // await driver.executeScript("arguments[0].click();", mainSendButton);
-              console.log(`${url}: 送信ボタンをクリックしました。`);
-              return true;
-            } catch (clickError) {
-              console.warn(
-                `${url}: 標準のクリックに失敗しました。DOM 操作でクリックを試みます。`,
+              await driver.executeScript(
+                'arguments[0].click();',
+                mainSendButton,
               );
-              // JavaScript を使用してクリック
-              try {
-                await driver.executeScript(
-                  'arguments[0].click();',
-                  mainSendButton,
-                );
-                console.log(`${url}: DOM 操作で送信ボタンをクリックしました。`);
-                return true;
-              } catch (jsClickError) {
-                console.error(
-                  `${url}: DOM 操作によるクリックにも失敗しました。`,
-                  jsClickError,
-                );
+              console.log(`${url}: 送信ボタンをクリックしました。`);
+
+              await driver.sleep(3000);
+              // 送信ボタンクリック後のhtml要素全取得
+              await this.getAllElements(driver, elementsAfter);
+              // html要素に変更があったか
+              let elementsCheck =
+                JSON.stringify(elementsBefore) ===
+                JSON.stringify(elementsAfter);
+              if (elementsCheck) {
+                console.log('要素は変更されていません。');
                 return false;
+              } else {
+                console.log('要素が変更されました。');
+                return true;
               }
+            } catch (clickError) {
+              console.warn(`${url}: クリックに失敗しました。`);
+              return false;
             }
           }
         } catch (err) {
@@ -10970,7 +11166,6 @@ export class AutoFormSendService {
           continue;
         }
       }
-
       console.log(`${url}: 送信ボタンが見つかりませんでした。`);
       return false;
     } catch (error) {
@@ -10978,16 +11173,43 @@ export class AutoFormSendService {
         `${url}: 送信ボタンのクリック中にエラーが発生しました:`,
         error,
       );
-      try {
-        // エラー発生時にも元のコンテキストに戻す
-        await driver.switchTo().defaultContent();
-      } catch (switchError) {
-        console.error(
-          `${url}: 元のコンテキストに戻す際にエラーが発生しました:`,
-          switchError,
-        );
-      }
       return false;
+    }
+  }
+
+  /**
+   * 再帰的にすべての要素を取得する関数
+   * @param driver Selenium WebDriverのインスタンス
+   * @param elementsInfo 要素を詰める配列
+   */
+  async getAllElements(driver, elementsInfo) {
+    // 現在のコンテキスト内の要素を取得
+    let elements = await driver.findElements(By.xpath('//*'));
+    for (let element of elements) {
+      let tagName = await element.getTagName();
+      let id = (await element.getAttribute('id')) || '';
+      let className = (await element.getAttribute('class')) || '';
+      elementsInfo.push({ tagName, id, className });
+
+      // iframeの場合は中に入って再帰的に要素を取得
+      if (tagName.toLowerCase() === 'iframe') {
+        try {
+          // 現在の要素（iframe）に切り替え
+          await driver.switchTo().frame(element);
+
+          // 再帰的に要素を取得
+          await this.getAllElements(driver, elementsInfo);
+
+          // 元のコンテキストに戻る
+          await driver.switchTo().parentFrame();
+        } catch (iframeErr) {
+          console.error(
+            `iframe内の要素取得中にエラーが発生しました: ${iframeErr}`,
+          );
+          // エラーが発生した場合も元のコンテキストに戻る
+          await driver.switchTo().defaultContent();
+        }
+      }
     }
   }
 
@@ -10995,15 +11217,38 @@ export class AutoFormSendService {
    * 入力項目エラー画面が表示されているかを検出します。
    * 「入力項目エラー」というテキストを含む要素を基に判定します。
    * @param driver Selenium WebDriverのインスタンス
-   * @returns 入力項目エラー画面が表示されていればtrue、そうでなければfalse
+   * @returns 入力項目エラー画面が表示されていない場合true、表示されている場合false
    */
   async isInputErrorDisplayed(driver: WebDriver): Promise<boolean> {
     try {
+      const inputErrorSelectors: By[] = [
+        By.xpath("//*[contains(text(), '入力しなおして')]"),
+        By.xpath("//*[contains(text(), '入力してください')]"),
+        By.xpath("//*[contains(text(), '入力し直して')]"),
+        By.xpath("//*[contains(text(), '必須項目です')]"),
+        By.xpath("//*[contains(text(), '再度入力して')]"),
+        By.xpath("//*[contains(text(), '有効な数字')]"),
+        By.xpath("//*[contains(text(), '無効な文字')]"),
+        By.xpath("//*[contains(text(), '短すぎます')]"),
+        By.xpath("//*[contains(text(), '長すぎます')]"),
+        By.xpath("//*[contains(text(), 'このフィールドを入力')]"),
+        By.xpath("//*[contains(text(), '必須項目に入力')]"),
+        By.xpath("//*[contains(text(), '不備があります')]"),
+        By.xpath("//*[contains(text(), '誤りがあります')]"),
+        By.xpath("//*[contains(text(), '未入力')]"),
+        By.xpath("//*[contains(text(), 'fields have an error')]"),
+        By.xpath("//*[contains(text(), '入力して下さい')]"),
+        By.xpath("//*[contains(text(), '入力内容に問題が')]"),
+        By.xpath("//*[contains(text(), '再度お試し')]"),
+        By.xpath("//*[contains(text(), 'もう一度お試し')]"),
+        By.xpath("//*[contains(text(), '必須につき')]"),
+        By.xpath("//*[contains(text(), '入力をお願い')]"),
+      ];
+
       // 1. すべてのiframeを取得
       const iframes: WebElement[] = await driver.findElements(
         By.tagName('iframe'),
       );
-      console.log(`見つかったiframeの数: ${iframes.length}`);
 
       if (iframes.length > 0) {
         // 2. 各iframeを順番にチェック
@@ -11013,21 +11258,7 @@ export class AutoFormSendService {
             await driver.switchTo().frame(iframes[i]);
             console.log(`iframe #${i + 1} に切り替えました。`);
 
-            // 送信ボタンを探すためのセレクターを複数試みます
-            const iframeInputErrorSelectors: By[] = [
-              By.xpath("//*[contains(text(), '入力しなおして')]"),
-              By.xpath("//*[contains(text(), '入力してください')]"),
-              By.xpath("//*[contains(text(), '必須項目です')]"),
-              By.xpath("//*[contains(text(), '誤りがあります')]"),
-              By.xpath("//*[contains(text(), '再度入力')]"),
-              By.xpath("//*[contains(text(), '有効な数字')]"),
-              By.xpath("//*[contains(text(), '有効な日付')]"),
-              By.xpath("//*[contains(text(), '無効な文字')]"),
-              By.xpath("//*[contains(text(), '短すぎます')]"),
-              By.xpath("//*[contains(text(), '長すぎます')]"),
-            ];
-
-            for (const selector of iframeInputErrorSelectors) {
+            for (const selector of inputErrorSelectors) {
               const elements = await driver.findElements(selector);
               if (elements.length > 0) {
                 console.log('Iframeで入力項目エラーが表示されています。');
@@ -11049,23 +11280,7 @@ export class AutoFormSendService {
         }
       }
 
-      // iframe内で入力項目エラーが見つからなかった場合、メインコンテンツでも探す
-      console.log(
-        `iframe内で入力項目エラーが見つからなかったため、メインコンテンツをチェックします。`,
-      );
-      const inputErrorSelectors: By[] = [
-        By.xpath("//*[contains(text(), '入力しなおして')]"),
-        By.xpath("//*[contains(text(), '入力してください')]"),
-        By.xpath("//*[contains(text(), '必須項目です')]"),
-        By.xpath("//*[contains(text(), '誤りがあります')]"),
-        By.xpath("//*[contains(text(), '再度入力')]"),
-        By.xpath("//*[contains(text(), '有効な数字')]"),
-        By.xpath("//*[contains(text(), '有効な日付')]"),
-        By.xpath("//*[contains(text(), '無効な文字')]"),
-        By.xpath("//*[contains(text(), '短すぎます')]"),
-        By.xpath("//*[contains(text(), '長すぎます')]"),
-      ];
-
+      // iframe内で見つからなかった場合、メインコンテンツでも探す
       for (const selector of inputErrorSelectors) {
         const elements = await driver.findElements(selector);
         if (elements.length > 0) {
@@ -11073,19 +11288,10 @@ export class AutoFormSendService {
           return false;
         }
       }
-
+      console.log('入力項目エラーは表示されていません。');
       return true;
     } catch (error) {
       console.error(`入力項目エラー検出中にエラーが発生しました:`, error);
-      try {
-        // エラー発生時にも元のコンテキストに戻す
-        await driver.switchTo().defaultContent();
-      } catch (switchError) {
-        console.error(
-          `元のコンテキストに戻す際にエラーが発生しました:`,
-          switchError,
-        );
-      }
       return false;
     }
   }
@@ -11094,15 +11300,37 @@ export class AutoFormSendService {
    * 確認画面が表示されているかを検出します。
    * 確認画面の特定の要素やテキストを基に判定します。
    * @param driver Selenium WebDriverのインスタンス
-   * @returns 確認画面が表示されていればtrue、そうでなければfalse
+   * @returns 確認画面が表示されていない場合true、表示されている場合false
    */
   async isConfirmationScreenDisplayed(driver: WebDriver): Promise<boolean> {
     try {
+      const confirmationSelectors: By[] = [
+        By.xpath("//*[contains(text(), '間違いがなければ')]"),
+        By.xpath("//*[contains(text(), '送信してもよろしい')]"),
+        By.xpath("//*[contains(text(), 'confirm')]"),
+        By.xpath("//*[contains(text(), '送信前')]"),
+        By.xpath("//*[contains(text(), '修正する')]"),
+        By.xpath("//button[.//*[contains(text(), '戻る')]]"),
+        // By.xpath("//*[contains(text(), '送信')]"),
+        // By.xpath("//*[contains(text(), '確認')]"),
+        // By.xpath("//*[contains(text(), 'この内容で')]"),
+        // By.xpath("//button[contains(text(), '送信')]"),
+        // By.xpath("//button[.//*[contains(text(), '送信')]]"),
+        // By.xpath("//input[contains(@value, '送信')]"),
+        // By.xpath("//input[.//*[contains(@value, '送信')]]"),
+        // By.xpath("//button[contains(text(), '確認')]"),
+        // By.xpath("//button[.//*[contains(text(), '確認')]]"),
+        // By.xpath("//input[contains(@value, '確認')]"),
+        // By.xpath("//input[.//*[contains(@value, '確認')]]"),
+        // By.css('.confirm'), // クラス名がconfirmの要素
+        // By.css('.confirmation'), // クラス名がconfirmationの要素
+        // By.xpath("//div[contains(@id, 'confirm')]"), // idにconfirmationを含むdiv
+      ];
+
       // 1. すべてのiframeを取得
       const iframes: WebElement[] = await driver.findElements(
         By.tagName('iframe'),
       );
-      console.log(`見つかったiframeの数: ${iframes.length}`);
 
       if (iframes.length > 0) {
         // 2. 各iframeを順番にチェック
@@ -11112,25 +11340,11 @@ export class AutoFormSendService {
             await driver.switchTo().frame(iframes[i]);
             console.log(`iframe #${i + 1} に切り替えました。`);
 
-            // 確認画面を探すためのセレクターを複数試みます
-            const iframeConfirmationSelectors: By[] = [
-              By.xpath("//*[contains(text(), '確認')]"),
-              By.xpath("//*[contains(text(), 'confirm')]"),
-              By.xpath("//*[contains(text(), '送信前')]"),
-              By.xpath("//*[contains(text(), '間違いがなければ')]"),
-              By.xpath("//*[contains(text(), '送信してもよろしい')]"),
-              By.xpath("//*[contains(text(), '送信する')]"),
-              By.xpath("//*[contains(text(), '送信')]"),
-              By.css('.confirm'), // クラス名がconfirmの要素
-              By.css('.confirmation'), // クラス名がconfirmationの要素
-              By.xpath("//div[contains(@id, 'confirm')]"), // idにconfirmationを含むdiv
-            ];
-
-            for (const selector of iframeConfirmationSelectors) {
+            for (const selector of confirmationSelectors) {
               const elements = await driver.findElements(selector);
               if (elements.length > 0) {
                 console.log('Iframeで確認画面が表示されています。');
-                return true;
+                return false;
               }
             }
 
@@ -11148,149 +11362,19 @@ export class AutoFormSendService {
         }
       }
 
-      // iframe内で確認画面が見つからなかった場合、メインコンテンツでも探す
-      console.log(
-        `iframe内で確認画面が見つからなかったため、メインコンテンツをチェックします。`,
-      );
-      const confirmationSelectors: By[] = [
-        By.xpath("//*[contains(text(), '確認')]"),
-        By.xpath("//*[contains(text(), 'confirm')]"),
-        By.xpath("//*[contains(text(), '送信前')]"),
-        By.xpath("//*[contains(text(), '間違いがなければ')]"),
-        By.xpath("//*[contains(text(), '送信してもよろしい')]"),
-        By.xpath("//*[contains(text(), '送信する')]"),
-        By.xpath("//*[contains(text(), '送信')]"),
-        By.css('.confirm'), // クラス名がconfirmの要素
-        By.css('.confirmation'), // クラス名がconfirmationの要素
-        By.xpath("//div[contains(@id, 'confirm')]"), // idにconfirmationを含むdiv
-      ];
-
+      // iframe内で見つからなかった場合、メインコンテンツでも探す
       for (const selector of confirmationSelectors) {
         const elements = await driver.findElements(selector);
         if (elements.length > 0) {
           console.log('確認画面が表示されています。');
-          return true;
+          return false;
         }
       }
 
-      return false;
+      console.log('確認画面が表示されていません。');
+      return true;
     } catch (error) {
       console.error(`確認画面検出中にエラーが発生しました:`, error);
-      try {
-        // エラー発生時にも元のコンテキストに戻す
-        await driver.switchTo().defaultContent();
-      } catch (switchError) {
-        console.error(
-          `元のコンテキストに戻す際にエラーが発生しました:`,
-          switchError,
-        );
-      }
-      return true;
-    }
-  }
-
-  /**
-   * 送信完了画面が表示されているかを検出します。
-   * 送信完了画面の特定の要素やテキストを基に判定します。
-   * @param driver Selenium WebDriverのインスタンス
-   * @returns 送信完了画面が表示されていればtrue、そうでなければfalse
-   */
-  async isSendCompleteScreenDisplayed(driver: WebDriver): Promise<boolean> {
-    try {
-      // 1. すべてのiframeを取得
-      const iframes: WebElement[] = await driver.findElements(
-        By.tagName('iframe'),
-      );
-      console.log(`見つかったiframeの数: ${iframes.length}`);
-
-      if (iframes.length > 0) {
-        // 2. 各iframeを順番にチェック
-        for (let i = 0; i < iframes.length; i++) {
-          try {
-            // iframeに切り替える
-            await driver.switchTo().frame(iframes[i]);
-            console.log(`iframe #${i + 1} に切り替えました。`);
-
-            // 送信完了画面を探すためのセレクターを複数試みます
-            const iframeSendCompleteSelectors: By[] = [
-              By.xpath("//*[contains(text(), '送信完了')]"),
-              By.xpath("//*[contains(text(), '送信が完了')]"),
-              By.xpath("//*[contains(text(), 'ありがとうございます')]"),
-              By.xpath("//*[contains(text(), 'ありがとうございました')]"),
-              By.xpath("//*[contains(text(), 'しばらくお待ち')]"),
-              By.xpath("//*[contains(text(), '担当者よりご連絡')]"),
-              By.xpath("//*[contains(text(), '担当者より連絡')]"),
-              By.xpath("//*[contains(text(), '担当者がご連絡')]"),
-              By.xpath("//*[contains(text(), '担当者が連絡')]"),
-              By.xpath("//*[contains(text(), 'トップページに戻る')]"),
-              By.xpath("//*[contains(text(), 'TOPページに戻る')]"),
-              By.css('.send-complete'), // クラス名がsend-completeの要素
-              By.css('.complete'), // クラス名がsend-completeの要素
-              By.xpath("//div[contains(@id, 'sendComplete')]"), // idにsendCompleteを含むdiv
-            ];
-
-            for (const selector of iframeSendCompleteSelectors) {
-              const elements = await driver.findElements(selector);
-              if (elements.length > 0) {
-                console.log('送信完了画面が表示されています。');
-                return true;
-              }
-            }
-
-            // 入力項目エラーが見つからなかった場合、元のコンテキストに戻る
-            await driver.switchTo().defaultContent();
-          } catch (iframeError) {
-            console.error(
-              `iframe #${i + 1} の処理中にエラーが発生しました。`,
-              iframeError,
-            );
-            // エラーが発生した場合でも元のコンテキストに戻る
-            await driver.switchTo().defaultContent();
-            continue;
-          }
-        }
-      }
-
-      // iframe内で送信完了画面が見つからなかった場合、メインコンテンツでも探す
-      console.log(
-        `iframe内で送信完了画面が見つからなかったため、メインコンテンツをチェックします。`,
-      );
-      const sendCompleteSelectors: By[] = [
-        By.xpath("//*[contains(text(), '送信完了')]"),
-        By.xpath("//*[contains(text(), '送信が完了')]"),
-        By.xpath("//*[contains(text(), 'ありがとうございます')]"),
-        By.xpath("//*[contains(text(), 'ありがとうございました')]"),
-        By.xpath("//*[contains(text(), 'しばらくお待ち')]"),
-        By.xpath("//*[contains(text(), '担当者よりご連絡')]"),
-        By.xpath("//*[contains(text(), '担当者より連絡')]"),
-        By.xpath("//*[contains(text(), '担当者がご連絡')]"),
-        By.xpath("//*[contains(text(), '担当者が連絡')]"),
-        By.xpath("//*[contains(text(), 'トップページに戻る')]"),
-        By.xpath("//*[contains(text(), 'TOPページに戻る')]"),
-        By.css('.send-complete'), // クラス名がsend-completeの要素
-        By.css('.complete'), // クラス名がsend-completeの要素
-        By.xpath("//div[contains(@id, 'sendComplete')]"), // idにsendCompleteを含むdiv
-      ];
-
-      for (const selector of sendCompleteSelectors) {
-        const elements = await driver.findElements(selector);
-        if (elements.length > 0) {
-          console.log('送信完了画面が表示されています。');
-          return true;
-        }
-      }
-      return false;
-    } catch (error) {
-      console.error(`送信完了画面検出中にエラーが発生しました:`, error);
-      try {
-        // エラー発生時にも元のコンテキストに戻す
-        await driver.switchTo().defaultContent();
-      } catch (switchError) {
-        console.error(
-          `元のコンテキストに戻す際にエラーが発生しました:`,
-          switchError,
-        );
-      }
       return false;
     }
   }
