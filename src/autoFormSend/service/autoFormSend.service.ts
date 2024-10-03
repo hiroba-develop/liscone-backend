@@ -1368,7 +1368,7 @@ export class AutoFormSendService {
           console.log('clickConfirmButton:', clickConfirmButton);
           if (clickConfirmButton === 1) {
             // 読み込まれるまで1秒待機（ミリ秒単位）
-            await driver.sleep(1000);
+            await driver.sleep(5000);
 
             // スクリーンショット実行
             await this.screenShot(
@@ -1436,7 +1436,7 @@ export class AutoFormSendService {
               .catch(() => false);
             if (clickSendButton) {
               // 読み込まれるまで1秒待機（ミリ秒単位）
-              await driver.sleep(1000);
+              await driver.sleep(5000);
 
               // スクリーンショット実行
               await this.screenShot(
@@ -1493,8 +1493,8 @@ export class AutoFormSendService {
           }
 
           // 分類されたデータを表示
-          console.log('\nカテゴリー:');
-          console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
+          // console.log('\nカテゴリー:');
+          // console.log(JSON.stringify(categorizedData, null, 2)); // カテゴリごとに分類されたフォーム要素データを表示
 
           // 3秒間待機
           await driver.sleep(3000);
@@ -1665,7 +1665,7 @@ export class AutoFormSendService {
         return readyState === 'complete';
       }, 3000);
 
-      await driver.sleep(1000); // 短いスリープを挟む
+      await driver.sleep(5000); // 短いスリープを挟む
 
       const currentUrl = await driver.getCurrentUrl(); // 現在のURLを取得
       console.log('Current URL after click (if any): ', currentUrl);
@@ -1926,7 +1926,7 @@ export class AutoFormSendService {
             contactLink,
           );
           // 1秒待機
-          await driver.sleep(1000);
+          await driver.sleep(5000);
 
           // アクションチェーンを使用して要素をクリック
           const actions = driver.actions({ bridge: true });
@@ -1940,7 +1940,7 @@ export class AutoFormSendService {
             return readyState === 'complete';
           }, 3000);
           // 1秒待機
-          await driver.sleep(1000);
+          await driver.sleep(5000);
         } catch (err) {
           if (err instanceof ElementClickInterceptedError) {
             // クリックが他の要素に妨げられた場合
