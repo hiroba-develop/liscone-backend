@@ -1379,11 +1379,7 @@ export class AutoFormSendService {
             );
 
             // 入力項目エラー画面が表示されているかを検出（最大3秒）
-            const inputErrorDisplayed: boolean = await driver
-              .wait(async () => {
-                return await this.isInputErrorDisplayed(driver);
-              }, 3000)
-              .catch(() => false);
+            const inputErrorDisplayed: boolean = await this.isInputErrorDisplayed(driver);
 
             if (inputErrorDisplayed) {
               // お問い合わせフォームの送信ボタンを検出してクリックします。クリック成功でTrue
@@ -1446,11 +1442,7 @@ export class AutoFormSendService {
                 '送信ボタンクリック',
               );
               // 入力項目エラー画面が表示されているかを検出（最大3秒）
-              const inputErrorDisplayed: boolean = await driver
-                .wait(async () => {
-                  return await this.isInputErrorDisplayed(driver);
-                }, 3000)
-                .catch(() => false);
+              const inputErrorDisplayed: boolean = await this.isInputErrorDisplayed(driver);
               if (inputErrorDisplayed) {
                 // DB更新
                 console.log('お問い合わせフォームの送信が完了しました。');
