@@ -10783,10 +10783,38 @@ export class AutoFormSendService {
     try {
       // 確認ボタンを探すためのセレクター
       const confirmButtonSelectors = [
+        By.xpath("//button[contains(text(), 'confirm')]"),
+        By.xpath("//button[.//*[contains(text(), 'confirm')]]"),
+        By.xpath("//button[contains(@name, 'confirm')]"),
+        By.xpath("//button[.//*[contains(@name, 'confirm')]]"),
+        By.xpath("//input[contains(@value, 'confirm')]"),
+        By.xpath("//input[.//*[contains(@value, 'confirm')]]"),
+        By.xpath("//input[contains(@name, 'confirm')]"),
+        By.xpath("//input[.//*[contains(@name, 'confirm')]]"),
+        By.xpath("//button[contains(text(), 'Confirm')]"),
+        By.xpath("//button[.//*[contains(text(), 'Confirm')]]"),
+        By.xpath("//button[contains(@name, 'Confirm')]"),
+        By.xpath("//button[.//*[contains(@name, 'Confirm')]]"),
+        By.xpath("//input[contains(@value, 'Confirm')]"),
+        By.xpath("//input[.//*[contains(@value, 'Confirm')]]"),
+        By.xpath("//input[contains(@name, 'Confirm')]"),
+        By.xpath("//input[.//*[contains(@name, 'Confirm')]]"),
+        By.xpath("//button[contains(text(), 'submitConfirm')]"),
+        By.xpath("//button[.//*[contains(text(), 'submitConfirm')]]"),
+        By.xpath("//button[contains(@name, 'submitConfirm')]"),
+        By.xpath("//button[.//*[contains(@name, 'submitConfirm')]]"),
+        By.xpath("//input[contains(@value, 'submitConfirm')]"),
+        By.xpath("//input[.//*[contains(@value, 'submitConfirm')]]"),
+        By.xpath("//input[contains(@name, 'submitConfirm')]"),
+        By.xpath("//input[.//*[contains(@name, 'submitConfirm')]]"),
         By.xpath("//button[contains(text(), '確認')]"),
         By.xpath("//button[.//*[contains(text(), '確認')]]"),
+        By.xpath("//button[contains(@name, '確認')]"),
+        By.xpath("//button[.//*[contains(@name, '確認')]]"),
         By.xpath("//input[contains(@value, '確認')]"),
         By.xpath("//input[.//*[contains(@value, '確認')]]"),
+        By.xpath("//input[contains(@name, '確認')]"),
+        By.xpath("//input[.//*[contains(@name, '確認')]]"),
       ];
 
       // フォーム全取得
@@ -10890,7 +10918,7 @@ export class AutoFormSendService {
                 'arguments[0].click();',
                 mainSendButton,
               );
-              console.log(`確認ボタン 確認ボタンをクリックしました。`);
+              console.log(`確認ボタンをクリックしました。`);
 
               await driver.sleep(3000);
               // 確認ボタンクリック後のhtml要素全取得
@@ -10919,10 +10947,7 @@ export class AutoFormSendService {
       console.log(`確認ボタンが見つかりませんでした。`);
       return 0;
     } catch (error) {
-      console.error(
-        `確認ボタン 確認ボタンのクリック中にエラーが発生しました:`,
-        error,
-      );
+      console.error(`確認ボタンのクリック中にエラーが発生しました:`, error);
       return 0;
     }
   }
@@ -10938,12 +10963,28 @@ export class AutoFormSendService {
       const sendButtonSelectors = [
         By.xpath("//button[contains(text(), '送信')]"),
         By.xpath("//button[.//*[contains(text(), '送信')]]"),
+        By.xpath("//button[contains(@name, '送信')]"),
+        By.xpath("//button[.//*[contains(@name, '送信')]]"),
         By.xpath("//input[contains(@value, '送信')]"),
         By.xpath("//input[.//*[contains(@value, '送信')]]"),
-        By.xpath("//button[contains(text(), 'ubmit')]"),
-        By.xpath("//button[.//*[contains(text(), 'ubmit')]]"),
-        By.xpath("//input[contains(@value, 'ubmit')]"),
-        By.xpath("//input[.//*[contains(@value, 'ubmit')]]"),
+        By.xpath("//input[contains(@name, '送信')]"),
+        By.xpath("//input[.//*[contains(@name, '送信')]]"),
+        By.xpath("//button[contains(text(), 'submit')]"),
+        By.xpath("//button[.//*[contains(text(), 'submit')]]"),
+        By.xpath("//button[contains(@name, 'submit')]"),
+        By.xpath("//button[.//*[contains(@name, 'submit')]]"),
+        By.xpath("//input[contains(@value, 'submit')]"),
+        By.xpath("//input[.//*[contains(@value, 'submit')]]"),
+        By.xpath("//input[contains(@name, 'submit')]"),
+        By.xpath("//input[.//*[contains(@name, 'submit')]]"),
+        By.xpath("//button[contains(text(), 'send')]"),
+        By.xpath("//button[.//*[contains(text(), 'send')]]"),
+        By.xpath("//button[contains(@name, 'send')]"),
+        By.xpath("//button[.//*[contains(@name, 'send')]]"),
+        By.xpath("//input[contains(@value, 'send')]"),
+        By.xpath("//input[.//*[contains(@value, 'send')]]"),
+        By.xpath("//input[contains(@name, 'send')]"),
+        By.xpath("//input[.//*[contains(@name, 'send')]]"),
       ];
 
       // フォーム全取得
