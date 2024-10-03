@@ -1382,7 +1382,7 @@ export class AutoFormSendService {
             // ファイル名を変数に設定
             const filename: string = `${InsertformResult}_${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${data.csvData[
               i
-            ][1].trim()}formInputComplete.jpg`;
+            ][1].trim()}_formInputComplete.jpg`;
             // 完全なファイルパスを生成
             const filePath: string = path.join(saveDir, filename);
             console.log(filePath);
@@ -1437,7 +1437,7 @@ export class AutoFormSendService {
               // ファイル名を変数に設定
               const filename: string = `${InsertformResult}_${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${data.csvData[
                 i
-              ][1].trim()}clickSendButton.jpg`;
+              ][1].trim()}_clickSendButton.jpg`;
               // 完全なファイルパスを生成
               const filePath: string = path.join(saveDir, filename);
               console.log(filePath);
