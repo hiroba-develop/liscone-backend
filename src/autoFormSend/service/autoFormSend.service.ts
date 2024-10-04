@@ -1379,7 +1379,8 @@ export class AutoFormSendService {
             );
 
             // 入力項目エラー画面が表示されているかを検出（最大3秒）
-            const inputErrorDisplayed: boolean = await this.isInputErrorDisplayed(driver);
+            const inputErrorDisplayed: boolean =
+              await this.isInputErrorDisplayed(driver);
 
             if (inputErrorDisplayed) {
               // お問い合わせフォームの送信ボタンを検出してクリックします。クリック成功でTrue
@@ -1442,7 +1443,8 @@ export class AutoFormSendService {
                 '送信ボタンクリック',
               );
               // 入力項目エラー画面が表示されているかを検出（最大3秒）
-              const inputErrorDisplayed: boolean = await this.isInputErrorDisplayed(driver);
+              const inputErrorDisplayed: boolean =
+                await this.isInputErrorDisplayed(driver);
               if (inputErrorDisplayed) {
                 // DB更新
                 console.log('お問い合わせフォームの送信が完了しました。');
@@ -11031,7 +11033,16 @@ export class AutoFormSendService {
                       return false;
                     } else {
                       console.log('要素が変更されました。');
-                      return true;
+                      let failure = await driver.findElement(
+                        By.xpath("//*[contains(text(), '失敗')]"),
+                      );
+                      if (failure) {
+                        console.log('失敗という文言は検出されました');
+                        return false;
+                      } else {
+                        console.log('失敗という文言は検出されませんでした');
+                        return true;
+                      }
                     }
                   } catch (clickError) {
                     console.warn(`クリックに失敗しました。`);
@@ -11092,7 +11103,16 @@ export class AutoFormSendService {
                 return false;
               } else {
                 console.log('要素が変更されました。');
-                return true;
+                let failure = await driver.findElement(
+                  By.xpath("//*[contains(text(), '失敗')]"),
+                );
+                if (failure) {
+                  console.log('失敗という文言は検出されました');
+                  return false;
+                } else {
+                  console.log('失敗という文言は検出されませんでした');
+                  return true;
+                }
               }
             } catch (clickError) {
               console.warn(`クリックに失敗しました。`);
@@ -11186,31 +11206,37 @@ export class AutoFormSendService {
       );
       if (recaptchaIframes.length === 0) {
         console.log('reCAPTCHAは存在しません。');
-      }else{
+      } else {
         console.log('reCAPTCHAのiframeが見つかりました。');
         // 各iframeをチェック
         for (let iframe of recaptchaIframes) {
-            // iframeに切り替え
-            await driver.switchTo().frame(iframe);
+          // iframeに切り替え
+          await driver.switchTo().frame(iframe);
 
-            // メッセージを探す
-            try {
-                // XPathを使用して特定のメッセージを含む要素を探す
-                let messageElement = await driver.findElement(By.xpath("//*[contains(text(), 'This reCAPTCHA is for testing purposes only.')]"));
-                if (messageElement) {
-                    console.log('特定のreCAPTCHAメッセージが検出されました。');
-                    return false;
-                }
-            } catch (err) {
-                // メッセージが見つからない場合はスキップ
-                console.log('特定のメッセージは見つかりませんでした。');
+          // メッセージを探す
+          try {
+            // XPathを使用して特定のメッセージを含む要素を探す
+            let messageElement = await driver.findElement(
+              By.xpath(
+                "//*[contains(text(), 'This reCAPTCHA is for testing purposes only.')]",
+              ),
+            );
+            if (messageElement) {
+              console.log('特定のreCAPTCHAメッセージが検出されました。');
+              return false;
             }
+          } catch (err) {
+            // メッセージが見つからない場合はスキップ
+            console.log('特定のメッセージは見つかりませんでした。');
+          }
 
-            // 元のコンテキストに戻す
-            await driver.switchTo().defaultContent();
+          // 元のコンテキストに戻す
+          await driver.switchTo().defaultContent();
         }
         // 特定のメッセージが見つからなかった場合
-        console.log('reCAPTCHAは存在しますが、特定のメッセージは表示されていません。');
+        console.log(
+          'reCAPTCHAは存在しますが、特定のメッセージは表示されていません。',
+        );
       }
 
       // すべてのiframeを取得
