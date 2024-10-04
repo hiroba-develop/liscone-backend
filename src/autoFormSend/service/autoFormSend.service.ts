@@ -11033,8 +11033,8 @@ export class AutoFormSendService {
                       return false;
                     } else {
                       console.log('要素が変更されました。');
-                      let failures = await driver.findElement(
-                        By.xpath("//*[contains(text(), '失敗')]"),
+                      let failures = await driver.findElements(
+                        By.xpath("//*[contains(text(), '失敗')]")
                       );
                       if (failures.length > 0) {
                         console.log('失敗という文言は検出されました');
@@ -11103,10 +11103,10 @@ export class AutoFormSendService {
                 return false;
               } else {
                 console.log('要素が変更されました。');
-                let failure = await driver.findElement(
-                  By.xpath("//*[contains(text(), '失敗')]"),
+                let failures = await driver.findElements(
+                  By.xpath("//*[contains(text(), '失敗')]")
                 );
-                if (failure) {
+                if (failures.length > 0) {
                   console.log('失敗という文言は検出されました');
                   return false;
                 } else {
