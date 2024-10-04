@@ -5992,16 +5992,6 @@ export class AutoFormSendService {
             'を入力しました。',
           );
         }
-      } else if (placeholder.includes('山田')) {
-        if (!currentValue.trim()) {
-          await inputElement.sendKeys(inquiryData.lastName);
-          console.log(inquiryData.lastName, 'を入力しました。');
-        }
-      } else if (placeholder.includes('太郎')) {
-        if (!currentValue.trim()) {
-          await inputElement.sendKeys(inquiryData.firstName);
-          console.log(inquiryData.firstName, 'を入力しました。');
-        }
       }
       // 名前(カナ)入力
       if (placeholder.includes('ヤマダ タロウ')) {
@@ -6014,17 +6004,7 @@ export class AutoFormSendService {
             'を入力しました。',
           );
         }
-      } else if (placeholder.includes('ヤマダ')) {
-        if (!currentValue.trim()) {
-          await inputElement.sendKeys(inquiryData.lastNameKatakana);
-          console.log(inquiryData.lastNameKatakana, 'を入力しました。');
-        }
-      } else if (placeholder.includes('タロウ')) {
-        if (!currentValue.trim()) {
-          await inputElement.sendKeys(inquiryData.firstNameKatakana);
-          console.log(inquiryData.firstNameKatakana, 'を入力しました。');
-        }
-      }
+      } 
       // 名前(かな)入力
       if (placeholder.includes('やまだ たろう')) {
         if (!currentValue.trim()) {
@@ -6036,20 +6016,7 @@ export class AutoFormSendService {
             'を入力しました。',
           );
         }
-      } else if (placeholder.includes('やまだ')) {
-        if (!currentValue.trim()) {
-          await inputElement.sendKeys(inquiryData.lastNameHiragana);
-          console.log(inquiryData.lastNameHiragana, 'を入力しました。');
-        }
-      } else if (placeholder.includes('たろう')) {
-        if (!currentValue.trim()) {
-          await inputElement.sendKeys(inquiryData.fifirstNameHiraganastName);
-          console.log(
-            inquiryData.fifirstNameHiraganastName,
-            'を入力しました。',
-          );
-        }
-      }
+      } 
 
       // 会社名
       if (placeholder.includes('会社名')) {
@@ -6069,7 +6036,7 @@ export class AutoFormSendService {
         }
       }
 
-      // 会社名
+      // 郵便番号
       if (placeholder.includes('123-4567')) {
         if (!currentValue.trim()) {
           await inputElement.sendKeys(inquiryData.postalCode);
@@ -11033,9 +11000,7 @@ export class AutoFormSendService {
                       return false;
                     } else {
                       console.log('要素が変更されました。');
-                      let failures = await driver.findElements(
-                        By.xpath("//*[contains(text(), '失敗')]")
-                      );
+                      let failures = await driver.findElements(By.xpath("//*[contains(text(), '失敗') or contains(text(), 'CAPTCHA')]"));
                       if (failures.length > 0) {
                         console.log('失敗という文言は検出されました');
                         return false;
@@ -11103,9 +11068,7 @@ export class AutoFormSendService {
                 return false;
               } else {
                 console.log('要素が変更されました。');
-                let failures = await driver.findElements(
-                  By.xpath("//*[contains(text(), '失敗')]")
-                );
+                let failures = await driver.findElements(By.xpath("//*[contains(text(), '失敗') or contains(text(), 'reCAPTCHA')]"));
                 if (failures.length > 0) {
                   console.log('失敗という文言は検出されました');
                   return false;
