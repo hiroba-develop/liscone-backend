@@ -4727,10 +4727,8 @@ export class AutoFormSendService {
         try {
           // 該当のテキストエリア要素が見つかるまで待機
           const textareaElement: WebElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//textarea[@name='${item['element_name']}']`),
-            ),
-            500, // 1秒間待機
+            until.elementLocated(By.name(item['element_name'])),
+            500, // 10秒間待機
           );
 
           // テキストエリアが空かどうかを確認
@@ -4853,7 +4851,7 @@ export class AutoFormSendService {
       // ページからすべての<textarea>要素を見つける
       const textareaElements = await driver.wait(
         until.elementsLocated(By.tagName('textarea')),
-        1000, // 10秒間待機
+        500, // 10秒間待機
       );
 
       // <textarea>要素が存在する場合の処理
@@ -4958,8 +4956,8 @@ export class AutoFormSendService {
             // テキストエリアが表示されていてクリック可能になるまで待つ
             const name = await textareaItem.getAttribute('name');
             const textareaElement = await driver.wait(
-              until.elementLocated(By.xpath(`//textarea[@name='${name}']`)),
-              500, // 1秒間待機
+              until.elementLocated(By.name(name)),
+              500, // 10秒間待機
             );
             // テキストエリアにデフォルトメッセージを入力
             await textareaElement.sendKeys(inquiryBody);
@@ -6065,11 +6063,8 @@ export class AutoFormSendService {
           for (const iframe of iframes) {
             await driver.switchTo().frame(iframe);
             try {
-              const emailElement = await driver.wait(
-                until.elementLocated(
-                  By.xpath(`//*[@name='${emailItem.element_name}']`),
-                ),
-                500,
+              const emailElement = await driver.findElement(
+                By.name(emailItem.element_name),
               );
               console.log('emailElement', emailElement);
               // フィールドが空かどうかをチェック
@@ -6093,11 +6088,8 @@ export class AutoFormSendService {
           }
         } else {
           try {
-            const emailElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${emailItem.element_name}']`),
-              ),
-              500,
+            const emailElement = await driver.findElement(
+              By.name(emailItem.element_name),
             );
             // フィールドが空かどうかをチェック
             const value = await emailElement.getAttribute('value');
@@ -6133,11 +6125,9 @@ export class AutoFormSendService {
       try {
         const firstphoneNumber = phoneNumber.slice(0, 3);
         // 1つ目の入力ボックスを取得し、空の場合に「123」を入力
-        const phoneNumberElement1 = await driver.wait(
+        const phoneNumberElement1 = await driver.findElement(
           until.elementLocated(
-            By.xpath(
-              `//*[@name='${categorizedData.phone_numbers[0].element_name}']`,
-            ),
+            By.name(categorizedData.phone_numbers[0].element_name),
           ),
           500,
         );
@@ -6155,11 +6145,9 @@ export class AutoFormSendService {
 
         // 2つ目の入力ボックスを取得し、空の場合に「345」を入力
         const secondphoneNumber = phoneNumber.slice(3, 6);
-        const phoneNumberElement2 = await driver.wait(
+        const phoneNumberElement2 = await driver.findElement(
           until.elementLocated(
-            By.xpath(
-              `//*[@name='${categorizedData.phone_numbers[1].element_name}']`,
-            ),
+            By.name(categorizedData.phone_numbers[1].element_name),
           ),
           500,
         );
@@ -6177,11 +6165,9 @@ export class AutoFormSendService {
 
         // 3つ目の入力ボックスを取得し、空の場合に「7899」を入力
         const lastphoneNumber = phoneNumber.slice(-4);
-        const phoneNumberElement3 = await driver.wait(
+        const phoneNumberElement3 = await driver.findElement(
           until.elementLocated(
-            By.xpath(
-              `//*[@name='${categorizedData.phone_numbers[2].element_name}']`,
-            ),
+            By.name(categorizedData.phone_numbers[2].element_name),
           ),
           500,
         );
@@ -6216,11 +6202,8 @@ export class AutoFormSendService {
     for (const phoneItem of categorizedData.phone_numbers) {
       if (phoneItem.element_type === 'Input') {
         try {
-          const phoneElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${phoneItem.element_name}']`),
-            ),
-            500,
+          const phoneElement = await driver.findElement(
+            By.name(phoneItem.element_name),
           );
           const value = await phoneElement.getAttribute('value');
           if (!value) {
@@ -6259,16 +6242,16 @@ export class AutoFormSendService {
       try {
         // 1つ目の入力ボックスを取得し、空の場合に「123」を入力
         const firstFax = fax.slice(0, 3);
-        const faxNumberElement1: WebElement = await driver.wait(
+        const faxNumberElement1: WebElement = await driver.findElement(
           until.elementLocated(
-            By.xpath(
-              `//*[@name='${categorized_data.fax_numbers[0].element_name}']`,
-            ),
+            By.name(categorized_data.fax_numbers[0].element_name),
           ),
           500,
         );
-
-        await driver.wait(until.elementIsVisible(faxNumberElement1), 1000);
+        await driver.findElement(
+          until.elementIsVisible(faxNumberElement1),
+          1000,
+        );
         const value1: string | null = await faxNumberElement1.getAttribute(
           'value',
         );
@@ -6285,15 +6268,16 @@ export class AutoFormSendService {
 
         // 2つ目の入力ボックスを取得し、空の場合に「345」を入力
         const secondFax = fax.slice(3, 6);
-        const faxNumberElement2: WebElement = await driver.wait(
+        const faxNumberElement2: WebElement = await driver.findElement(
           until.elementLocated(
-            By.xpath(
-              `//*[@name='${categorized_data.fax_numbers[1].element_name}']`,
-            ),
+            By.name(categorized_data.fax_numbers[1].element_name),
           ),
           500,
         );
-        await driver.wait(until.elementIsVisible(faxNumberElement2), 1000);
+        await driver.findElement(
+          until.elementIsVisible(faxNumberElement2),
+          1000,
+        );
         const value2: string | null = await faxNumberElement2.getAttribute(
           'value',
         );
@@ -6310,15 +6294,16 @@ export class AutoFormSendService {
 
         // 3つ目の入力ボックスを取得し、空の場合に「7899」を入力
         const lastFax = fax.slice(-4);
-        const faxNumberElement3: WebElement = await driver.wait(
+        const faxNumberElement3: WebElement = await driver.findElement(
           until.elementLocated(
-            By.xpath(
-              `//*[@name='${categorized_data.fax_numbers[2].element_name}']`,
-            ),
+            By.name(categorized_data.fax_numbers[2].element_name),
           ),
           500,
         );
-        await driver.wait(until.elementIsVisible(faxNumberElement3), 1000);
+        await driver.findElement(
+          until.elementIsVisible(faxNumberElement3),
+          1000,
+        );
         const value3: string | null = await faxNumberElement3.getAttribute(
           'value',
         );
@@ -6358,13 +6343,10 @@ export class AutoFormSendService {
     for (const faxItem of categorized_data.fax_numbers) {
       if (faxItem.element_type === 'Input') {
         try {
-          const faxElement: WebElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${faxItem.element_name}']`),
-            ),
-            500,
+          const faxElement: WebElement = await driver.findElement(
+            By.name(faxItem.element_name),
           );
-          await driver.wait(until.elementIsVisible(faxElement), 1000);
+          await driver.findElement(until.elementIsVisible(faxElement), 1000);
           const value: string | null = await faxElement.getAttribute('value');
           if (!value) {
             await faxElement.sendKeys(fax);
@@ -6396,11 +6378,9 @@ export class AutoFormSendService {
       try {
         // 1つ目の入力ボックスを取得し、空の場合に「987」を入力
         const firstpostalCode = postalCode.slice(0, 3);
-        const postCodeElement1 = await driver.wait(
+        const postCodeElement1 = await driver.findElement(
           until.elementLocated(
-            By.xpath(
-              `//*[@name='${categorizedData.post_code[0].element_name}']`,
-            ),
+            By.name(categorizedData.post_code[0].element_name),
           ),
           500,
         );
@@ -6418,11 +6398,9 @@ export class AutoFormSendService {
 
         // 2つ目の入力ボックスを取得し、空の場合に「6543」を入力
         const secondpostalCode = postalCode.slice(3, 7);
-        const postCodeElement2 = await driver.wait(
+        const postCodeElement2 = await driver.findElement(
           until.elementLocated(
-            By.xpath(
-              `//*[@name='${categorizedData.post_code[1].element_name}']`,
-            ),
+            By.name(categorizedData.post_code[1].element_name),
           ),
           500,
         );
@@ -6457,11 +6435,8 @@ export class AutoFormSendService {
     for (const postCodeItem of categorizedData.post_code) {
       if (postCodeItem.element_type === 'Input') {
         try {
-          const postCodeElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${postCodeItem.element_name}']`),
-            ),
-            500,
+          const postCodeElement = await driver.findElement(
+            By.name(postCodeItem.element_name),
           );
           const value = await postCodeElement.getAttribute('value');
           if (!value) {
@@ -6495,11 +6470,8 @@ export class AutoFormSendService {
     for (const companyItem of categorizedData.company_names) {
       if (companyItem.element_type === 'Input') {
         try {
-          const companyElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${companyItem.element_name}']`),
-            ),
-            500,
+          const companyElement = await driver.findElement(
+            By.name(companyItem.element_name),
           );
           const value = await companyElement.getAttribute('value');
           const currentValue: string =
@@ -6537,11 +6509,8 @@ export class AutoFormSendService {
     for (const kanjiSeiItem of categorizedData.kanji_sei) {
       if (kanjiSeiItem.element_type === 'Input') {
         try {
-          const kanjiSeiElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${kanjiSeiItem.element_name}']`),
-            ),
-            500,
+          const kanjiSeiElement = await driver.findElement(
+            By.name(kanjiSeiItem.element_name),
           );
           const value = await kanjiSeiElement.getAttribute('value');
           if (value === '') {
@@ -6575,11 +6544,8 @@ export class AutoFormSendService {
     for (const kanjiMeiItem of categorizedData.kanji_mei) {
       if (kanjiMeiItem.element_type === 'Input') {
         try {
-          const kanjiMeiElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${kanjiMeiItem.element_name}']`),
-            ),
-            500,
+          const kanjiMeiElement = await driver.findElement(
+            By.name(kanjiMeiItem.element_name),
           );
           const value = await kanjiMeiElement.getAttribute('value');
           if (value === '') {
@@ -6615,11 +6581,8 @@ export class AutoFormSendService {
     for (const kanjiFullnameItem of categorizedData.kanji_fullname) {
       if (kanjiFullnameItem.element_type === 'Input') {
         try {
-          const kanjiFullnameElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${kanjiFullnameItem.element_name}']`),
-            ),
-            500,
+          const kanjiFullnameElement = await driver.findElement(
+            By.name(kanjiFullnameItem.element_name),
           );
           const value = await kanjiFullnameElement.getAttribute('value');
           if (value === '') {
@@ -6653,11 +6616,8 @@ export class AutoFormSendService {
     for (const katakanaSeiItem of categorizedData.katakana_sei) {
       if (katakanaSeiItem.element_type === 'Input') {
         try {
-          const katakanaSeiElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${katakanaSeiItem.element_name}']`),
-            ),
-            500,
+          const katakanaSeiElement = await driver.findElement(
+            By.name(katakanaSeiItem.element_name),
           );
           const value = await katakanaSeiElement.getAttribute('value');
           if (value === '') {
@@ -6691,11 +6651,8 @@ export class AutoFormSendService {
     for (const katakanaMeiItem of categorizedData.katakana_mei) {
       if (katakanaMeiItem.element_type === 'Input') {
         try {
-          const katakanaMeiElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${katakanaMeiItem.element_name}']`),
-            ),
-            500,
+          const katakanaMeiElement = await driver.findElement(
+            By.name(katakanaMeiItem.element_name),
           );
           const value = await katakanaMeiElement.getAttribute('value');
           if (value === '') {
@@ -6731,11 +6688,8 @@ export class AutoFormSendService {
     for (const katakanaFullnameItem of categorizedData.katakana_fullname) {
       if (katakanaFullnameItem.element_type === 'Input') {
         try {
-          const katakanaFullnameElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${katakanaFullnameItem.element_name}']`),
-            ),
-            500,
+          const katakanaFullnameElement = await driver.findElement(
+            By.name(katakanaFullnameItem.element_name),
           );
           const value = await katakanaFullnameElement.getAttribute('value');
           if (value === '') {
@@ -6771,11 +6725,8 @@ export class AutoFormSendService {
     for (const hiraganaSeiItem of categorizedData.hiragana_sei) {
       if (hiraganaSeiItem.element_type === 'Input') {
         try {
-          const hiraganaSeiElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${hiraganaSeiItem.element_name}']`),
-            ),
-            500,
+          const hiraganaSeiElement = await driver.findElement(
+            By.name(hiraganaSeiItem.element_name),
           );
           const value = await hiraganaSeiElement.getAttribute('value');
           if (value === '') {
@@ -6809,11 +6760,8 @@ export class AutoFormSendService {
     for (const hiraganaMeiItem of categorizedData.hiragana_mei) {
       if (hiraganaMeiItem.element_type === 'Input') {
         try {
-          const hiraganaMeiElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${hiraganaMeiItem.element_name}']`),
-            ),
-            500,
+          const hiraganaMeiElement = await driver.findElement(
+            By.name(hiraganaMeiItem.element_name),
           );
           const value = await hiraganaMeiElement.getAttribute('value');
           if (value === '') {
@@ -6849,11 +6797,8 @@ export class AutoFormSendService {
     for (const hiraganaFullnameItem of categorizedData.hiragana_fullname) {
       if (hiraganaFullnameItem.element_type === 'Input') {
         try {
-          const hiraganaFullnameElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${hiraganaFullnameItem.element_name}']`),
-            ),
-            500,
+          const hiraganaFullnameElement = await driver.findElement(
+            By.name(hiraganaFullnameItem.element_name),
           );
           const value = await hiraganaFullnameElement.getAttribute('value');
           if (value === '') {
@@ -6888,11 +6833,8 @@ export class AutoFormSendService {
     for (const departmentsItem of categorizedData.departments) {
       if (departmentsItem.element_type === 'Input') {
         try {
-          const departmentsElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${departmentsItem.element_name}']`),
-            ),
-            500,
+          const departmentsElement = await driver.findElement(
+            By.name(departmentsItem.element_name),
           );
           const value = await departmentsElement.getAttribute('value');
           if (value === '') {
@@ -6924,11 +6866,8 @@ export class AutoFormSendService {
     for (const introductionTimeItem of categorizedData.introduction_time) {
       if (introductionTimeItem.element_type === 'Input') {
         try {
-          const introductionTimeElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${introductionTimeItem.element_name}']`),
-            ),
-            500,
+          const introductionTimeElement = await driver.findElement(
+            By.name(introductionTimeItem.element_name),
           );
           const value = await introductionTimeElement.getAttribute('value');
           if (value === '') {
@@ -6962,11 +6901,8 @@ export class AutoFormSendService {
     for (const departmentsItem of categorizedData.departments) {
       if (departmentsItem.element_type === 'Select') {
         try {
-          const selectElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${departmentsItem.element_name}']`),
-            ),
-            500,
+          const selectElement = await driver.findElement(
+            By.name(departmentsItem.element_name),
           );
           const options = await selectElement.findElements(
             By.tagName('option'),
@@ -7010,11 +6946,8 @@ export class AutoFormSendService {
     for (const introductionTimeItem of categorizedData.introduction_time) {
       if (introductionTimeItem.element_type === 'Select') {
         try {
-          const selectElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${introductionTimeItem.element_name}']`),
-            ),
-            500,
+          const selectElement = await driver.findElement(
+            By.name(introductionTimeItem.element_name),
           );
           const options = await selectElement.findElements(
             By.tagName('option'),
@@ -7053,11 +6986,8 @@ export class AutoFormSendService {
     for (const howFoundItem of categorizedData.how_found) {
       if (howFoundItem.element_type === 'Input') {
         try {
-          const howFoundElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${howFoundItem.element_name}']`),
-            ),
-            500,
+          const howFoundElement = await driver.findElement(
+            By.name(howFoundItem.element_name),
           );
           await howFoundElement.sendKeys('きっかけ');
           console.log(
@@ -7082,11 +7012,8 @@ export class AutoFormSendService {
     for (const howFoundItem of categorizedData.how_found) {
       if (howFoundItem.element_type === 'Select') {
         try {
-          const selectElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${howFoundItem.element_name}']`),
-            ),
-            500,
+          const selectElement = await driver.findElement(
+            By.name(howFoundItem.element_name),
           );
           const options = await selectElement.findElements(
             By.tagName('option'),
@@ -7126,11 +7053,8 @@ export class AutoFormSendService {
     for (const positionsItem of categorizedData.positions) {
       if (positionsItem.element_type === 'Input') {
         try {
-          const positionsElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${positionsItem.element_name}']`),
-            ),
-            500,
+          const positionsElement = await driver.findElement(
+            By.name(positionsItem.element_name),
           );
           const value = await positionsElement.getAttribute('value');
           if (value === '') {
@@ -7164,11 +7088,8 @@ export class AutoFormSendService {
     for (const positionsItem of categorizedData.positions) {
       if (positionsItem.element_type === 'Select') {
         try {
-          const selectElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${positionsItem.element_name}']`),
-            ),
-            500,
+          const selectElement = await driver.findElement(
+            By.name(positionsItem.element_name),
           );
           const options = await selectElement.findElements(
             By.tagName('option'),
@@ -7215,11 +7136,8 @@ export class AutoFormSendService {
     for (const industryItem of categorizedData.industry) {
       if (industryItem.element_type === 'Input') {
         try {
-          const industryElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${industryItem.element_name}']`),
-            ),
-            500,
+          const industryElement = await driver.findElement(
+            By.name(industryItem.element_name),
           );
           const value = await industryElement.getAttribute('value');
           if (value === '') {
@@ -7253,11 +7171,8 @@ export class AutoFormSendService {
     for (const industryItem of categorizedData.industry) {
       if (industryItem.element_type === 'Select') {
         try {
-          const selectElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${industryItem.element_name}']`),
-            ),
-            500,
+          const selectElement = await driver.findElement(
+            By.name(industryItem.element_name),
           );
           const options = await selectElement.findElements(
             By.tagName('option'),
@@ -7303,11 +7218,8 @@ export class AutoFormSendService {
     for (const employeeSizesItem of categorizedData.employee_sizes) {
       if (employeeSizesItem.element_type === 'Input') {
         try {
-          const employeeSizesElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${employeeSizesItem.element_name}']`),
-            ),
-            500,
+          const employeeSizesElement = await driver.findElement(
+            By.name(employeeSizesItem.element_name),
           );
           await employeeSizesElement.sendKeys(employeeSize);
           console.log(
@@ -7334,11 +7246,8 @@ export class AutoFormSendService {
     for (const employeeSizesItem of categorizedData.employee_sizes) {
       if (employeeSizesItem.element_type === 'Select') {
         try {
-          const selectElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${employeeSizesItem.element_name}']`),
-            ),
-            500,
+          const selectElement = await driver.findElement(
+            By.name(employeeSizesItem.element_name),
           );
           const options = await selectElement.findElements(
             By.tagName('option'),
@@ -7384,11 +7293,8 @@ export class AutoFormSendService {
     for (const urlItem of categorizedData.url) {
       if (urlItem.element_type === 'Input') {
         try {
-          const urlElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${urlItem.element_name}']`),
-            ),
-            500,
+          const urlElement = await driver.findElement(
+            By.name(urlItem.element_name),
           );
           await urlElement.sendKeys(myCorporateURL);
           console.log(`Url input successful for ${urlItem.element_name}.`);
@@ -7413,11 +7319,8 @@ export class AutoFormSendService {
     for (const inquiryGenreItem of categorizedData.inquiry_genre) {
       if (inquiryGenreItem.element_type === 'Input') {
         try {
-          const inquiryGenreElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${inquiryGenreItem.element_name}']`),
-            ),
-            500,
+          const inquiryGenreElement = await driver.findElement(
+            By.name(inquiryGenreItem.element_name),
           );
           await inquiryGenreElement.sendKeys(inquirySubject);
           console.log(
@@ -7442,11 +7345,8 @@ export class AutoFormSendService {
     for (const inquiryGenreItem of categorizedData.inquiry_genre) {
       if (inquiryGenreItem.element_type === 'Select') {
         try {
-          const selectElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${inquiryGenreItem.element_name}']`),
-            ),
-            500,
+          const selectElement = await driver.findElement(
+            By.name(inquiryGenreItem.element_name),
           );
           const options = await selectElement.findElements(
             By.tagName('option'),
@@ -7512,11 +7412,8 @@ export class AutoFormSendService {
     for (const addressItem of categorizedData.address) {
       if (addressItem.element_type === 'Input') {
         try {
-          const addressElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${addressItem.element_name}']`),
-            ),
-            500,
+          const addressElement = await driver.findElement(
+            By.name(addressItem.element_name),
           );
           const value = await addressElement.getAttribute('value');
           if (!value.trim()) {
@@ -7562,11 +7459,8 @@ export class AutoFormSendService {
     for (const addressZipItem of categorizedData.address_zip) {
       if (addressZipItem.element_type === 'Input') {
         try {
-          const addressZipElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${addressZipItem.element_name}']`),
-            ),
-            500,
+          const addressZipElement = await driver.findElement(
+            By.name(addressZipItem.element_name),
           );
           const value = await addressZipElement.getAttribute('value');
           if (!value.trim()) {
@@ -7600,11 +7494,8 @@ export class AutoFormSendService {
     for (const addressCityItem of categorizedData.address_city) {
       if (addressCityItem.element_type === 'Input') {
         try {
-          const addressCityElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${addressCityItem.element_name}']`),
-            ),
-            500,
+          const addressCityElement = await driver.findElement(
+            By.name(addressCityItem.element_name),
           );
           const value = await addressCityElement.getAttribute('value');
           if (!value.trim()) {
@@ -7638,11 +7529,8 @@ export class AutoFormSendService {
     for (const addressPrefectureItem of categorizedData.address_prefecture) {
       if (addressPrefectureItem.element_type === 'Input') {
         try {
-          const addressPrefectureElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${addressPrefectureItem.element_name}']`),
-            ),
-            500,
+          const addressPrefectureElement = await driver.findElement(
+            By.name(addressPrefectureItem.element_name),
           );
           const value = await addressPrefectureElement.getAttribute('value');
           if (!value.trim()) {
@@ -7686,11 +7574,8 @@ export class AutoFormSendService {
     for (const addressStreetItem of categorizedData.address_street) {
       if (addressStreetItem.element_type === 'Input') {
         try {
-          const addressStreetElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${addressStreetItem.element_name}']`),
-            ),
-            500,
+          const addressStreetElement = await driver.findElement(
+            By.name(addressStreetItem.element_name),
           );
           const value = await addressStreetElement.getAttribute('value');
           if (!value.trim()) {
@@ -7724,11 +7609,8 @@ export class AutoFormSendService {
     for (const addressItem of categorizedData.address) {
       if (addressItem.element_type === 'Select') {
         try {
-          const selectElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${addressItem.element_name}']`),
-            ),
-            500,
+          const selectElement = await driver.findElement(
+            By.name(addressItem.element_name),
           );
           const options = await selectElement.findElements(
             By.tagName('option'),
@@ -7764,11 +7646,8 @@ export class AutoFormSendService {
     for (const addressPrefectureItem of categorizedData.address_prefecture) {
       if (addressPrefectureItem.element_type === 'Select') {
         try {
-          const selectElement = await driver.wait(
-            until.elementLocated(
-              By.xpath(`//*[@name='${addressPrefectureItem.element_name}']`),
-            ),
-            500,
+          const selectElement = await driver.findElement(
+            By.name(addressPrefectureItem.element_name),
           );
           const options = await selectElement.findElements(
             By.tagName('option'),
@@ -7808,11 +7687,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const companyElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${companyItem.element_name}']`),
-              ),
-              500,
+            const companyElement = await driver.findElement(
+              By.name(companyItem.element_name),
             );
             const currentValue: string =
               (await companyElement.getAttribute('value')) || '';
@@ -7857,15 +7733,12 @@ export class AutoFormSendService {
           await driver.switchTo().frame(iframe);
           try {
             const firstPostalCode = postalCode.slice(0, 3);
-            const postCodeElement1 = await driver.wait(
+            const postCodeElement1 = await driver.findElement(
               until.elementLocated(
-                By.xpath(
-                  `//*[@name='${categorizedData.post_code[0].element_name}']`,
-                ),
+                By.name(categorizedData.post_code[0].element_name),
               ),
               500,
             );
-
             const value1 = await postCodeElement1.getAttribute('value');
             if (!value1) {
               await postCodeElement1.sendKeys(firstPostalCode);
@@ -7882,11 +7755,9 @@ export class AutoFormSendService {
             }
 
             const secondPostalCode = postalCode.slice(3, 7);
-            const postCodeElement2 = await driver.wait(
+            const postCodeElement2 = await driver.findElement(
               until.elementLocated(
-                By.xpath(
-                  `//*[@name='${categorizedData.post_code[1].element_name}']`,
-                ),
+                By.name(categorizedData.post_code[1].element_name),
               ),
               500,
             );
@@ -7934,11 +7805,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const postCodeElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${postCodeItem.element_name}']`),
-              ),
-              500,
+            const postCodeElement = await driver.findElement(
+              By.name(postCodeItem.element_name),
             );
             const value = await postCodeElement.getAttribute('value');
             if (!value) {
@@ -7984,11 +7852,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const kanjiSeiElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${kanjiSeiItem.element_name}']`),
-              ),
-              500,
+            const kanjiSeiElement = await driver.findElement(
+              By.name(kanjiSeiItem.element_name),
             );
             const value = await kanjiSeiElement.getAttribute('value');
             if (!value) {
@@ -8031,11 +7896,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const kanjiMeiElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${kanjiMeiItem.element_name}']`),
-              ),
-              500,
+            const kanjiMeiElement = await driver.findElement(
+              By.name(kanjiMeiItem.element_name),
             );
             const value = await kanjiMeiElement.getAttribute('value');
             if (!value) {
@@ -8085,11 +7947,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const kanjiFullnameElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${kanjiFullnameItem.element_name}']`),
-              ),
-              500,
+            const kanjiFullnameElement = await driver.findElement(
+              By.name(kanjiFullnameItem.element_name),
             );
             const value = await kanjiFullnameElement.getAttribute('value');
             if (!value) {
@@ -8137,11 +7996,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const katakanaSeiElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${katakanaSeiItem.element_name}']`),
-              ),
-              500,
+            const katakanaSeiElement = await driver.findElement(
+              By.name(katakanaSeiItem.element_name),
             );
             const value = await katakanaSeiElement.getAttribute('value');
             if (!value) {
@@ -8189,11 +8045,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const katakanaMeiElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${katakanaMeiItem.element_name}']`),
-              ),
-              500,
+            const katakanaMeiElement = await driver.findElement(
+              By.name(katakanaMeiItem.element_name),
             );
             const value = await katakanaMeiElement.getAttribute('value');
             if (!value) {
@@ -8243,11 +8096,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const katakanaFullnameElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${katakanaFullnameItem.element_name}']`),
-              ),
-              500,
+            const katakanaFullnameElement = await driver.findElement(
+              By.name(katakanaFullnameItem.element_name),
             );
             const value = await katakanaFullnameElement.getAttribute('value');
             if (!value) {
@@ -8297,11 +8147,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const hiraganaSeiElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${hiraganaSeiItem.element_name}']`),
-              ),
-              500,
+            const hiraganaSeiElement = await driver.findElement(
+              By.name(hiraganaSeiItem.element_name),
             );
             const value = await hiraganaSeiElement.getAttribute('value');
             if (!value) {
@@ -8349,11 +8196,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const hiraganaMeiElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${hiraganaMeiItem.element_name}']`),
-              ),
-              500,
+            const hiraganaMeiElement = await driver.findElement(
+              By.name(hiraganaMeiItem.element_name),
             );
             const value = await hiraganaMeiElement.getAttribute('value');
             if (!value) {
@@ -8403,11 +8247,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const hiraganaFullnameElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${hiraganaFullnameItem.element_name}']`),
-              ),
-              500,
+            const hiraganaFullnameElement = await driver.findElement(
+              By.name(hiraganaFullnameItem.element_name),
             );
             const value = await hiraganaFullnameElement.getAttribute('value');
             if (!value) {
@@ -8457,11 +8298,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const departmentsElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${departmentsItem.element_name}']`),
-              ),
-              500,
+            const departmentsElement = await driver.findElement(
+              By.name(departmentsItem.element_name),
             );
             await driver.wait(until.elementIsVisible(departmentsElement), 1000);
             await departmentsElement.sendKeys(department);
@@ -8503,11 +8341,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const selectElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${departmentsItem.element_name}']`),
-              ),
-              500,
+            const selectElement = await driver.findElement(
+              By.name(departmentsItem.element_name),
             );
             const options = await selectElement.findElements(
               By.tagName('option'),
@@ -8561,11 +8396,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const introductionTimeElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${introductionTimeItem.element_name}']`),
-              ),
-              500,
+            const introductionTimeElement = await driver.findElement(
+              By.name(introductionTimeItem.element_name),
             );
             await driver.wait(
               until.elementIsVisible(introductionTimeElement),
@@ -8608,11 +8440,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const selectElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${introductionTimeItem.element_name}']`),
-              ),
-              500,
+            const selectElement = await driver.findElement(
+              By.name(introductionTimeItem.element_name),
             );
             const options = await selectElement.findElements(
               By.tagName('option'),
@@ -8678,11 +8507,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const employeeSizesElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${employeeSizesItem.element_name}']`),
-              ),
-              500,
+            const employeeSizesElement = await driver.findElement(
+              By.name(employeeSizesItem.element_name),
             );
             await driver.wait(
               until.elementIsVisible(employeeSizesElement),
@@ -8727,11 +8553,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const selectElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${employeeSizesItem.element_name}']`),
-              ),
-              500,
+            const selectElement = await driver.findElement(
+              By.name(employeeSizesItem.element_name),
             );
             const options = await selectElement.findElements(
               By.tagName('option'),
@@ -8792,11 +8615,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const urlElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${urlItem.element_name}']`),
-              ),
-              500,
+            const urlElement = await driver.findElement(
+              By.name(urlItem.element_name),
             );
             await driver.wait(until.elementIsVisible(urlElement), 1000);
             await urlElement.sendKeys(myCorporateURL);
@@ -8836,11 +8656,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const positionsElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${positionsItem.element_name}']`),
-              ),
-              500,
+            const positionsElement = await driver.findElement(
+              By.name(positionsItem.element_name),
             );
             await driver.wait(until.elementIsVisible(positionsElement), 1000);
             await positionsElement.sendKeys(jobPosition);
@@ -8882,11 +8699,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const selectElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${positionsItem.element_name}']`),
-              ),
-              500,
+            const selectElement = await driver.findElement(
+              By.name(positionsItem.element_name),
             );
             const options = await selectElement.findElements(
               By.tagName('option'),
@@ -8944,11 +8758,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const industryElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${industryItem.element_name}']`),
-              ),
-              500,
+            const industryElement = await driver.findElement(
+              By.name(industryItem.element_name),
             );
             await driver.wait(until.elementIsVisible(industryElement), 1000);
             await industryElement.sendKeys(industryType);
@@ -8990,11 +8801,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const selectElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${industryItem.element_name}']`),
-              ),
-              500,
+            const selectElement = await driver.findElement(
+              By.name(industryItem.element_name),
             );
             const options = await selectElement.findElements(
               By.tagName('option'),
@@ -9049,11 +8857,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const howFoundElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${howFoundItem.element_name}']`),
-              ),
-              500,
+            const howFoundElement = await driver.findElement(
+              By.name(howFoundItem.element_name),
             );
             await driver.wait(until.elementIsVisible(howFoundElement), 1000);
             await howFoundElement.sendKeys('検索');
@@ -9093,11 +8898,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const selectElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${howFoundItem.element_name}']`),
-              ),
-              500,
+            const selectElement = await driver.findElement(
+              By.name(howFoundItem.element_name),
             );
             const options = await selectElement.findElements(
               By.tagName('option'),
@@ -9181,11 +8983,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const inquiryGenreElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${inquiryGenreItem.element_name}']`),
-              ),
-              500,
+            const inquiryGenreElement = await driver.findElement(
+              By.name(inquiryGenreItem.element_name),
             );
             await driver.wait(until.elementIsVisible(inquiryGenreElement), 500);
             await inquiryGenreElement.sendKeys(inquirySubject);
@@ -9225,11 +9024,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const selectElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${inquiryGenreItem.element_name}']`),
-              ),
-              500,
+            const selectElement = await driver.findElement(
+              By.name(inquiryGenreItem.element_name),
             );
             const selectObj = await selectElement.findElements(
               By.tagName('option'),
@@ -9319,11 +9115,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const addressElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${addressItem.element_name}']`),
-              ),
-              500,
+            const addressElement = await driver.findElement(
+              By.name(addressItem.element_name),
             );
             await driver.wait(until.elementIsVisible(addressElement), 1000);
             const value = await addressElement.getAttribute('value');
@@ -9386,11 +9179,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const addressPrefectureElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${addressPrefectureItem.element_name}']`),
-              ),
-              500,
+            const addressPrefectureElement = await driver.findElement(
+              By.name(addressPrefectureItem.element_name),
             );
             await driver.wait(
               until.elementIsVisible(addressPrefectureElement),
@@ -9454,11 +9244,8 @@ export class AutoFormSendService {
         for (const iframe of iframes) {
           await driver.switchTo().frame(iframe);
           try {
-            const addressCityElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${addressCityItem.element_name}']`),
-              ),
-              500,
+            const addressCityElement = await driver.findElement(
+              By.name(addressCityItem.element_name),
             );
             await driver.wait(until.elementIsVisible(addressCityElement), 1000);
             const value = await addressCityElement.getAttribute('value');
@@ -9511,11 +9298,8 @@ export class AutoFormSendService {
           const iframe = iframes[i];
           await driver.switchTo().frame(iframe);
           try {
-            const addressZipElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${addressZipItem.element_name}']`),
-              ),
-              500,
+            const addressZipElement = await driver.findElement(
+              By.name(addressZipItem.element_name),
             );
             await driver.wait(until.elementIsVisible(addressZipElement), 1000);
             const value = (
@@ -9562,13 +9346,10 @@ export class AutoFormSendService {
           const iframe = iframes[i];
           await driver.switchTo().frame(iframe);
           try {
-            const addressStreetElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${addressStreetItem.element_name}']`),
-              ),
-              500,
+            const addressStreetElement = await driver.findElement(
+              By.name(addressStreetItem.element_name),
             );
-            await driver.wait(
+            await driver.findElement(
               until.elementIsVisible(addressStreetElement),
               500,
             );
@@ -9616,11 +9397,8 @@ export class AutoFormSendService {
           const iframe = iframes[i];
           await driver.switchTo().frame(iframe);
           try {
-            const selectElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${addressItem.element_name}']`),
-              ),
-              500,
+            const selectElement = await driver.findElement(
+              By.name(addressItem.element_name),
             );
             const options = await selectElement.findElements(
               By.tagName('option'),
@@ -9672,11 +9450,8 @@ export class AutoFormSendService {
           const iframe = iframes[i];
           await driver.switchTo().frame(iframe);
           try {
-            const selectElement = await driver.wait(
-              until.elementLocated(
-                By.xpath(`//*[@name='${addressPrefectureItem.element_name}']`),
-              ),
-              500,
+            const selectElement = await driver.findElement(
+              By.name(addressPrefectureItem.element_name),
             );
             const options = await selectElement.findElements(
               By.tagName('option'),
@@ -11158,7 +10933,7 @@ export class AutoFormSendService {
                       console.log('要素が変更されました。');
                       let failures = await driver.findElements(
                         By.xpath(
-                          "//*[contains(text(), '失敗') or contains(text(), 'CAPTCHA')]",
+                          "//*[not(self::script) and contains(text(), '失敗') or contains(text(), 'CAPTCHA')]",
                         ),
                       );
                       if (failures.length > 0) {
@@ -11230,12 +11005,21 @@ export class AutoFormSendService {
                 console.log('要素が変更されました。');
                 let failures = await driver.findElements(
                   By.xpath(
-                    "//*[contains(text(), '失敗') or contains(text(), 'reCAPTCHA')]",
+                    "//*[contains(text(), '失敗') or contains(text(), 'CAPTCHA')]",
                   ),
                 );
                 if (failures.length > 0) {
-                  console.log('失敗という文言は検出されました');
-                  return false;
+                  for (let failure of failures) {
+                    if (await failure.isDisplayed()) {
+                      console.log(
+                        'Visible element found: ' + (await failure.getText()),
+                      );
+                      console.log('失敗という文言は検出されました');
+                      return false;
+                    }
+                  }
+                  console.log('失敗という文言は検出されませんでした');
+                  return true;
                 } else {
                   console.log('失敗という文言は検出されませんでした');
                   return true;
